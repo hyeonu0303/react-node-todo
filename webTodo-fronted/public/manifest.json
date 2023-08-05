@@ -1,0 +1,21 @@
+{
+  "name": "TodoWeb",
+  "short_name": "MyPWA",
+  "start_url": "",
+  "display": "standalone",
+  "background_color": "#F8F7DA",
+  "theme_color": "#8C383A",
+  "description": "PWA with Vite.js, React.js",
+  "icons": [
+    {
+      "src": "icons/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icons/favicon-16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    }
+  ]
+}
