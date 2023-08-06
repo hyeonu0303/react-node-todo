@@ -49,6 +49,7 @@ app.post('/api/login',(req,res)=>{
 })
 
 /**git 연습 */
+/**git 연습222222222 */
 
 //react에서 라우팅 담당
 app.get('*', function (req, res) {
