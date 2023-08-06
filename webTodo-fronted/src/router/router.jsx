@@ -6,17 +6,14 @@ const RouterInfo = [
   {
     path: "/",
     element: <App/>,
-    // errorElement: <ErrorPage />
   },
   {
     path: "/login",
     element: <Login/>,
-    // errorElement: <ErrorPage />
   },
   {
     path: "/signup",
     element: <SignUp/>,
-    // errorElement: <ErrorPage />
   },
 ];
 
