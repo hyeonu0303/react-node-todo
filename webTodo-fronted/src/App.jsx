@@ -10,6 +10,7 @@ function App() {
       <Link to="/login">로그인</Link>
       <Link to="/singup">회원가입</Link>
       <p>메인창</p>
+      <p>브랜치연습중22222222</p>
     </Container>
   )
 }
