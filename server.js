@@ -2,14 +2,12 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const path = require('path');
-const port = process.env.PORT
-
-app.use(express.json());
-let cors = require('cors');
+const cors = require('cors');
 app.use(cors());
 
-
-
+app.use(express.urlencoded({extended : true}))
+app.use(express.json());
+app.use(express.static(path.join(__dirname, './webTodo-fronted/dist')));
 /**
  * mongoose연결
  * 스키마정의 - > 모델형성 
@@ -18,7 +16,10 @@ app.use(cors());
  * @todo passport 및 비밀번호 암호화 라이브러리 설치
  */
 const mongoose = require('mongoose');
-const User = require('./models/user');
+/**
+ * loginUser Data
+ */
+const Login = require('./models/login');
 let db;
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -27,23 +28,30 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     db = mongoose.connection;
   })
   .catch((err) => {
-    console.error('MongoDB 연결 오류:', err);
+    console.error('MongoDB 연결 오류: ', err);
   });
 
-app.listen(port, () => {
-  console.log(`listening on port ${port}`)
+app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}`)
 })
 
-app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));
 
 
-
-
-
+/**
+ * 로그인
+ */
+app.post('/api/login',(req,res)=>{
+  Login.find()
+    .then((result)=>{
+      console.log(result)
+      res.json(result)
+    })
+    .catch((err)=>{console.log(err)});
+})
 
 //react에서 라우팅 담당
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, '/webTodo-fronted/dist/index.html'));
+  res.sendFile(path.join(__dirname, './webTodo-fronted/dist/index.html'));
 });
 
 
