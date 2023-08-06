@@ -10,10 +10,10 @@ const Router = createBrowserRouter(RouterInfo);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={Router}>
-      <ChakraProvider>
+    <ChakraProvider>
+      <RouterProvider router={Router}>
         <App />
-      </ChakraProvider>
-    </RouterProvider>
+      </RouterProvider>
+    </ChakraProvider>
   </React.StrictMode>
 );
