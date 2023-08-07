@@ -18,12 +18,14 @@ function Login() {
    */
   const handleSetId = (e) => {
     setId(e.target.value);
+    console.log(id);
   }
   /**
    * pw입력란 input값 가져오는함수
    */
   const handleSetPw = (e) =>{
     setPassword(e.target.value)
+    console.log(password)
   }
   
   
@@ -45,6 +47,7 @@ function Login() {
             size="md"
             mt={5} 
             onClick={()=>{
+              // const hashedPassword = bcrypt.hashSync(password, 10);
               axios.post('/api/login',{
                 id:id,
                 password:password
