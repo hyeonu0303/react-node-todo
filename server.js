@@ -48,9 +48,6 @@ app.post('/api/login',(req,res)=>{
     .catch((err)=>{console.log(err)});
 })
 
-/**git 연습 */
-/**git 연습222222222 */
-
 //react에서 라우팅 담당
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, './webTodo-fronted/dist/index.html'));
