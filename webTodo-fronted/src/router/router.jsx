@@ -15,6 +15,10 @@ const RouterInfo = [
     path: "/signup",
     element: <SignUp/>,
   },
+  {
+    path: "/signup",
+    element: <SignUp/>,
+  },
 ];
 
 export default RouterInfo;
