@@ -12,17 +12,9 @@ const customTheme = extendTheme({
 
 function App() {
   return (
-<<<<<<< HEAD
-    <Container>
-      <Heading as='h2' size='lg'>잘 완성해보자구~~</Heading>
-      <Link to="/login">로그인</Link>
-      <Link to="/register">회원가입</Link>
-    </Container>
-=======
     <ChakraProvider theme={customTheme}>
       <Main></Main>
     </ChakraProvider>
->>>>>>> feature/vera
   )
 }
 
