@@ -33,7 +33,7 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:3000/', // 백엔드 서버 주소
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        // rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
