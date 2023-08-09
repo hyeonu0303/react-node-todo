@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Heading,
@@ -42,11 +43,12 @@ const InputField = styled.input`
 `;
 
 
-
 const SignUp = () => {
   let [userName,setUserName] = useState('');
   let [email,setEmail] = useState('');
   let [password,setPassword] = useState('');
+  const navigate = useNavigate();
+  
   return (
     <SignUpContainer>
       <SignUpBox>
@@ -74,7 +76,7 @@ const SignUp = () => {
             password:password
           })
           //여기콘솔은 웹 콘솔
-          .then((result)=>{console.log(result.data)})
+          .then((result)=>{console.log(result.data), navigate('/')})
           .catch((error)=>{console.log('회원가입 데이터 전송오류: '+error)})
         }}
         >회원가입</Button>

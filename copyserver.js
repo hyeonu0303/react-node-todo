@@ -1,17 +1,14 @@
-require('dotenv').config();
+/* require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const app = express();
 const port = process.env.PORT;
-const mongoUrl = process.env.MONGODB_URI;
-const secret_key = process.env.SECRET_KEY;
 app.use(express.json());
 var cors = require('cors');
 app.use(cors());
-app.use(express.urlencoded({extended: true})) 
 
-app.listen(port, function () {
-  console.log(`listening on ${port}`)
+app.listen(process.env.PORT, function () {
+  console.log('listening on $')
 }); 
 
 
@@ -31,4 +28,4 @@ app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '/webTodo-fronted/dist/index.html'));
 });
-
+ */

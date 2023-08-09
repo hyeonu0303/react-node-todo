@@ -8,7 +8,7 @@ function App() {
     <Container>
       <Heading as='h2' size='lg'>잘 완성해보자구~~</Heading>
       <Link to="/login">로그인</Link>
-      <Link to="/signup">회원가입</Link>
+      <Link to="/register">회원가입</Link>
     </Container>
   )
 }
