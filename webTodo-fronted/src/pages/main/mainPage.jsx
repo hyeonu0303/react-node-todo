@@ -55,7 +55,7 @@ const mainPage = () => {
           <br />
           <Link to="/login">로그인</Link>
           <br />
-          <Link to="/signup"> 회원가입</Link>
+          <Link to="/register"> 회원가입</Link>
           <br />
         </GridItem>
         <GridItem colSpan={3}>

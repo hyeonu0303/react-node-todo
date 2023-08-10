@@ -77,7 +77,7 @@ const SignUp = () => {
           })
           //여기콘솔은 웹 콘솔
           .then((result)=>{console.log(result.data), navigate('/')})
-          .catch((error)=>{console.log('회원가입 데이터 전송오류: '+error)})
+          .catch((error)=>{console.log('회원가입 데이터 전송오류: '+error), navigate('/fail')})
         }}
         >회원가입</Button>
       </SignUpBox>
