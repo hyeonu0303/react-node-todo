@@ -1,7 +1,7 @@
 import App from '../App';
 // import ErrorPage from '../pages/ErrorPage';
 import Login from '../pages/login/login';
-import Register from '../pages/register/register';
+import Register from '../pages/singup/register';
 const RouterInfo = [
   {
     path: "/",

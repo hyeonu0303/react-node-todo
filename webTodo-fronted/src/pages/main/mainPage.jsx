@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Grid, GridItem } from "@chakra-ui/react";
+import { useState } from "react"; // Import React explicitly
+import { Grid, GridItem, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,65 +9,75 @@ import {
   faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-const mainPage = () => {
+const MainPage = () => { // Use PascalCase for component names
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  const iconSize = "2x"; // 아이콘 크기 설정 ("lg", "2x", "3x" 등)
-  const iconMarginBottom = "3rem"; // 아이콘 간격 설정
-  const iconMarginTop = "2rem";
+  const iconSize = "2x";
+  const iconMarginBottom = "1rem";
 
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Grid
         h="100%"
-        templateRows="repeat(1, 1fr)"
+        templateRows="repeat(12, 1fr)"
         templateColumns="repeat(12, 1fr)"
         gap={4}
       >
-        <GridItem rowSpan={1} colSpan={1} bg="var(--mainColor)">
-          <FontAwesomeIcon
-            icon={faHouse}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom, marginTop: iconMarginTop }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faStar}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faBell}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faGear}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <br />
-          <Link to="/login">로그인</Link>
-          <br />
-          <Link to="/signup"> 회원가입</Link>
-          <br />
+        <GridItem
+          rowSpan={[1, 12]}
+          colSpan={[12, 1]}
+          bg="var(--mainColor)"
+          textAlign={["center", "left"]}
+          padding="2rem"
+        >
+          <Flex
+            direction={["row", "column"]}
+            alignItems={["center", "flex-start"]}
+            justifyContent={["space-between", "flex-start"]}
+            h="100%"
+          >
+            <FontAwesomeIcon
+              icon={faHouse}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom }}
+            />
+            <FontAwesomeIcon
+              icon={faStar}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom }}
+            />
+            <FontAwesomeIcon
+              icon={faBell}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom, marginLeft: 4 }}
+            />
+            <FontAwesomeIcon
+              icon={faGear}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
+            />
+          </Flex>
         </GridItem>
-        <GridItem colSpan={3}>
-          {" "}
+        <GridItem
+          rowSpan={[3, 12]}
+          colSpan={[12, 3]}
+          padding={["1rem", "2rem"]}
+        >
           <h1>Your Calendar</h1>
           <Calendar onChange={handleDateChange} value={selectedDate} />
-          <p>Selected date: {selectedDate.toDateString()}</p>{" "}
+          <p>Selected date: {selectedDate.toDateString()}</p>
         </GridItem>
-        <GridItem colSpan={7} />
+        <GridItem rowSpan={[7, 12]} colSpan={[12, 7]}>
+          <Link to="/login">로그인</Link>
+          <Link to="/signup">회원가입</Link>
+        </GridItem>
       </Grid>
     </div>
   );
 };
 
-export default mainPage;
+export default MainPage;
