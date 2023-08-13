@@ -16,6 +16,7 @@ import {useSelector} from 'react-redux';
 
 const MainPage = () => {
 
+  
   let state = useSelector((state)=> state) /**모든스테이트남음 */
   console.log(state.user);
   /**로그인한 유저이름 */
@@ -52,7 +53,6 @@ const MainPage = () => {
 
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
-      {username}
       <Grid
         h="100%"
         templateRows="repeat(12, 1fr)"
@@ -92,6 +92,7 @@ const MainPage = () => {
               size={iconSize}
               style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
             />
+          {/* 유저이름 로그인상태 */}
           <p>{username}</p>
           </Flex>
         </GridItem>

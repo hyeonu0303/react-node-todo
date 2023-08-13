@@ -11,7 +11,7 @@ import axios from 'axios';
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUsername } from "../../store/store";
+import { setUsername } from "../../store/userSlice";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -30,6 +30,7 @@ function Login() {
   const handleSetPw = (e) =>{
     setPassword(e.target.value)
   }
+  //user에서 res.json으로 보낸데이터값과 일치하면 보여주는식
   return (
     <Container mt={5}>
       <Center>

@@ -1,30 +1,24 @@
-import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-let user = createSlice({
-  name: "username", //name: 'state이름~'
-  initialState: {
-    username: ''
-  }, //initialState: '값'
-  /**
-   * 1.state수정해주는 함수 만들기
-   * 2.export해줘야함
-   */
-  reducers: {
-    /**
-     * @param state 기존스테이트
-     * @param action 상태변화객체
-     */
-    setUsername: (state, action) => {
-      state.username = action.payload;
-    },
-  },
-});
+import userSlice from './userSlice';
 
-//state 변경함수남음
-export let { setUsername } = user.actions;
+
+const persistConfig = {
+  key: "user", 
+  storage: storage, //localstorage에 저장 
+  whitelist:['username'] //유지하려는 키 값 name:에 저장한 변수명
+  //blacklist: //유지하지 않을 상태 키 목록
+};
+
+/**
+ * persistReducer 로컬스토리지에 저장을 해줌
+ */
+const userReducer = persistReducer(persistConfig,userSlice.reducer);
 
 export default configureStore({
   reducer: {
-    user: user.reducer, //작명 : user.reducer
+    user: userReducer, //작명 : user.reducer
   },
 });

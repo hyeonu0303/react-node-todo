@@ -8,6 +8,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const LocalStrategy = require('passport-local').Strategy;
 const cors = require('cors');
 
@@ -26,8 +27,13 @@ app.listen(port, function () {
 app.use(session({
   secret: secret_key,
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store:MongoStore.create({
+    mongoUrl: mongoUrl,
+    ttl: 24 * 60 * 60 //세션 24시간후 만료 자동삭제됨
+  })
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -43,6 +49,7 @@ mongoose.connect(mongoUrl, {
 }).catch(err => {
   console.error('❌ MongoDB 연결실패:', err.message);
 });
+
 /**로그인 확인하기위한 미들웨어 */
 const isLoggined = (req,res,next) => {
   if(req.isAuthenticated()){
