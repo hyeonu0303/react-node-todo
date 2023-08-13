@@ -10,7 +10,7 @@ import store from "./store/store.js";
 import {PersistGate} from 'redux-persist/integration/react'
 import {persistStore} from 'redux-persist'
 
-const Router = createBrowserRouter(RouterInfo);
+const router = createBrowserRouter(RouterInfo);
 export let persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ChakraProvider>
-          <RouterProvider router={Router}>
+          <RouterProvider router={router}>
             <App />
           </RouterProvider>
         </ChakraProvider>

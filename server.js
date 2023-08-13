@@ -60,7 +60,6 @@ const isLoggined = (req,res,next) => {
   }
 }
 
-
 app.post('/api/register', async (req, res) => {
   console.log('회원가입 데이터:', {
     userName: req.body.userName,
@@ -103,14 +102,26 @@ app.post('/api/login', (req, res, next) => {
       });
   })(req, res, next);
   //axios로 post요청보낸 이메일과 비밀번호 확인
-  console.log(req.body.email, req.body.password)
+  // console.log(req.body.email, req.body.password)
 });
 
 
 
 /**로그아웃 */
-app.get("/logout", (req, res) => {
-  req.logout();
+app.get("/api/logout", (req, res) => {
+  req.logout(function(err) {
+    if (err) {
+      return res.status(500).json({ error: "❗로그인실패" });
+    }
+    req.session.destroy(function(err) {
+      if (err) {
+        return res.status(500).json({ error: "❗세션 삭제실패" });
+      }
+      res.clearCookie('connect.sid');
+      res.status(200).json({ message: "✅로그아웃 완료" });
+      console.log('✅ 로그아웃 완료')
+    });
+  });
 });
 
 app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));

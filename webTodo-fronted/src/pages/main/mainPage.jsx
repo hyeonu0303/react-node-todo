@@ -9,22 +9,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Link } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import CustomModal from "./modal";
-import {useSelector} from 'react-redux';
+import UserStatus from "../../components/UserStatus";
 
 const MainPage = () => {
 
-  
-  let state = useSelector((state)=> state) /**모든스테이트남음 */
-  console.log(state.user);
-  /**로그인한 유저이름 */
-  const username = state.user.username;
-
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -93,8 +84,9 @@ const MainPage = () => {
               style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
             />
           {/* 유저이름 로그인상태 */}
-          <p>{username}</p>
+          <UserStatus></UserStatus>
           </Flex>
+
         </GridItem>
         <GridItem
           rowSpan={[3, 5, 12]}
@@ -106,8 +98,7 @@ const MainPage = () => {
           <p>Selected date: {selectedDate.toDateString()}</p>
         </GridItem>
         <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]}>
-          <Link to="/login">로그인</Link>
-          <Link to="/register">회원가입</Link>
+          
           <Button onClick={openModal}>모달 열기</Button>
           <CustomModal
             isOpen={modalOpen}

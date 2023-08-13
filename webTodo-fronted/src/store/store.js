@@ -8,7 +8,7 @@ import userSlice from './userSlice';
 const persistConfig = {
   key: "user", 
   storage: storage, //localstorage에 저장 
-  whitelist:['username'] //유지하려는 키 값 name:에 저장한 변수명
+  whitelist:['username','isLoggedIn'] //유지하려는 키 값 name:에 저장한 변수명
   //blacklist: //유지하지 않을 상태 키 목록
 };
 

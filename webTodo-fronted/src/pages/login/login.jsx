@@ -11,7 +11,7 @@ import axios from 'axios';
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUsername } from "../../store/userSlice";
+import { login } from "../../store/userSlice";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -55,7 +55,7 @@ function Login() {
               .then((result)=>{
                 console.log(result.data.user.username)
                 const username = result.data.user.username
-                dispatch(setUsername(username))
+                dispatch(login(username))
                 navigate('/')
               })
               .catch((error)=>{
