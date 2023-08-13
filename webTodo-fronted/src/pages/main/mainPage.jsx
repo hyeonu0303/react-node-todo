@@ -12,9 +12,17 @@ import "react-calendar/dist/Calendar.css";
 import { Link } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import CustomModal from "./modal";
+import {useSelector} from 'react-redux';
 
 const MainPage = () => {
+
+  let state = useSelector((state)=> state) /**모든스테이트남음 */
+  console.log(state.user);
+  /**로그인한 유저이름 */
+  const username = state.user.username;
+
   const [selectedDate, setSelectedDate] = useState(new Date());
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -44,44 +52,13 @@ const MainPage = () => {
 
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
+      {username}
       <Grid
         h="100%"
         templateRows="repeat(12, 1fr)"
         templateColumns="repeat(12, 1fr)"
         gap={4}
       >
-<<<<<<< HEAD
-        <GridItem rowSpan={1} colSpan={1} bg="var(--mainColor)">
-          <FontAwesomeIcon
-            icon={faHouse}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom, marginTop: iconMarginTop }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faStar}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faBell}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <FontAwesomeIcon
-            icon={faGear}
-            size={iconSize}
-            style={{ marginBottom: iconMarginBottom }}
-          />
-          <br />
-          <br />
-          <Link to="/login">로그인</Link>
-          <br />
-          <Link to="/register"> 회원가입</Link>
-          <br />
-=======
         <GridItem
           rowSpan={[1, 12, 12]}
           colSpan={[12, 1, 1]}
@@ -115,8 +92,8 @@ const MainPage = () => {
               size={iconSize}
               style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
             />
+          <p>{username}</p>
           </Flex>
->>>>>>> feature/vera
         </GridItem>
         <GridItem
           rowSpan={[3, 5, 12]}
@@ -128,23 +105,27 @@ const MainPage = () => {
           <p>Selected date: {selectedDate.toDateString()}</p>
         </GridItem>
         <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]}>
-        <Link to="/login">로그인</Link>
-      <Link to="/register">회원가입</Link>
+          <Link to="/login">로그인</Link>
+          <Link to="/register">회원가입</Link>
           <Button onClick={openModal}>모달 열기</Button>
-          <CustomModal isOpen={modalOpen} onClose={closeModal} onConfirm={addTodo} />
+          <CustomModal
+            isOpen={modalOpen}
+            onClose={closeModal}
+            onConfirm={addTodo}
+          />
           <div className="todo">
-  <h2>Todo 목록</h2>
-  <ul>
-    {todos.map((todo) => (
-      <li key={todo.id}>
-        <label>
-          <input type="checkbox" />
-          {todo.text}
-        </label>
-      </li>
-    ))}
-  </ul>
-</div>
+            <h2>Todo 목록</h2>
+            <ul>
+              {todos.map((todo) => (
+                <li key={todo.id}>
+                  <label>
+                    <input type="checkbox" />
+                    {todo.text}
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
         </GridItem>
       </Grid>
     </div>

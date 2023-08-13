@@ -9,11 +9,15 @@ import {
 } from "@chakra-ui/react";
 import axios from 'axios';
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUsername } from "../../store/store";
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState('');
+  
+  let dispatch = useDispatch();
   /**
    * id입력란 input값 가져오는 함수
    */
@@ -48,8 +52,10 @@ function Login() {
                 password:password
               })
               .then((result)=>{
+                console.log(result.data.user.username)
+                const username = result.data.user.username
+                dispatch(setUsername(username))
                 navigate('/')
-                console.log(result.data)
               })
               .catch((error)=>{
                 if (error.response) {
@@ -59,6 +65,7 @@ function Login() {
               }
               })
           }}>Login</Button>
+          
         </FormControl>
       </Center>
     </Container>

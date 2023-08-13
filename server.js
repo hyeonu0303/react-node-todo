@@ -48,6 +48,9 @@ const isLoggined = (req,res,next) => {
   if(req.isAuthenticated()){
     return next();
   }
+  else{
+    res.send('로그인안함')
+  }
 }
 
 
@@ -88,7 +91,7 @@ app.post('/api/login', (req, res, next) => {
           if (loginErr) {
               return res.status(500).json({ message: '로그인 중 오류', error: loginErr.message });
           }
-          res.json({ message: '로그인 성공!'}); //user입력하면 user정보옴
+          res.json({ message: '로그인 성공!', user}); //user입력하면 user정보옴
           console.log('✅로그인성공!')
       });
   })(req, res, next);
@@ -99,10 +102,9 @@ app.post('/api/login', (req, res, next) => {
 
 
 /**로그아웃 */
-/* app.get("/logout", (req, res) => {
+app.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("/");
-}); */
+});
 
 app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));
 
