@@ -10,14 +10,17 @@ const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require('mongoose-findorcreate');
 const cors = require('cors');
 
 const User = require('./schema/User');
 
 const app = express();
-
 app.use(express.json());
-app.use(cors({credentials: true}));
+app.use(cors({
+  credentials: true}
+  ));
 app.use(express.urlencoded({extended: true})) 
 
 app.listen(port, function () {
@@ -40,6 +43,16 @@ app.use(passport.session());
 passport.use(new LocalStrategy({usernameField:'email',passwordField:'password'},User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+/* passport.serializeUser((user, done)=>{
+  done(null, user.id)
+})
+
+passport.deserializeUser((email, done)=>{
+  User.findById(email,(err, user)=>{
+    done(err,user)
+  })
+}) */
 
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
@@ -123,6 +136,35 @@ app.get("/api/logout", (req, res) => {
     });
   });
 });
+
+/**구글로그인 */
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback",
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    console.log("accessToken:", accessToken);
+    console.log("refreshToken:", refreshToken);
+    console.log("profile:", profile);
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile','email'] }));
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.json({user:req.user});
+    // res.redirect('/');
+  });
+
+
 
 app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));
 
