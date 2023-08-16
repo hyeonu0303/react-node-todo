@@ -3,6 +3,10 @@
 # Dependencies
 node_modules/
 .env
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/server
 
 # Logs
 npm-debug.log*

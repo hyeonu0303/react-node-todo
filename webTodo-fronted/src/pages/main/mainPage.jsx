@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, GridItem, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,8 +12,20 @@ import "react-calendar/dist/Calendar.css";
 import { Button } from "@chakra-ui/react";
 import CustomModal from "./modal";
 import UserStatus from "../../components/UserStatus";
-
+import { useDispatch } from "react-redux";
+import {login} from '../../store/userSlice';
 const MainPage = () => {
+  let dispatch = useDispatch();
+
+  useEffect(()=>{
+    const urlParams = new URLSearchParams(window.location.search);
+    const googleName = urlParams.get('googleName');
+    if(googleName){
+      dispatch(login(googleName));
+    }
+    const kakaoName = urlParams.get('kakaoName');
+    if(kakaoName) dispatch(login(kakaoName));
+  },[dispatch])
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date) => {

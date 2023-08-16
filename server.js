@@ -10,14 +10,18 @@ const passport = require('passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const KakaoStrategy = require('passport-kakao').Strategy
+const findOrCreate = require('mongoose-findorcreate');
 const cors = require('cors');
 
 const User = require('./schema/User');
 
 const app = express();
-
 app.use(express.json());
-app.use(cors({credentials: true}));
+app.use(cors({
+  credentials: true}
+  ));
 app.use(express.urlencoded({extended: true})) 
 
 app.listen(port, function () {
@@ -38,8 +42,22 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy({usernameField:'email',passwordField:'password'},User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+/* passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser()); */
+
+passport.serializeUser((user, done)=>{
+  done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+      .then(user => {
+          done(null, user);
+      })
+      .catch(err => {
+          done(err, null);
+      });
+});
 
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
@@ -122,6 +140,74 @@ app.get("/api/logout", (req, res) => {
       console.log('✅ 로그아웃 완료')
     });
   });
+});
+
+/**구글로그인 */
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/callback",
+},
+
+function(accessToken, refreshToken, profile, cb) {
+  console.log("accessToken:", accessToken);
+  console.log("refreshToken:", refreshToken);
+  console.log("profile:", profile);
+  User.findOrCreate({ 
+    googleId: profile.id, 
+    googleName: profile.displayName,
+    googleEmail: profile.emails[0].value
+  }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
+
+app.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }));
+
+app.get('/auth/google/callback', (req, res, next) => {
+  passport.authenticate('google', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/'); }
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      const redirectUrl = `http://localhost:5173/?googleName=${user.googleName}`
+      res.redirect(redirectUrl);
+    });
+  })(req, res, next);
+});
+
+/**카카오로그인 */
+passport.use(new KakaoStrategy({
+  clientID : process.env.KAKAO_CLIENT_ID,
+  // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
+  callbackURL : 'http://localhost:3000/auth/kakao/callback'
+},
+(accessToken, refreshToken, profile, done) => {
+  // 사용자의 정보는 profile에 들어있다.
+  console.log(profile)
+  User.findOrCreate({
+    kakaoId:profile.id,
+    kakaoName:profile.username
+  }, (err, user) => {
+    if (err) { return done(err) }
+    return done(null, user)
+  })
+}
+))
+
+app.get('/auth/kakao', passport.authenticate('kakao',{failureRedirect:'/fail'}));
+
+app.get('/auth/kakao/callback', (req, res, next) => {
+  passport.authenticate('kakao', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/'); }
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      const redirectUrl = `http://localhost:5173/?kakaoName=${user.kakaoName}`
+      res.redirect(redirectUrl);
+    });
+  })(req, res, next);
 });
 
 app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));

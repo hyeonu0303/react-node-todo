@@ -1,5 +1,6 @@
 
 import {useSelector, useDispatch} from 'react-redux';
+import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import {Button} from '@chakra-ui/react';
 import axios from 'axios';
@@ -10,10 +11,13 @@ const UserStatus = ()=>{
   let dispatch = useDispatch();
   const navigate = useNavigate();
   const state = useSelector((state)=> state) /**모든스테이트남음 */
-  console.log(state.user.username);
-  console.log(state.user.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const username = useSelector((state) => state.user.username);
+  useEffect(() => {
+    console.log(username);
+    console.log(isLoggedIn);
+  }, [username, isLoggedIn]);
   /**로그인한 유저이름 */
-  const username = state.user.username
 
   /**
    * 로그아웃 get요청 
