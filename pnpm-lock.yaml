@@ -37,6 +37,9 @@ dependencies:
   passport-google-oauth20:
     specifier: ^2.0.0
     version: 2.0.0
+  passport-kakao:
+    specifier: ^1.0.1
+    version: 1.0.1
   passport-local:
     specifier: ^1.0.0
     version: 1.0.0
@@ -1703,6 +1706,13 @@ packages:
       passport-oauth2: 1.7.0
     dev: false
 
+  /passport-kakao@1.0.1:
+    resolution: {integrity: sha512-uItaYRVrTHL6iGPMnMZvPa/O1GrAdh/V6EMjOHcFlQcVroZ9wgG7BZ5PonMNJCxfHQ3L2QVNRnzhKWUzSsumbw==}
+    dependencies:
+      passport-oauth2: 1.1.2
+      pkginfo: 0.3.1
+    dev: false
+
   /passport-local-mongoose@8.0.0:
     resolution: {integrity: sha512-jgfN/B0j11WT5f96QlL5EBvxbIwmzd+tbwPzG1Vk8hzDOF68jrch5M+NFvrHjWjb3lfAU0DkxKmNRT9BjFZysQ==}
     engines: {node: '>= 8.0.0'}
@@ -1717,6 +1727,15 @@ packages:
     engines: {node: '>= 0.4.0'}
     dependencies:
       passport-strategy: 1.0.0
+    dev: false
+
+  /passport-oauth2@1.1.2:
+    resolution: {integrity: sha512-wpsGtJDHHQUjyc9WcV9FFB0bphFExpmKtzkQrxpH1vnSr6RcWa3ZEGHx/zGKAh2PN7Po9TKYB1fJeOiIBspNPA==}
+    engines: {node: '>= 0.4.0'}
+    dependencies:
+      oauth: 0.9.15
+      passport-strategy: 1.0.0
+      uid2: 0.0.4
     dev: false
 
   /passport-oauth2@1.7.0:
@@ -1755,6 +1774,11 @@ packages:
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+    dev: false
+
+  /pkginfo@0.3.1:
+    resolution: {integrity: sha512-yO5feByMzAp96LtP58wvPKSbaKAi/1C4kV9XpTctr6EepnP6F33RBNOiVrdz9BrPA98U2BMFsTNHo44TWcbQ2A==}
+    engines: {node: '>= 0.4.0'}
     dev: false
 
   /proxy-addr@2.0.7:

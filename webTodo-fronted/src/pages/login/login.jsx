@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/userSlice";
 import googleLoginButton from "../../img/구글버튼/btn_google_signin_light_normal_web.png";
+import kakaoLoginButton from '../../img/카카오버튼/kakao_login_medium_narrow.png';
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -57,7 +58,6 @@ function Login() {
                   password: password,
                 })
                 .then((result) => {
-                  console.log(result.data.user.username);
                   const username = result.data.user.username;
                   dispatch(login(username));
                   navigate("/");
@@ -84,7 +84,8 @@ function Login() {
             }}
           >
             <Image src={googleLoginButton}></Image>
-          </Button>
+          </Button><br/><br/>
+          <Button style={{padding:'0'}} onClick={()=>{window.location.href='/auth/kakao'}}><Image src={kakaoLoginButton}></Image></Button>
         </FormControl>
       </Center>
     </Container>

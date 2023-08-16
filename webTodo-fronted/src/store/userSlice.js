@@ -5,7 +5,7 @@ let user = createSlice({
   name: "username", //name: 'state이름~'
   initialState: {
     username: '',
-    isLoggedIn: false
+    isLoggedIn: false,
   }, //initialState: '값'
   /**
    * 1.state수정해주는 함수 만들기
@@ -20,8 +20,8 @@ let user = createSlice({
       state.username = action.payload;
     }, */
     login: (state, action)=>{
-      state.isLoggedIn = true;
       state.username = action.payload;
+      state.isLoggedIn = true;
     },
     
     logout: (state)=>{

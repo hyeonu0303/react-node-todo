@@ -4,7 +4,11 @@ const findOrCreate = require('mongoose-findorcreate');
 const userSchema = new mongoose.Schema({
   username: String,
   email: String,
-  googleId: String
+  googleId: String,
+  googleName:String,
+  googleEmail:String,
+  kakaoId: String,
+  kakaoName: String,
 },{
   collection:'users' //내가원하는 collection이름
 });
