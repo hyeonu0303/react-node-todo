@@ -1,7 +1,7 @@
 import App from '../App';
 // import ErrorPage from '../pages/ErrorPage';
 import Login from '../pages/login/login';
-import SignUp from '../pages/singup/signup';
+import Register from '../pages/register/register';
 const RouterInfo = [
   {
     path: "/",
@@ -12,8 +12,8 @@ const RouterInfo = [
     element: <Login/>,
   },
   {
-    path: "/signup",
-    element: <SignUp/>,
+    path: "/register",
+    element: <Register/>,
   },
 ];
 
