@@ -18,6 +18,8 @@ const cors = require('cors');
 const User = require('./schema/User');
 
 const app = express();
+// /경로로 들어온사람들은 이 라우트를 적용
+app.use('/', require('./routes/auth'));
 app.use(express.json());
 app.use(cors({
   credentials: true}
@@ -163,20 +165,6 @@ function(accessToken, refreshToken, profile, cb) {
 }
 ));
 
-app.get('/auth/google',passport.authenticate('google', { scope: ['profile','email'] }));
-
-app.get('/auth/google/callback', (req, res, next) => {
-  passport.authenticate('google', (err, user, info) => {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect('/'); }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      const redirectUrl = `http://localhost:5173/?googleName=${user.googleName}`
-      res.redirect(redirectUrl);
-    });
-  })(req, res, next);
-});
-
 /**카카오로그인 */
 passport.use(new KakaoStrategy({
   clientID : process.env.KAKAO_CLIENT_ID,
@@ -196,19 +184,7 @@ passport.use(new KakaoStrategy({
 }
 ))
 
-app.get('/auth/kakao', passport.authenticate('kakao',{failureRedirect:'/fail'}));
 
-app.get('/auth/kakao/callback', (req, res, next) => {
-  passport.authenticate('kakao', (err, user, info) => {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect('/'); }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      const redirectUrl = `http://localhost:5173/?kakaoName=${user.kakaoName}`
-      res.redirect(redirectUrl);
-    });
-  })(req, res, next);
-});
 
 app.use(express.static(path.join(__dirname, 'webTodo-fronted/dist')));
 
