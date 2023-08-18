@@ -1,21 +1,17 @@
 import { useState } from "react";
 import { Grid, GridItem, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHouse,
-  faGear,
-  faStar,
-  faBell,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Button } from "@chakra-ui/react";
-import CustomModal from "./modal";
 import UserStatus from "../../components/UserStatus";
+import BeforeModal from "./modal/beforeModal";
+import OriginModal from "./modal/originModal";
 
 const MainPage = () => {
-
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isOriginModalOpen, setIsOriginModalOpen] = useState(false);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -23,25 +19,14 @@ const MainPage = () => {
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
-  // 모달 부분
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
+  const openOriginModal = () => {
+    setIsOriginModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const closeOriginModal = () => {
+    setIsOriginModalOpen(false);
   };
-
-  // 투두 부분
-  const [todos, setTodos] = useState([]);
-
-  const addTodo = (text) => {
-    const newTodo = { id: new Date().getTime(), text };
-    setTodos([...todos, newTodo]);
-  };
-
+  
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Grid
@@ -83,10 +68,8 @@ const MainPage = () => {
               size={iconSize}
               style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
             />
-          {/* 유저이름 로그인상태 */}
-          <UserStatus></UserStatus>
+            <UserStatus />
           </Flex>
-
         </GridItem>
         <GridItem
           rowSpan={[3, 5, 12]}
@@ -97,27 +80,13 @@ const MainPage = () => {
           <Calendar onChange={handleDateChange} value={selectedDate} />
           <p>Selected date: {selectedDate.toDateString()}</p>
         </GridItem>
-        <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]}>
-          
-          <Button onClick={openModal}>모달 열기</Button>
-          <CustomModal
-            isOpen={modalOpen}
-            onClose={closeModal}
-            onConfirm={addTodo}
-          />
-          <div className="todo">
-            <h2>Todo 목록</h2>
-            <ul>
-              {todos.map((todo) => (
-                <li key={todo.id}>
-                  <label>
-                    <input type="checkbox" />
-                    {todo.text}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]} padding={["1rem", "2rem"]}>
+          <div className="modal" onClick={openOriginModal}></div>
+          {isOriginModalOpen ? (
+            <OriginModal onClose={closeOriginModal} />
+          ) : (
+            <BeforeModal />
+          )}
         </GridItem>
       </Grid>
     </div>
