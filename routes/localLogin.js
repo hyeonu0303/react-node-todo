@@ -5,13 +5,13 @@ const User = require('../schema/User');
 router.post('/api/register', async (req, res) => {
   console.log('회원가입 데이터:', {
     userName: req.body.userName,
-    email: req.body.email,
+    id: req.body.id,
     password: req.body.password,
   });
   try{
     const newUser = new User({
       username:req.body.userName,
-      email: req.body.email
+      id: req.body.id
     });
     await User.register(newUser, req.body.password);
     console.log('✅ 회원가입 성공!')
@@ -41,7 +41,7 @@ router.post('/api/login', (req, res, next) => {
           console.log('✅로그인성공!')
       });
   })(req, res, next);
-  console.log(req.body.email, req.body.password)
+  console.log(req.body.id, req.body.password)
 });
 
 /**로그아웃 */
