@@ -31,7 +31,7 @@ router.post('/api/login', (req, res, next) => {
           return res.status(500).json({ message: '서버 오류', error: err.message });
       }
       if (!user) {
-          return res.status(400).json({ message: '로그인 정보가 잘못되었습니다.' });
+          return res.status(400).json({ message: '아이디또는 비밀번호가 틀립니다' });
       }
       req.logIn(user, (loginErr) => {
           if (loginErr) {
