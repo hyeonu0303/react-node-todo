@@ -25,6 +25,10 @@ router.post('/api/register', async (req, res) => {
   }
 });
 
+router.post('/api/check-id', (req,res)=>{
+  console.log(req.body.id);
+})
+
 router.post('/api/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
       if (err) {
