@@ -42,6 +42,7 @@ const SignUp = () => {
   let [nickName,setUserName] = useState('');
   let [id,setId] = useState('');
   let [password,setPassword] = useState('');
+  let [duplicateId, setDuplicateId] = useState();
   const navigate = useNavigate();
   
   const handleRegister = () => {
@@ -67,15 +68,12 @@ const SignUp = () => {
         axios.post('/api/check-id', { id: inputId })
         .then((result) => {
             if (result.data.isDuplicate) {
-                console.log('아이디가 중복됩니다.');
+                setDuplicateId(true);
                 // 이곳에서 중복 시 UI 변경 처리 (예: 에러 메시지 표시)
-            } else {
-                console.log('사용 가능한 아이디입니다.');
-                // 이곳에서 사용 가능 시 UI 변경 처리
-            }
+            } else setDuplicateId(false) ;
         })
         .catch((error) => {
-            console.log('아이디 중복확인 오류: ' + error);
+          console.log(error);
         });
     }, 500);
   }
@@ -107,7 +105,8 @@ const SignUp = () => {
           <Heading size='lg' style={{padding:'50px'}}>회원가입</Heading>
 
         <SignUpContent>
-          <FormControl isRequired isInvalid={!isNameValid()}>
+
+          <FormControl isRequired>
             <FormLabel>
               <FontAwesomeIcon icon={faUser} /><InputLabel>이름(닉네임)</InputLabel>
             </FormLabel>
@@ -115,12 +114,12 @@ const SignUp = () => {
             {
               nickName == '' ? (<></>) 
               : isNameValid() ? (
-                <FormHelperText>올바른 닉네임 형식입니다.</FormHelperText> 
-              ): (<FormErrorMessage>숫자와 문자만 입력해주세요!</FormErrorMessage>)
+                <FormHelperText>사용가능한 닉네임 입니다</FormHelperText> 
+              ): (<FormHelperText style={{ color: '#E53E3E' }}>숫자와 문자만 입력해주세요!</FormHelperText>)
             }
           </FormControl>
 
-          <FormControl isRequired isInvalid={!isIdValid()} style={{marginTop:'10px'}}>
+          <FormControl isRequired style={{marginTop:'10px'}}>
             <FormLabel>
               <FontAwesomeIcon icon={faEnvelope} /><InputLabel>아이디</InputLabel>
             </FormLabel>
@@ -132,24 +131,32 @@ const SignUp = () => {
               maxLength={20}
             />
             {
-              id == '' ? (<></>):isIdValid() ? (
-                <FormHelperText>올바른 아이디 형식입니다</FormHelperText>
-                ) : (
-                  <FormErrorMessage>5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.</FormErrorMessage>
+              id === '' ? (
+              <></>
+              ) : duplicateId === true ? (
+              <FormHelperText style={{ color: '#E53E3E' }}>
+                사용할 수 없는 아이디입니다(중복)
+              </FormHelperText>
+              ) : isIdValid() ? (
+              <FormHelperText>사용 가능한 아이디입니다</FormHelperText>
+              ) : (
+                <FormHelperText style={{ color: '#E53E3E' }}>
+                5~20자의 영문 소문자, 숫자와 특수 기호(_),(-)만 사용 가능합니다.
+              </FormHelperText>
               )
             }
           </FormControl>
 
-          <FormControl isRequired isInvalid={!isPasswordValid()} style={{marginTop:'10px'}}>
+          <FormControl isRequired style={{marginTop:'10px'}}>
             <FormLabel>
               <FontAwesomeIcon icon={faLock} /><InputLabel>비밀번호</InputLabel>
             </FormLabel>
             <Input value={password} onChange={(e)=>{setPassword(e.target.value)}} type="password" maxLength={16}/>
             {
               password == ''? (<></>):isPasswordValid() ? (
-                <FormHelperText>올바른 비밀번호 형식입니다.</FormHelperText>
+                <FormHelperText>사용가능한 비밀번호입니다.</FormHelperText>
               ) : (
-                <FormErrorMessage>비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.</FormErrorMessage>
+                <FormHelperText style={{ color: '#E53E3E' }}>비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.</FormHelperText>
               )
             }
           </FormControl>
@@ -162,7 +169,7 @@ const SignUp = () => {
               handleRegister()  
             }
           }}
-          isDisabled={!isIdValid() || !isPasswordValid() || !isNameValid()} //입력값 다 정상적이면 회원가입버튼생김
+          isDisabled={!isIdValid() || !isPasswordValid() || !isNameValid() || duplicateId} //입력값 다 정상적이면 회원가입버튼생김
           >회원가입
           </Button>
 

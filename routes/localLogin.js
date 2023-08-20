@@ -27,6 +27,16 @@ router.post('/api/register', async (req, res) => {
 
 router.post('/api/check-id', (req,res)=>{
   console.log(req.body.id);
+  User.findOne({id:req.body.id})
+    .then((result)=>{
+      console.log(result)
+      if(result){
+        res.json({isDuplicate:true})
+      }
+      else{
+        res.json({isDuplicate:false})
+      }
+    })
 })
 
 router.post('/api/login', (req, res, next) => {
