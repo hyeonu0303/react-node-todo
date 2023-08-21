@@ -6,7 +6,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import UserStatus from "../../components/UserStatus";
 
-import OriginModal from "./Modal/originModal";
+import OriginModal from "./addTodo/originModal";
 
 const MainPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
