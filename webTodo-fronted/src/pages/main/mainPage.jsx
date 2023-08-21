@@ -5,12 +5,12 @@ import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-ico
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import UserStatus from "../../components/UserStatus";
-import BeforeModal from "./modal/beforeModal";
-import OriginModal from "./modal/originModal";
+
+import OriginModal from "./Modal/originModal";
 
 const MainPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [isOriginModalOpen, setIsOriginModalOpen] = useState(false);
+
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -19,14 +19,7 @@ const MainPage = () => {
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
-  const openOriginModal = () => {
-    setIsOriginModalOpen(true);
-  };
 
-  const closeOriginModal = () => {
-    setIsOriginModalOpen(false);
-  };
-  
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Grid
@@ -81,12 +74,7 @@ const MainPage = () => {
           <p>Selected date: {selectedDate.toDateString()}</p>
         </GridItem>
         <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]} padding={["1rem", "2rem"]}>
-          <div className="modal" onClick={openOriginModal}></div>
-          {isOriginModalOpen ? (
-            <OriginModal onClose={closeOriginModal} />
-          ) : (
-            <BeforeModal />
-          )}
+          <OriginModal></OriginModal>
         </GridItem>
       </Grid>
     </div>
