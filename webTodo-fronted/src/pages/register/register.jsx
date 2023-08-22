@@ -8,7 +8,6 @@ import {
   Heading,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   FormHelperText,
   Input
 } from '@chakra-ui/react'
@@ -39,16 +38,16 @@ const InputLabel = styled.span`
 let debounceTimer;
 
 const SignUp = () => {
-  let [nickName,setUserName] = useState('');
-  let [id,setId] = useState('');
+  let [displayName,setDisplayName] = useState('');
+  let [userName,setUserName] = useState('');
   let [password,setPassword] = useState('');
   let [duplicateId, setDuplicateId] = useState();
   const navigate = useNavigate();
   
   const handleRegister = () => {
     axios.post('/api/register',{
-      userName : nickName,
-      id : id,
+      displayName : displayName,
+      userName : userName,
       password:password
     })
     //여기콘솔은 웹 콘솔
@@ -65,7 +64,7 @@ const SignUp = () => {
   // 새로운 디바운스 타이머를 설정합니다.
     debounceTimer = setTimeout(() => {
         // 이 부분에 중복 확인 로직을 작성합니다.
-        axios.post('/api/check-id', { id: inputId })
+        axios.post('/api/check-id', { userName: inputId })
         .then((result) => {
             if (result.data.isDuplicate) {
                 setDuplicateId(true);
@@ -78,15 +77,15 @@ const SignUp = () => {
     }, 500);
   }
 
-  const isNameValid = () => {
+  const isDisplayNameValid = () => {
     const namePattern = /^[a-zA-Z가-힣0-9]{1,30}$/;
-    return namePattern.test(nickName);
+    return namePattern.test(displayName);
   }
 
   const isIdValid = () => {
     let idPattern = /^[a-z0-9_-]{5,20}$/;
     return(
-      idPattern.test(id)
+      idPattern.test(userName)
       )
     }
   
@@ -110,10 +109,10 @@ const SignUp = () => {
             <FormLabel>
               <FontAwesomeIcon icon={faUser} /><InputLabel>이름(닉네임)</InputLabel>
             </FormLabel>
-            <Input value={nickName} onChange={(e)=>{setUserName(e.target.value);}} type="text"maxLength={10}/>
+            <Input value={displayName} onChange={(e)=>{setDisplayName(e.target.value);}} type="text"maxLength={10}/>
             {
-              nickName == '' ? (<></>) 
-              : isNameValid() ? (
+              displayName == '' ? (<></>) 
+              : isDisplayNameValid() ? (
                 <FormHelperText>사용가능한 닉네임 입니다</FormHelperText> 
               ): (<FormHelperText style={{ color: '#E53E3E' }}>숫자와 문자만 입력해주세요!</FormHelperText>)
             }
@@ -123,15 +122,15 @@ const SignUp = () => {
             <FormLabel>
               <FontAwesomeIcon icon={faEnvelope} /><InputLabel>아이디</InputLabel>
             </FormLabel>
-            <Input value={id} onChange={(e)=>{
-              setId(e.target.value);
+            <Input value={userName} onChange={(e)=>{
+              setUserName(e.target.value);
               checkIdDuplication(e.target.value);
               }} 
               type="text" 
               maxLength={20}
             />
             {
-              id === '' ? (
+              userName === '' ? (
               <></>
               ) : duplicateId === true ? (
               <FormHelperText style={{ color: '#E53E3E' }}>
@@ -165,11 +164,11 @@ const SignUp = () => {
           style={{width:'100%', marginTop:'50px'}}
           colorScheme='whatsapp'
           onClick={()=>{
-            if(isIdValid() && isPasswordValid() && isNameValid()){
+            if(isIdValid() && isPasswordValid() && isDisplayNameValid()){
               handleRegister()  
             }
           }}
-          isDisabled={!isIdValid() || !isPasswordValid() || !isNameValid() || duplicateId} //입력값 다 정상적이면 회원가입버튼생김
+          isDisabled={!isIdValid() || !isPasswordValid() || !isDisplayNameValid() || duplicateId} //입력값 다 정상적이면 회원가입버튼생김
           >회원가입
           </Button>
 

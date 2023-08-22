@@ -14,7 +14,7 @@ import { LoginContainer,LoginBox,LoginHeader,LoginContent, SocialContent,SocialB
 
 function Login() {
   const navigate = useNavigate();
-  const [id, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   let dispatch = useDispatch();
 
@@ -22,11 +22,11 @@ function Login() {
   /**로그인POST */
   let handleLogin = () => {
     axios.post("/api/login", {
-      id: id,
+      userName: userName,
       password: password,
     })
     .then((result) => {
-      const username = result.data.user.username;
+      const username = result.data.user.displayName;
       dispatch(login(username));
       navigate("/");
     })
@@ -44,7 +44,7 @@ function Login() {
   }
   /**id입력란 input값 가져오는 함수*/
   const handleSetId = (e) => {
-    setEmail(e.target.value);
+    setUserName(e.target.value);
   };
   /** pw입력란 input값 가져오는함수*/
   const handleSetPw = (e) => {
@@ -60,7 +60,7 @@ function Login() {
         <LoginContent>
           <FormControl isRequired>
             <FormLabel>아이디</FormLabel>
-            <Input type="text" value={id} onChange={handleSetId}/>
+            <Input type="text" value={userName} onChange={handleSetId}/>
             <FormLabel>비밀번호</FormLabel>
             <Input type="password" value={password} onChange={handleSetPw} />
             <Button

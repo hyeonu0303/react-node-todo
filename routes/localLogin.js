@@ -4,14 +4,14 @@ const User = require('../schema/User');
 
 router.post('/api/register', async (req, res) => {
   console.log('회원가입 데이터:', {
+    displayName: req.body.displayName,
     userName: req.body.userName,
-    id: req.body.id,
     password: req.body.password,
   });
   try{
     const newUser = new User({
-      username:req.body.userName,
-      id: req.body.id
+      displayName: req.body.displayName,
+      userName:req.body.userName
     });
     await User.register(newUser, req.body.password);
     console.log('✅ 회원가입 성공!')
@@ -26,8 +26,8 @@ router.post('/api/register', async (req, res) => {
 });
 
 router.post('/api/check-id', (req,res)=>{
-  console.log(req.body.id);
-  User.findOne({id:req.body.id})
+  console.log(req.body.userName);
+  User.findOne({userName:req.body.userName})
     .then((result)=>{
       console.log(result)
       if(result){
@@ -55,7 +55,7 @@ router.post('/api/login', (req, res, next) => {
           console.log('✅로그인성공!')
       });
   })(req, res, next);
-  console.log(req.body.id, req.body.password)
+  console.log(req.body.userName, req.body.password)
 });
 
 /**로그아웃 */

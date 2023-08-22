@@ -2,7 +2,7 @@ const passport = require('passport');
 const User = require('../schema/User');
 const LocalStrategy = require('passport-local').Strategy;
 
-passport.use(new LocalStrategy({usernameField:'id',passwordField:'password'},User.authenticate()));
+passport.use(new LocalStrategy({usernameField:'userName',passwordField:'password'},User.authenticate()));
 /* passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser()); */
 
