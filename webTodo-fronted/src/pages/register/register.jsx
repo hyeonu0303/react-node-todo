@@ -162,7 +162,7 @@ const SignUp = () => {
 
           <Button 
           style={{width:'100%', marginTop:'50px'}}
-          colorScheme='whatsapp'
+          colorScheme='blue'
           onClick={()=>{
             if(isIdValid() && isPasswordValid() && isDisplayNameValid()){
               handleRegister()  

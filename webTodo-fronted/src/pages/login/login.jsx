@@ -64,7 +64,7 @@ function Login() {
             <FormLabel>비밀번호</FormLabel>
             <Input type="password" value={password} onChange={handleSetPw} />
             <Button
-              colorScheme="whatsapp"
+              colorScheme="blue"
               variant="outline"
               style={{ width: "100%" }}
               size="md"

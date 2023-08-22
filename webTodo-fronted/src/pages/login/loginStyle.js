@@ -53,6 +53,6 @@ export const LoginFooter = styled.div`
   display: flex;
   justify-content: flex-end;
   a{
-    color:rgb(47, 199, 42);
+    color:#c6dbf4;
   }
 `
