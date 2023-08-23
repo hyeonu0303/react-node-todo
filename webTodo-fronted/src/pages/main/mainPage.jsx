@@ -3,11 +3,12 @@ import { Grid, GridItem, Flex } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
+import './reactCalendar.css';
 import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
 import OriginModal from "./addTodo/originModal";
+import moment from 'moment';
 
 const MainPage = () => {
   let dispatch = useDispatch();
@@ -21,6 +22,9 @@ const MainPage = () => {
     const kakaoName = urlParams.get('kakaoName');
     if(kakaoName) dispatch(login(kakaoName));
   },[dispatch])
+
+
+
   const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -81,9 +85,18 @@ const MainPage = () => {
           colSpan={[12, 11, 3]}
           padding={["1rem", "2rem"]}
         >
-          <h1>Your Calendar</h1>
-          <Calendar onChange={handleDateChange} value={selectedDate} />
-          <p>Selected date: {selectedDate.toDateString()}</p>
+          <Calendar 
+            calendarType="hebrew" //일요일부터시작 지우면 월요일부터
+            onChange={handleDateChange}  
+            value={selectedDate} 
+            minDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정
+            maxDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정
+            showNeighboringMonth={false} //  이전, 이후 달의 날짜는 보이지 않도록 설정
+            next2Label={null}
+            prev2Label={null}
+            formatDay={(locale, date) => date.toLocaleString("en", {day: "numeric"})}
+          />
+          <span>{moment(selectedDate).format('YYYY년 MM월 DD일')}</span>
         </GridItem>
         <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]} padding={["1rem", "2rem"]}>
           <OriginModal></OriginModal>

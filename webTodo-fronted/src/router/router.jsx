@@ -5,11 +5,11 @@ import Register from '../pages/register/register';
 const RouterInfo = [
   {
     path: "/",
-    element: <App/>,
+    element: <Login/>,
   },
   {
-    path: "/login",
-    element: <Login/>,
+    path: "/main",
+    element: <App/>,
   },
   {
     path: "/register",

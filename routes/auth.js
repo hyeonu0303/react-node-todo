@@ -20,7 +20,7 @@ router.get('/auth/google/callback', (req, res, next) => {
     if (!user) { return res.redirect('/'); }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
-      const redirectUrl = `http://localhost:5173/?googleName=${user.googleName}`
+      const redirectUrl = `http://localhost:5173/main/?googleName=${user.googleName}`
       res.redirect(redirectUrl);
     });
   })(req, res, next);
@@ -35,7 +35,7 @@ router.get('/auth/kakao/callback', (req, res, next) => {
     if (!user) { return res.redirect('/'); }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
-      const redirectUrl = `http://localhost:5173/?kakaoName=${user.kakaoName}`
+      const redirectUrl = `http://localhost:5173/main/?kakaoName=${user.kakaoName}`
       res.redirect(redirectUrl);
     });
   })(req, res, next);

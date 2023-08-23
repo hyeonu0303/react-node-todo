@@ -7,6 +7,7 @@ import {
   faTag,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
+import axios from 'axios';
 
 const TodoDiv = styled.div`
   border: 2px solid #7f7f7f48;
@@ -122,7 +123,13 @@ function ExpModal({ closeModal }) {
         <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
       </SetTodoButton>
       <SetTag />
-      <AddTodoButton onClick={closeModal}>
+
+      {/* 
+      * @todo post요청보내야함
+      */}
+      <AddTodoButton onClick={
+        closeModal
+        }>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
       </AddTodoButton>
     </div>
@@ -139,6 +146,7 @@ function TodoContainer() {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    
   };
 
   useEffect(() => {

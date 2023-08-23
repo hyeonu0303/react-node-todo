@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Button,
   Heading,
@@ -13,6 +13,10 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios';
 
+const SignupHeader = styled.div`
+  margin:auto;
+`
+
 const SignUpContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -22,18 +26,30 @@ const SignUpContainer = styled.div`
 `;
 
 const SignUpBox = styled.div`
+  display:flex;
+  flex-wrap: wrap;
   width:600px;
-  height:600px;
+  height:auto;
+  min-height: 600px;
   background-color: #ffffff;
-  padding: 0 80px;
+  padding: 0 100px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const SignUpContent = styled.div`
+  width:100%;
 `
 const InputLabel = styled.span`
   margin-left:10px;
+`
+export const SignupFooter = styled.div`
+  margin-top:20px;
+  display: flex;
+  justify-content: flex-end;
+  a{
+    color:#c6dbf4;
+  }
 `
 let debounceTimer;
 
@@ -44,6 +60,7 @@ const SignUp = () => {
   let [duplicateId, setDuplicateId] = useState();
   const navigate = useNavigate();
   
+  /**회원가입POST요청 */
   const handleRegister = () => {
     axios.post('/api/register',{
       displayName : displayName,
@@ -55,13 +72,14 @@ const SignUp = () => {
     .catch((error)=>{console.log('회원가입 데이터 전송오류: '+error), navigate('/fail')})
   }
 
+  /**중복확인POST요청 */
   const checkIdDuplication = (inputId) => {
     // 서버에 아이디 중복 확인 요청 보내기
     if (debounceTimer) {
       clearTimeout(debounceTimer);
   }
 
-  // 새로운 디바운스 타이머를 설정합니다.
+  /**디바운스 적용 */
     debounceTimer = setTimeout(() => {
         // 이 부분에 중복 확인 로직을 작성합니다.
         axios.post('/api/check-id', { userName: inputId })
@@ -77,18 +95,19 @@ const SignUp = () => {
     }, 500);
   }
 
+  /**닉네임 정규식 */
   const isDisplayNameValid = () => {
     const namePattern = /^[a-zA-Z가-힣0-9]{1,30}$/;
     return namePattern.test(displayName);
   }
-
+  /**아이디 정규식 */
   const isIdValid = () => {
     let idPattern = /^[a-z0-9_-]{5,20}$/;
     return(
       idPattern.test(userName)
       )
     }
-  
+  /**비밀번호 정규식 */
   const isPasswordValid = () => {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
     return(
@@ -101,10 +120,13 @@ const SignUp = () => {
   return (
     <SignUpContainer>
       <SignUpBox>
-          <Heading size='lg' style={{padding:'50px'}}>회원가입</Heading>
-
+        {/* 회원가입헤더 */}
+        <SignupHeader>
+          <Heading size='lg'>회원가입</Heading>
+        </SignupHeader>
+        {/* 회원가입헤더END */}
         <SignUpContent>
-
+          {/* 회원가입 폼 */}
           <FormControl isRequired>
             <FormLabel>
               <FontAwesomeIcon icon={faUser} /><InputLabel>이름(닉네임)</InputLabel>
@@ -117,7 +139,6 @@ const SignUp = () => {
               ): (<FormHelperText style={{ color: '#E53E3E' }}>숫자와 문자만 입력해주세요!</FormHelperText>)
             }
           </FormControl>
-
           <FormControl isRequired style={{marginTop:'10px'}}>
             <FormLabel>
               <FontAwesomeIcon icon={faEnvelope} /><InputLabel>아이디</InputLabel>
@@ -145,7 +166,6 @@ const SignUp = () => {
               )
             }
           </FormControl>
-
           <FormControl isRequired style={{marginTop:'10px'}}>
             <FormLabel>
               <FontAwesomeIcon icon={faLock} /><InputLabel>비밀번호</InputLabel>
@@ -159,9 +179,11 @@ const SignUp = () => {
               )
             }
           </FormControl>
+          {/* 회원가입폼END */}
 
+          {/* 회원가입버튼 */}
           <Button 
-          style={{width:'100%', marginTop:'50px'}}
+          style={{width:'100%', marginTop:'30px'}}
           colorScheme='blue'
           onClick={()=>{
             if(isIdValid() && isPasswordValid() && isDisplayNameValid()){
@@ -171,7 +193,13 @@ const SignUp = () => {
           isDisabled={!isIdValid() || !isPasswordValid() || !isDisplayNameValid() || duplicateId} //입력값 다 정상적이면 회원가입버튼생김
           >회원가입
           </Button>
-
+          {/* 회원가입버튼END */}
+          
+          {/* 계정질문 */}
+          <SignupFooter>
+            <span>계정이 있으신가요?</span> <Link to='/'> 로그인</Link>
+          </SignupFooter>
+          {/* END */}
         </SignUpContent>
       </SignUpBox>
     </SignUpContainer>
