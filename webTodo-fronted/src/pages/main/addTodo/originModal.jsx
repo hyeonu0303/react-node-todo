@@ -7,7 +7,10 @@ import {
   faTag,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
+
+import { useDispatch, useSelector } from "react-redux";
+import { changeContent } from "../../../store/todoSlice";
+import axios from "axios";
 
 const TodoDiv = styled.div`
   border: 2px solid #7f7f7f48;
@@ -75,9 +78,9 @@ padding: 10px;
   
 `
 
-const CategoryDiv = styled.div`
+/* const CategoryDiv = styled.div`
 
-`;
+`; */
 
 const AddTagInput = styled.input`
 width: 80%;
@@ -95,6 +98,8 @@ width: 20%;
 `;
 
 
+
+
 function App() {
   return (
     <TodoDiv>
@@ -103,20 +108,44 @@ function App() {
   );
 }
 
+
+
 function BeforeModal({ toggleModal }) {
+  const dispatch = useDispatch();
+  let [inputValue,setInputValue]=useState('');
+  useEffect(()=>{
+    dispatch(changeContent(inputValue))
+  },[inputValue])
+
   return (
     <div>
       <TodoInput
         type="text"
         placeholder="오늘의 할일은 무엇인가요?"
         onClick={toggleModal}
+        value={(inputValue)}
+        onChange={e=>setInputValue(e.target.value)}
       />
       <ShowCategory></ShowCategory>
     </div>
   );
 }
 
+
+
 function ExpModal({ closeModal }) {
+
+  const todoData = useSelector(state=>state.todo);
+  /**모달창닫기와 데이터POST요청 */
+  const handleAddButton= () => {
+    closeModal;
+    axios.post('/api/todoData',{
+      todoData
+    })
+    .then((response)=>{
+      console.log('요청성공'+response);
+    })
+  }
   return (
     <div>
       <SetTodoButton>
@@ -127,9 +156,7 @@ function ExpModal({ closeModal }) {
       {/* 
       * @todo post요청보내야함
       */}
-      <AddTodoButton onClick={
-        closeModal
-        }>
+      <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
       </AddTodoButton>
     </div>

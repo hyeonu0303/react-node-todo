@@ -33,6 +33,9 @@ require('./config/passport'); //로컬로그인
 require('./config/passport-google'); //google로그인
 require('./config/passport-kakao'); //카카오 로그인
 
+/**router */
+
+
 /**로그인 확인하기위한 미들웨어 */
 const isLoggined = (req,res,next) => {
   if(req.isAuthenticated()){
@@ -42,6 +45,8 @@ const isLoggined = (req,res,next) => {
     res.send('로그인안함')
   }
 }
+
+app.use('/', require('./routes/todo'));
 
 /**로컬로그인 */
 app.use('/',require('./routes/localLogin'));

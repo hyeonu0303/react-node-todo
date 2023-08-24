@@ -3,7 +3,7 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import userSlice from './userSlice';
-
+import todoSlice from './todoSlice';
 
 const persistConfig = {
   key: "user", 
@@ -20,5 +20,6 @@ const userReducer = persistReducer(persistConfig,userSlice.reducer);
 export default configureStore({
   reducer: {
     user: userReducer, //작명 : user.reducer
+    todo : todoSlice.reducer
   },
 });

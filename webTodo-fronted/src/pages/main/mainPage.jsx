@@ -5,13 +5,16 @@ import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-ico
 import Calendar from "react-calendar";
 import './reactCalendar.css';
 import UserStatus from "../../components/UserStatus";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import {login} from '../../store/userSlice';
 import OriginModal from "./addTodo/originModal";
 import moment from 'moment';
+import { changeDate } from "../../store/todoSlice";
+
 
 const MainPage = () => {
   let dispatch = useDispatch();
+  const todo = useSelector(state=>state.todo);
   
   useEffect(()=>{
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,12 +24,17 @@ const MainPage = () => {
     }
     const kakaoName = urlParams.get('kakaoName');
     if(kakaoName) dispatch(login(kakaoName));
-  },[dispatch])
+  },[dispatch]);
 
 
-
+  //선택한 날짜 todoSlice에 저장
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  let formatdate = moment(selectedDate).format('YYYY-MM-DD');
+  useEffect(()=>{
+    dispatch(changeDate(formatdate));
+  },[formatdate])
+  //확인용
+  console.log(todo);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -35,7 +43,14 @@ const MainPage = () => {
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
-
+  /* let date = useQuery(['date',formatdate],()=>{
+    axios.get(`/data?date=${formatdate}`)
+      .then((result)=>{
+        console.log('요청됨'+result.data);
+        return result.data;
+      })
+  }) */
+  
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Grid
