@@ -5,16 +5,16 @@ import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-ico
 import Calendar from "react-calendar";
 import './reactCalendar.css';
 import UserStatus from "../../components/UserStatus";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
-import OriginModal from "./addTodo/originModal";
+import OriginModal from "./component/originModal";
 import moment from 'moment';
 import { changeDate } from "../../store/todoSlice";
-
+// import { useQuery } from "@tanstack/react-query";
+// import axios from 'axios';
 
 const MainPage = () => {
   let dispatch = useDispatch();
-  const todo = useSelector(state=>state.todo);
   
   useEffect(()=>{
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +26,10 @@ const MainPage = () => {
     if(kakaoName) dispatch(login(kakaoName));
   },[dispatch]);
 
+  /**날짜변경 */
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   //선택한 날짜 todoSlice에 저장
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -33,24 +37,29 @@ const MainPage = () => {
   useEffect(()=>{
     dispatch(changeDate(formatdate));
   },[formatdate])
-  //확인용
-  console.log(todo);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  /* const [mark, setMark] = useState([]);
+
+  const { data } = useQuery(
+    ["logDate", formatdate],
+    async () => {
+      const result = await axios.get(
+        `/api/data?date=${formatdate}` //저장한 todo의 date를 가져오면 될거같다.
+      );
+      return result.data;
+    },
+    {
+      onSuccess: (data) => {
+        setMark(data);
+       // ["2022-02-02", "2022-02-02", "2022-02-10"] 형태로 가져옴
+      },
+    }
+  ); */
+
 
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
-  /* let date = useQuery(['date',formatdate],()=>{
-    axios.get(`/data?date=${formatdate}`)
-      .then((result)=>{
-        console.log('요청됨'+result.data);
-        return result.data;
-      })
-  }) */
-  
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
       <Grid
@@ -110,6 +119,16 @@ const MainPage = () => {
             next2Label={null}
             prev2Label={null}
             formatDay={(locale, date) => date.toLocaleString("en", {day: "numeric"})}
+            /* tileContent={({ date, view }) => {
+              if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
+                let html = [];
+                html.push(<div className="dot"></div>);
+                return (
+                  <>
+                    {html}
+                </>
+              );}
+            }} */
           />
           <span>{moment(selectedDate).format('YYYY년 MM월 DD일')}</span>
         </GridItem>
