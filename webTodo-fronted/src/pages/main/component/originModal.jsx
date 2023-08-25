@@ -97,9 +97,6 @@ const AddTagButton = styled.button`
 width: 20%;
 `;
 
-
-
-
 function App() {
   return (
     <TodoDiv>
@@ -107,8 +104,6 @@ function App() {
     </TodoDiv>
   );
 }
-
-
 
 function BeforeModal({ toggleModal }) {
   const dispatch = useDispatch();

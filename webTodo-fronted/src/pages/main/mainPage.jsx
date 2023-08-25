@@ -10,8 +10,8 @@ import {login} from '../../store/userSlice';
 import OriginModal from "./component/originModal";
 import moment from 'moment';
 import { changeDate } from "../../store/todoSlice";
-// import { useQuery } from "@tanstack/react-query";
-// import axios from 'axios';
+import axios from 'axios';
+import { styled } from "styled-components";
 
 const MainPage = () => {
   let dispatch = useDispatch();
@@ -34,29 +34,46 @@ const MainPage = () => {
   //선택한 날짜 todoSlice에 저장
   const [selectedDate, setSelectedDate] = useState(new Date());
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
+
   useEffect(()=>{
     dispatch(changeDate(formatdate));
   },[formatdate])
 
-  /* const [mark, setMark] = useState([]);
+  //이사람에대한 date들을 다 보내서 배열에 저장한다..
+  const [mark, setMark] = useState();
+  
+  /**날짜정보가져옴 */
+  useEffect(()=>{
+    axios.get('/api/data')
+      .then((result)=>{
+        setMark(result.data.dates);
+      })
+  },[])
+  
+  const Dot = styled.div`
+    height: 8px;
+    width: 8px;
+    background-color: #f87171;
+    border-radius: 50%;
+    display: flex;
+    position:absolute;
+  `
 
-  const { data } = useQuery(
-    ["logDate", formatdate],
-    async () => {
-      const result = await axios.get(
-        `/api/data?date=${formatdate}` //저장한 todo의 date를 가져오면 될거같다.
-      );
-      return result.data;
-    },
-    {
-      onSuccess: (data) => {
-        setMark(data);
-       // ["2022-02-02", "2022-02-02", "2022-02-10"] 형태로 가져옴
-      },
+  const tileContent = ({ date }) => {
+    if (!mark) {
+      return null; // Return null when data is not loaded
     }
-  ); */
 
+    if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
+      return <Dot />;
+    }
 
+    return null; // No Dot for this date
+  };
+    /**
+     * get요청을하면 DB에있는날짜를 가져다줘서 setMark에저장
+     * 
+     */
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
@@ -111,25 +128,17 @@ const MainPage = () => {
         >
           <Calendar 
             calendarType="hebrew" //일요일부터시작 지우면 월요일부터
-            onChange={handleDateChange}  
-            value={selectedDate} 
+            onChange={handleDateChange} //선택날짜 selectedDate변수에담아줌
+            value={selectedDate} //날짜 선택
             minDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정
             maxDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정
             showNeighboringMonth={false} //  이전, 이후 달의 날짜는 보이지 않도록 설정
-            next2Label={null}
-            prev2Label={null}
-            formatDay={(locale, date) => date.toLocaleString("en", {day: "numeric"})}
-            /* tileContent={({ date, view }) => {
-              if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
-                let html = [];
-                html.push(<div className="dot"></div>);
-                return (
-                  <>
-                    {html}
-                </>
-              );}
-            }} */
+            next2Label={null} //>>모양제거
+            prev2Label={null} //<<모양제거
+            formatDay={(locale, date) => moment(date).format("DD")} //날짜 뒤 '일'제거
+            tileContent={tileContent} //Dot넣어주기 위한것(Dot필요없으면 생략!)
           />
+          {/* 선택한날짜표시 */}
           <span>{moment(selectedDate).format('YYYY년 MM월 DD일')}</span>
         </GridItem>
         <GridItem rowSpan={[7, 7, 12]} colSpan={[12, 11, 7]} padding={["1rem", "2rem"]}>

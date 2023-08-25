@@ -16,11 +16,15 @@ router.post('/api/todoData',(req,res)=>{
 
 })
 
-/* router.get('/api/data',(req,res)=>{
-  Todo.findOne({user:req.user._id})
-    .then((result)=>{
-      console.log(result);
-      console.log(req.query);
+router.get("/api/data", (req, res) => {
+  Todo.find({ 
+    user: req.user._id 
+  })
+    .then((result) => {
+      const dates = result.map(item => item.date);
+      // console.log(dates);
+      res.json({dates});
     })
-}) */
+    .catch((error) => {console.log('date GET요청에러')})
+});
 module.exports = router;

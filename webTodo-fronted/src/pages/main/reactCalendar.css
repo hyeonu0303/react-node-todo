@@ -1,11 +1,12 @@
 .react-calendar {
-  width: 350px;
+  width: auto;
+  height:auto;
   padding:15px;
   max-width: 100%;
   background: white;
   border-radius: 10px;
   /* font-family: Arial, Helvetica, sans-serif; */
-  line-height: 1.125em;
+  line-height: 1.5em;
   box-shadow: 1px 1px 10px grey;
   @font-face {
     font-family: 'Pretendard-Regular';
@@ -89,6 +90,7 @@
   justify-content: center;
   font-size: 0.75em;
   font-weight: bold;
+  
 }
 
 .react-calendar__month-view__days__day--weekend {
@@ -106,57 +108,63 @@
 }
 
 .react-calendar__tile {
-  
-  max-width: 100%;
-  padding: 14px 10px;
+  padding: 10px 6.6667px;
   background: none;
   text-align: center;
-  line-height: 16px;
 }
 
-.react-calendar__tile:disabled {
+/*이부분 원크기 설정*/
+.react-calendar__tile abbr{
+  display:inline-block;
+  width:35px;
+  height:35px;
+  line-height: 35px;
+  text-align: center;
+}
+
+.react-calendar__tile:disabled abbr{
   background-color: #f0f0f0;
 }
 
 /*달력 일에 마우스 올려놨을때 색*/
-.react-calendar__tile:enabled:hover,
-.react-calendar__tile:enabled:focus {
+.react-calendar__tile:enabled:hover abbr,
+.react-calendar__tile:enabled:focus abbr{
   background-color: #e6e6e6;
   border-radius:50%;
 }
 /*오늘 날짜 배경색*/
-.react-calendar__tile--now {
+.react-calendar__tile--now abbr{
   /* background: #ffff76; */
   background: #ffc4f1;
   color:white;
   border-radius:50%;
 }
 /*오늘 날짜 마우스 올렸을때 배경색*/
-.react-calendar__tile--now:enabled:hover,
-.react-calendar__tile--now:enabled:focus {
+.react-calendar__tile--now:enabled:hover abbr,
+.react-calendar__tile--now:enabled:focus abbr{
   /* background: #ffffa9; */
   background: #ffa6fc;
   color:white;
   border-radius:50%;
 }
 
-.react-calendar__tile--hasActive {
+.react-calendar__tile--hasActive abbr{
   background: #76baff;
 }
 
-.react-calendar__tile--hasActive:enabled:hover,
-.react-calendar__tile--hasActive:enabled:focus {
+.react-calendar__tile--hasActive:enabled:hover abbr,
+.react-calendar__tile--hasActive:enabled:focus abbr{
   background: #a9d4ff;
 }
 
-.react-calendar__tile--active {
+.react-calendar__tile--active abbr{
   background: var(--mainColor);
   color: white;
   border-radius:50%;
 }
 
-.react-calendar__tile--active:enabled:hover,
-.react-calendar__tile--active:enabled:focus {
+.react-calendar__tile--active:enabled:hover abbr,
+.react-calendar__tile--active:enabled:focus abbr{
   background: #6ab2fb;
   border-radius:50%;
 }
