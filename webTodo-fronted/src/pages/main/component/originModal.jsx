@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
@@ -32,6 +33,16 @@ const TodoInput = styled.input`
     outline: none;
     background-color: transparent;
   }
+
+  @media screen and (max-width:996px){
+    font-size: 16px;
+    padding:32px;
+  }
+
+  @media screen and (max-width:768px){
+    font-size: 16px;
+    padding:28px;
+  }
 `;
 
 const AddTodoButton = styled.button`
@@ -60,8 +71,7 @@ const DropdownWrapper = styled.div`
 `;
 
 const DropdownMenu = styled.ul`
-width: 200px;
-
+  width: 200px;
   position: absolute;
   top: 80%;
   left: 0;
@@ -94,7 +104,7 @@ width: 80%;
   }
 `;
 const AddTagButton = styled.button`
-width: 20%;
+  width: 20%;
 `;
 
 function App() {
