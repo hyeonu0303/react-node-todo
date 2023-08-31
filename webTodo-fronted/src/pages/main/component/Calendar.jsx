@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { styled } from "styled-components";
 import './reactCalendar.css'
 
-const ReactCalendar = () => {
+const ReactCalendar = (props) => {
 
   let dispatch = useDispatch();
   /**날짜변경 */
@@ -22,24 +22,14 @@ const ReactCalendar = () => {
   useEffect(()=>{
     dispatch(changeDate(formatdate));
   },[formatdate])
-
-  //이사람에대한 date들을 다 보내서 배열에 저장
-  const [mark, setMark] = useState();
   
-  /**날짜정보가져옴 */
-  useEffect(()=>{
-    axios.get('/api/data')
-      .then((result)=>{
-        setMark(result.data.dates);
-      })
-  },[])
-
+  //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
-    if (!mark) {
+    if (!props.mark) {
       return null; 
     }
 
-    if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
+    if (props.mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
       return <Dot />;
     }
 

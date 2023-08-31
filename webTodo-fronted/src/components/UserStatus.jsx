@@ -40,9 +40,11 @@ const UserStatus = ()=>{
       {
         state.user.isLoggedIn == true ? (
           <>
-            <p>{username}님 환영합니다!</p>
+            <p>{username}님<br/> 환영합니다!</p>
             <Button 
-              colorScheme='red'
+              colorScheme='purple'
+              variant='ghost'
+              size='sm'
               onClick={handleLogout}
             >
               로그아웃

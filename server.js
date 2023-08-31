@@ -46,6 +46,7 @@ const isLoggined = (req,res,next) => {
   }
 }
 
+/**메인페이지 라우트 */
 app.use('/', require('./routes/todo'));
 
 /**로컬로그인 */
