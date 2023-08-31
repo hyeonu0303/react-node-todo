@@ -13,9 +13,9 @@ router.post('/api/todoData',(req,res)=>{
     .then((result)=>{
       console.log(`저장완료: ${result}`);
     })
-
 })
 
+/**날짜 Get요청 */
 router.get("/api/data", (req, res) => {
   Todo.find({ 
     user: req.user._id 

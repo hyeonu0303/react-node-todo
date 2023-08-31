@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { Grid, GridItem, Flex } from "@chakra-ui/react";
+import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
 import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
 import OriginModal from "./component/originModal";
-import ReactCalendar from "./component/Calendar";
-import { MainContainer,Nav } from "./mainPageStyle";
+import { MainContainer } from "./mainPageStyle";
+import Calendar from './component/Calendar';
 
 const MainPage = () => {
   let dispatch = useDispatch();
@@ -25,51 +25,94 @@ const MainPage = () => {
   const iconMarginBottom = "1rem";
 
   return (
-    <MainContainer>
+    <MainContainer mr='3'>
       <Grid
         h='100%'
         templateRows={'repeat(12,1fr)'}
         templateColumns={'repeat(12,1fr)'}
-        gap={3}
+        gap={4}
       >
         <GridItem
           colSpan={[12,1]}
           rowSpan={[1,12]}
-          bg='orange.400'
+          bg='#c6dbf4'
+          w={['100%','100px']}
         >
-          Nav
+          <Box
+            display='flex'
+            flexDirection='column'
+            mt='5'
+          >
+            <FontAwesomeIcon
+              icon={faHouse}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom }}
+            />
+            <FontAwesomeIcon
+              icon={faStar}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom }}
+            />
+            <FontAwesomeIcon
+              icon={faBell}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom, marginLeft: 4 }}
+            />
+            <FontAwesomeIcon
+              icon={faGear}
+              size={iconSize}
+              style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
+            />
+            <UserStatus /> 
+
+          </Box>
         </GridItem>
         
         <GridItem
           colSpan={3}
           rowSpan={4}
-          bg='green.300'
-          w='400px'
+          // bg='green.300'
+          w='100%'
+          h='400px'
           display={['none',null,null,'block']}
+          p='2'
+          
         >
-          달력
-        </GridItem>
-        
-        <GridItem
-          colSpan={[12,11,11,8]}
-          rowSpan={3}
-          bg='blue.300'
-        >
-          할일 입력란
-        </GridItem>
-        
-        <GridItem
-          colSpan={[12,11,11,8]}
-          rowSpan={[8,9]}
-          bg='yellow.400'
+          <Box 
+            display='flex' 
+            alignItems='center' 
+            justifyContent='center' 
+            h='100%' 
+            w='100%'
           >
-          할일내용
+          <Calendar/>
+          </Box>
+        </GridItem>
+        
+        <GridItem
+          colSpan={[12,10,10,7]}
+          rowSpan={2}
+          // bg='blue.200'
+          mt='2'
+        >
+          
+          <OriginModal/>
+        </GridItem>
+        
+        <GridItem
+          colSpan={[12,10,10,7]}
+          rowSpan={[8,10]}
+          // bg='yellow.400'
+          >
+          <Box>
+            할일내용
+          </Box>
           </GridItem>
 
         <GridItem
           colSpan={3}
           rowSpan={8}
-          bg='blue.800'
+          // bg='blue.800'
           w='400px'
           display={['none',null,null,'block']}
         >
@@ -77,28 +120,8 @@ const MainPage = () => {
         </GridItem>
 
       </Grid>
-      {/* <FontAwesomeIcon
-        icon={faHouse}
-        size={iconSize}
-        style={{ marginBottom: iconMarginBottom }}
-      />
-      <FontAwesomeIcon
-        icon={faStar}
-        size={iconSize}
-        style={{ marginBottom: iconMarginBottom }}
-      />
-      <FontAwesomeIcon
-        icon={faBell}
-        size={iconSize}
-        style={{ marginBottom: iconMarginBottom, marginLeft: 4 }}
-      />
-      <FontAwesomeIcon
-        icon={faGear}
-        size={iconSize}
-        style={{ marginBottom: iconMarginBottom, marginLeft: 2.7 }}
-      /> */}
+      
       {/* 유저로그인 */}
-      {/* <UserStatus /> */}
       
       
       

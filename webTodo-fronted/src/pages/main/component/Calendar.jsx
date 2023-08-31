@@ -23,7 +23,7 @@ const ReactCalendar = () => {
     dispatch(changeDate(formatdate));
   },[formatdate])
 
-  //이사람에대한 date들을 다 보내서 배열에 저장한다..
+  //이사람에대한 date들을 다 보내서 배열에 저장
   const [mark, setMark] = useState();
   
   /**날짜정보가져옴 */
@@ -36,14 +36,14 @@ const ReactCalendar = () => {
 
   const tileContent = ({ date }) => {
     if (!mark) {
-      return null; // Return null when data is not loaded
+      return null; 
     }
 
     if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
       return <Dot />;
     }
 
-    return null; // No Dot for this date
+    return null;
   };
 
   const Dot = styled.div`
@@ -51,7 +51,7 @@ const ReactCalendar = () => {
     width: 8px;
     background-color: #f87171;
     border-radius: 50%;
-    display: flex;
+    margin-left:10px;
     position:absolute;
   `
   return(
@@ -69,7 +69,6 @@ const ReactCalendar = () => {
         tileContent={tileContent} //Dot넣어주기 위한것(Dot필요없으면 생략!)
       />
       {/* 선택한날짜표시 */}
-      <span>{moment(selectedDate).format('YYYY년 MM월 DD일')}</span>
     </>
   );
 }

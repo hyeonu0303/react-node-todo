@@ -5,10 +5,3 @@ export const MainContainer= styled.div`
   
 `
 
-export const Nav = styled.div`
-  position:fixed;
-  background:var(--mainColor);
-  width:100%;
-  height:100%;
-`
-

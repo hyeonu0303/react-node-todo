@@ -14,21 +14,22 @@ import { changeContent } from "../../../store/todoSlice";
 import axios from "axios";
 
 const TodoDiv = styled.div`
+  width:100%;
   border: 2px solid #7f7f7f48;
   border-radius: 15px;
   text-align: left;
   cursor: pointer;
   padding: 0px;
   position: relative;
-  box-shadow: 5px 5px 20px grey;
+  box-shadow:3px 3px 5px grey;
 `;
 
 const TodoInput = styled.input`
+  width: 100%;
   padding: 35px;
   border: none;
   font-size: 20px;
   background-color: transparent;
-  width: 100%;
   &:focus {
     outline: none;
     background-color: transparent;
@@ -47,12 +48,11 @@ const TodoInput = styled.input`
 
 const AddTodoButton = styled.button`
   font-size: 20px;
-
   padding: 2px 8.25px; /* 패딩을 한 줄로 정리 */
   border-radius: 5px;
   position: absolute;
   bottom: 10px; /* 아래 여백을 조절하여 위치 조정 */
-  right: 10px; /* 오른쪽 여백을 조절하여 위치 조정 */
+  right: 10px; /*오른쪽 여백을 조절하여 위치 조정 */
   &:hover {
     background-color: var(--mainColor);
   }
@@ -123,7 +123,7 @@ function BeforeModal({ toggleModal }) {
   },[inputValue])
 
   return (
-    <div>
+    <div style={{width:'100%'}}>
       <TodoInput
         type="text"
         placeholder="오늘의 할일은 무엇인가요?"
