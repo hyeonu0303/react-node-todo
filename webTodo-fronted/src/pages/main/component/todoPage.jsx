@@ -1,111 +1,24 @@
 /*eslint-disable */
 import { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
+
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faTag,
-  faClock,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeContent } from "../../../store/todoSlice";
+import { changeContent, addTag } from "../../../store/todoSlice";
 import axios from "axios";
-
-const TodoDiv = styled.div`
-  width:100%;
-  border: 2px solid #7f7f7f48;
-  border-radius: 15px;
-  text-align: left;
-  cursor: pointer;
-  padding: 0px;
-  position: relative;
-  box-shadow:3px 3px 5px grey;
-`;
-
-const TodoInput = styled.input`
-  width: 100%;
-  padding: 35px;
-  border: none;
-  font-size: 20px;
-  background-color: transparent;
-  &:focus {
-    outline: none;
-    background-color: transparent;
-  }
-
-  @media screen and (max-width:996px){
-    font-size: 16px;
-    padding:32px;
-  }
-
-  @media screen and (max-width:768px){
-    font-size: 16px;
-    padding:28px;
-  }
-`;
-
-const AddTodoButton = styled.button`
-  font-size: 20px;
-  padding: 2px 8.25px; /* 패딩을 한 줄로 정리 */
-  border-radius: 5px;
-  position: absolute;
-  bottom: 10px; /* 아래 여백을 조절하여 위치 조정 */
-  right: 10px; /*오른쪽 여백을 조절하여 위치 조정 */
-  &:hover {
-    background-color: var(--mainColor);
-  }
-`;
-
-const SetTodoButton = styled.button`
-  font-size: 20px;
-  padding: 20px;
-  
-`;
-
-const DropdownWrapper = styled.div`
-  position: relative;
-  display: inline-block;
-  
-`;
-
-const DropdownMenu = styled.ul`
-  width: 200px;
-  position: absolute;
-  top: 80%;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: inline-block;
-`;
-
-const TagList = styled.li `
-padding: 10px;
-  
-`
-
-/* const CategoryDiv = styled.div`
-
-`; */
-
-const AddTagInput = styled.input`
-width: 80%;
-
-  border: none;
-
-  background-color: transparent;
-  &:focus {
-    outline: none;
-    background-color: transparent;
-  }
-`;
-const AddTagButton = styled.button`
-  width: 20%;
-`;
+import {
+  TodoDiv,
+  TodoInput,
+  AddTodoButton,
+  SetTodoButton,
+  DropdownWrapper,
+  DropdownMenu,
+  TagList,
+  AddTagInput,
+  AddTagButton,
+} from "./todoPageStyle";
 
 function App() {
   return (
@@ -116,11 +29,12 @@ function App() {
 }
 
 function BeforeModal({ toggleModal }) {
+  // 마우스 클릭 이벤트 전 모달
   const dispatch = useDispatch();
-  let [inputValue,setInputValue]=useState('');
-  useEffect(()=>{
-    dispatch(changeContent(inputValue))
-  },[inputValue])
+  let [inputValue, setInputValue] = useState("");
+  useEffect(() => {
+    dispatch(changeContent(inputValue));
+  }, [inputValue]);
 
   return (
     <div style={{width:'100%'}}>
@@ -128,29 +42,28 @@ function BeforeModal({ toggleModal }) {
         type="text"
         placeholder="오늘의 할일은 무엇인가요?"
         onClick={toggleModal}
-        value={(inputValue)}
-        onChange={e=>setInputValue(e.target.value)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
       />
       <ShowCategory></ShowCategory>
     </div>
   );
 }
 
-
-
 function ExpModal({ closeModal }) {
-
-  const todoData = useSelector(state=>state.todo);
+  // 마우스 클릭 이벤트 후 모달
+  const todoData = useSelector((state) => state.todo);
   /**모달창닫기와 데이터POST요청 */
-  const handleAddButton= () => {
+  const handleAddButton = () => {
     closeModal;
-    axios.post('/api/todoData',{
-      todoData
-    })
-    .then((response)=>{
-      console.log('요청성공'+response);
-    })
-  }
+    axios
+      .post("/api/todoData", {
+        todoData,
+      })
+      .then((response) => {
+        console.log("요청성공" + response);
+      });
+  };
   return (
     <div>
       <SetTodoButton>
@@ -158,9 +71,9 @@ function ExpModal({ closeModal }) {
       </SetTodoButton>
       <SetTag />
 
-      {/* 
-      * @todo post요청보내야함
-      */}
+      {/*
+       * @todo post요청보내야함
+       */}
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
       </AddTodoButton>
@@ -178,7 +91,6 @@ function TodoContainer() {
 
   const closeModal = () => {
     setIsModalVisible(false);
-    
   };
 
   useEffect(() => {
@@ -202,51 +114,74 @@ function TodoContainer() {
   );
 }
 
-function SetTag() {
+const SetTag = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [tags, setTags] = useState([]);
+  const [newTagInputValue, setNewTagInputValue] = useState("");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  const dispatch = useDispatch();
+
+  // 데이터 초기화
+  useEffect(() => {
+    const storedTags = localStorage.getItem("tags");
+    if (storedTags) {
+      setTags(JSON.parse(storedTags));
+    }
+  }, []);
+
+  // 데이터 업데이트 시 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem("tags", JSON.stringify(tags));
+  }, [tags]);
+
   const handleTagAdd = (newTag) => {
     setTags([...tags, newTag]);
+    dispatch(addTag(newTag));
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      const newTag = event.target.value;
-      if (newTag.trim() !== "") {
+    if (event.key === "Enter") {
+      const newTag = event.target.value.trim();
+      if (newTag !== "") {
         handleTagAdd(newTag);
-        event.target.value = ""; // 입력 필드 초기화
+        setNewTagInputValue("");
       }
     }
   };
 
+  const handleInputChange = (event) => {
+    setNewTagInputValue(event.target.value);
+  };
+
   return (
-    <DropdownWrapper> 
+    <DropdownWrapper>
       <SetTodoButton onClick={toggleDropdown}>
         <FontAwesomeIcon icon={faTag} style={{ color: "#000000" }} />
       </SetTodoButton>
       {isOpen && (
         <DropdownMenu>
-          {tags.map((tag, index) => (
-            <TagList key={index}>{tag}</TagList>
+          {tags.map((tag) => (
+            <TagList key={tag}>{tag}</TagList>
           ))}
           <TagList>
             <AddTagInput
               id="newTagInput"
               type="text"
               placeholder="추가할 태그 입력"
+              value={newTagInputValue}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
             />
             <AddTagButton
               onClick={() => {
-                const newTag = document.querySelector("#newTagInput").value;
-                if (newTag.trim() !== "") {
+                const newTag = newTagInputValue.trim();
+                if (newTag !== "") {
                   handleTagAdd(newTag);
-                  document.querySelector("#newTagInput").value = ""; 
+                  setNewTagInputValue("");
                 }
               }}
             >
@@ -257,14 +192,11 @@ function SetTag() {
       )}
     </DropdownWrapper>
   );
-}
-
+};
 
 function ShowCategory() {
   return <p></p>;
 }
-
-
 
 BeforeModal.propTypes = {
   toggleModal: PropTypes.func.isRequired,
