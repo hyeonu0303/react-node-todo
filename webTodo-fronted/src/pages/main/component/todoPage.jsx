@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeContent, addTag  } from "../../../store/todoSlice";
+import { changeContent, addTag } from "../../../store/todoSlice";
 import axios from "axios";
 import {
   TodoDiv,
@@ -27,7 +27,8 @@ function App() {
   );
 }
 
-function BeforeModal({ toggleModal }) { // 마우스 클릭 이벤트 전 모달
+function BeforeModal({ toggleModal }) {
+  // 마우스 클릭 이벤트 전 모달
   const dispatch = useDispatch();
   let [inputValue, setInputValue] = useState("");
   useEffect(() => {
@@ -48,7 +49,8 @@ function BeforeModal({ toggleModal }) { // 마우스 클릭 이벤트 전 모달
   );
 }
 
-function ExpModal({ closeModal }) { // 마우스 클릭 이벤트 후 모달
+function ExpModal({ closeModal }) {
+  // 마우스 클릭 이벤트 후 모달
   const todoData = useSelector((state) => state.todo);
   /**모달창닫기와 데이터POST요청 */
   const handleAddButton = () => {
@@ -122,9 +124,22 @@ const SetTag = () => {
 
   const dispatch = useDispatch();
 
+  // 데이터 초기화
+  useEffect(() => {
+    const storedTags = localStorage.getItem("tags");
+    if (storedTags) {
+      setTags(JSON.parse(storedTags));
+    }
+  }, []);
+
+  // 데이터 업데이트 시 로컬 스토리지에 저장
+  useEffect(() => {
+    localStorage.setItem("tags", JSON.stringify(tags));
+  }, [tags]);
+
   const handleTagAdd = (newTag) => {
     setTags([...tags, newTag]);
-    dispatch(addTag(newTag)); // Redux의 addTag 액션 호출
+    dispatch(addTag(newTag));
   };
 
   const handleKeyDown = (event) => {
@@ -132,7 +147,7 @@ const SetTag = () => {
       const newTag = event.target.value.trim();
       if (newTag !== "") {
         handleTagAdd(newTag);
-        setNewTagInputValue(""); // 입력 필드 초기화
+        setNewTagInputValue("");
       }
     }
   };
@@ -148,8 +163,8 @@ const SetTag = () => {
       </SetTodoButton>
       {isOpen && (
         <DropdownMenu>
-          {tags.map((tag, index) => (
-            <TagList key={index}>{tag}</TagList>
+          {tags.map((tag) => (
+            <TagList key={tag}>{tag}</TagList>
           ))}
           <TagList>
             <AddTagInput
@@ -165,7 +180,7 @@ const SetTag = () => {
                 const newTag = newTagInputValue.trim();
                 if (newTag !== "") {
                   handleTagAdd(newTag);
-                  setNewTagInputValue(""); // 입력 필드 초기화
+                  setNewTagInputValue("");
                 }
               }}
             >
