@@ -7,7 +7,7 @@ import './reactCalendar.css';
 import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
-import OriginModal from "./component/originModal";
+import OriginModal from "./component/todoPage";
 import moment from 'moment';
 import { changeDate } from "../../store/todoSlice";
 import axios from 'axios';

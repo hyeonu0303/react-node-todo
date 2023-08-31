@@ -27,7 +27,8 @@ let user = createSlice({
     logout: (state)=>{
       state.isLoggedIn = false;
       state.username = '';
-    }
+    },
+
   },
 });
 export let { login, logout } = user.actions;
