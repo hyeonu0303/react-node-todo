@@ -5,7 +5,7 @@ import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-ico
 import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
-import OriginModal from "./component/originModal";
+import OriginModal from "./component/todoPage";
 import { MainContainer } from "./mainPageStyle";
 import Calendar from './component/Calendar';
 import axios from "axios";
@@ -29,13 +29,11 @@ const MainPage = () => {
   useEffect(()=>{
     axios.get('/api/data')
       .then((result)=>{
-        let dates = result.data.importanceData.dates; //날짜데이터
-        let contents = result.data.importanceData.contents; //할일목록데이터
-        setMark(dates);
-        console.log(result.data.contents)
+        const dates = Object.keys(result.data); //날짜데이터
+        setMark(dates);  
       })
   },[])
-
+  
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 

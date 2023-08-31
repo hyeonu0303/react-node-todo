@@ -35,8 +35,8 @@ router.get("/api/data", (req, res) => {
           todoData[date].push({content})
         }
       }
-
       console.log(todoData);
+      res.json(todoData);
     })
     .catch((error) => {console.log('date GET요청에러')})
 });
