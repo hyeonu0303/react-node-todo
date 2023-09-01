@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeContent, addTag } from "../../../store/todoSlice";
+import {
+  changeContent,
+  addTag,
+  changeSelectTag,
+} from "../../../store/todoSlice";
 import axios from "axios";
 import {
   TodoDiv,
@@ -37,7 +41,7 @@ function BeforeModal({ toggleModal }) {
   }, [inputValue]);
 
   return (
-    <div style={{width:'100%'}}>
+    <div style={{ width: "100%" }}>
       <TodoInput
         type="text"
         placeholder="오늘의 할일은 무엇인가요?"
@@ -45,14 +49,14 @@ function BeforeModal({ toggleModal }) {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <ShowCategory></ShowCategory>
     </div>
   );
 }
 
 function ExpModal({ closeModal }) {
-  // 마우스 클릭 이벤트 후 모달
   const todoData = useSelector((state) => state.todo);
+  // console.log(todoData);
+
   /**모달창닫기와 데이터POST요청 */
   const handleAddButton = () => {
     closeModal;
@@ -64,16 +68,16 @@ function ExpModal({ closeModal }) {
         console.log("요청성공" + response);
       });
   };
+
   return (
     <div>
+      <ShowCategory />
+
       <SetTodoButton>
         <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
       </SetTodoButton>
       <SetTag />
 
-      {/*
-       * @todo post요청보내야함
-       */}
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
       </AddTodoButton>
@@ -118,30 +122,25 @@ const SetTag = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [tags, setTags] = useState([]);
   const [newTagInputValue, setNewTagInputValue] = useState("");
+  const dispatch = useDispatch();
+  const stateTags = useSelector((state) => state.todo.tags);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const dispatch = useDispatch();
-
-  // 데이터 초기화
-  useEffect(() => {
-    const storedTags = localStorage.getItem("tags");
-    if (storedTags) {
-      setTags(JSON.parse(storedTags));
-    }
-  }, []);
-
-  // 데이터 업데이트 시 로컬 스토리지에 저장
-  useEffect(() => {
-    localStorage.setItem("tags", JSON.stringify(tags));
-  }, [tags]);
-
   const handleTagAdd = (newTag) => {
-    setTags([...tags, newTag]);
+    setTags([...tags,newTag]);
     dispatch(addTag(newTag));
   };
+
+  /**태그저장요청 */
+  const handleTagPost = () => {
+    axios.post('/api/tags',{
+      tags:stateTags
+    })
+    .then((response)=>{'태그저장완료'})
+  }
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -149,6 +148,7 @@ const SetTag = () => {
       if (newTag !== "") {
         handleTagAdd(newTag);
         setNewTagInputValue("");
+        handleTagPost();
       }
     }
   };
@@ -160,13 +160,27 @@ const SetTag = () => {
   return (
     <DropdownWrapper>
       <SetTodoButton onClick={toggleDropdown}>
-        <FontAwesomeIcon icon={faTag} style={{ color: "#000000" }} />
+        <FontAwesomeIcon
+          icon={faTag}
+          style={{ color: "#000000" }}
+          onClick={() => {}}
+        />
       </SetTodoButton>
       {isOpen && (
         <DropdownMenu>
           {tags.map((tag) => (
-            <TagList key={tag}>{tag}</TagList>
+            /**선택한 태그로직 */
+
+            <TagList
+              key={tag}
+              onClick={() => {
+                dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
+              }}
+            >
+              {tag}
+            </TagList>
           ))}
+
           <TagList>
             <AddTagInput
               id="newTagInput"
@@ -176,12 +190,14 @@ const SetTag = () => {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
             />
+
             <AddTagButton
               onClick={() => {
                 const newTag = newTagInputValue.trim();
                 if (newTag !== "") {
                   handleTagAdd(newTag);
                   setNewTagInputValue("");
+                  handleTagPost();
                 }
               }}
             >
@@ -195,7 +211,8 @@ const SetTag = () => {
 };
 
 function ShowCategory() {
-  return <p></p>;
+  const todoData = useSelector((state) => state.todo);
+  return <p>{todoData.selectTag}</p>;
 }
 
 BeforeModal.propTypes = {
