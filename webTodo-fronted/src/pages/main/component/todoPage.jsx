@@ -71,7 +71,7 @@ function ExpModal({ closeModal }) {
 
   return (
     <div>
-      <ShowCategory />
+      <p>{todoData.selectTag}</p>
 
       <SetTodoButton>
         <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
@@ -120,41 +120,38 @@ function TodoContainer() {
 
 const SetTag = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [newTagInputValue, setNewTagInputValue] = useState("");
+  const [tagValue, setTagValue] = useState('');
   const dispatch = useDispatch();
-  const stateTags = useSelector((state) => state.todo.tags);
+  const tags = useSelector((state) => state.todo.tags);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleTagAdd = (newTag) => {
-    setTags([...tags,newTag]);
-    dispatch(addTag(newTag));
-  };
-
   /**태그저장요청 */
   const handleTagPost = () => {
     axios.post('/api/tags',{
-      tags:stateTags
+      tags:[...tags, tagValue]
     })
-    .then((response)=>{'태그저장완료'})
+    .catch((error)=>{
+      if(error) console.log("태그저장요청에러" + error
+    )})
   }
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      const newTag = event.target.value.trim();
-      if (newTag !== "") {
-        handleTagAdd(newTag);
-        setNewTagInputValue("");
-        handleTagPost();
-      }
+  
+  /**태그추가기능 */
+  const addNewTag = () => {
+    if (tagValue !== "") {
+      dispatch(addTag(tagValue));
+      handleTagPost()
+      setTagValue('');
     }
   };
 
-  const handleInputChange = (event) => {
-    setNewTagInputValue(event.target.value);
+  /**엔터키입력시 태그추가기능 */
+  const handleEnterKey = (event) => {
+    if (event.key === "Enter") {
+      addNewTag();
+    }
   };
 
   return (
@@ -163,7 +160,6 @@ const SetTag = () => {
         <FontAwesomeIcon
           icon={faTag}
           style={{ color: "#000000" }}
-          onClick={() => {}}
         />
       </SetTodoButton>
       {isOpen && (
@@ -186,20 +182,13 @@ const SetTag = () => {
               id="newTagInput"
               type="text"
               placeholder="추가할 태그 입력"
-              value={newTagInputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
+              value={tagValue}
+              onChange={(e)=>{setTagValue(e.target.value)}}
+              onKeyDown={handleEnterKey}
             />
 
             <AddTagButton
-              onClick={() => {
-                const newTag = newTagInputValue.trim();
-                if (newTag !== "") {
-                  handleTagAdd(newTag);
-                  setNewTagInputValue("");
-                  handleTagPost();
-                }
-              }}
+              onClick={() => {addNewTag}}
             >
               +
             </AddTagButton>
@@ -211,8 +200,7 @@ const SetTag = () => {
 };
 
 function ShowCategory() {
-  const todoData = useSelector((state) => state.todo);
-  return <p>{todoData.selectTag}</p>;
+  
 }
 
 BeforeModal.propTypes = {
