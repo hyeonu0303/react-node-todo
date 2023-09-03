@@ -4,14 +4,14 @@ import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
-
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   changeContent,
   addTag,
   changeSelectTag,
 } from "../../../store/todoSlice";
-import axios from "axios";
 import {
   TodoDiv,
   TodoInput,
@@ -76,7 +76,7 @@ function ExpModal({ closeModal }) {
       <SetTodoButton>
         <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
       </SetTodoButton>
-      <SetTag />
+      <SetTag/>
 
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
@@ -120,39 +120,55 @@ function TodoContainer() {
 
 const SetTag = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [tagValue, setTagValue] = useState('');
+  const [tagInputValue, setTagInputValue] = useState('');
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
+  const [tagData,setTagData] = useState([]);
+
+  /**태그 데이터 */
+  useEffect(()=>{
+    axios.get('/api/tags')
+      .then(result=>{
+        setTagData(result.data.tags)
+      })
+    },[tags])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+  
 
-  /**태그저장요청 */
-  const handleTagPost = () => {
-    axios.post('/api/tags',{
-      tags:[...tags, tagValue]
-    })
-    .catch((error)=>{
-      if(error) console.log("태그저장요청에러" + error
-    )})
-  }
+  
   
   /**태그추가기능 */
   const addNewTag = () => {
-    if (tagValue !== "") {
-      dispatch(addTag(tagValue));
-      handleTagPost()
-      setTagValue('');
+    if (tagInputValue !== "") {
+      dispatch(addTag(tagInputValue)); //전역변수 따로저장
+      
+      axios.post('/api/tags', {
+        tags: tagInputValue
+      })
+      .then(response => {
+        setTagData(prevTags => [...prevTags, tagInputValue]);
+      })
+      .catch((error) => {
+        if(error) console.log("태그저장요청에러" + error);
+      })
+      
+      setTagInputValue('');
     }
   };
 
+  
+  
   /**엔터키입력시 태그추가기능 */
   const handleEnterKey = (event) => {
     if (event.key === "Enter") {
       addNewTag();
     }
   };
+  
+  
 
   return (
     <DropdownWrapper>
@@ -160,35 +176,38 @@ const SetTag = () => {
         <FontAwesomeIcon
           icon={faTag}
           style={{ color: "#000000" }}
+
         />
       </SetTodoButton>
+      {/* todoData가 있으면 todoData.map  */}
       {isOpen && (
         <DropdownMenu>
-          {tags.map((tag) => (
-            /**선택한 태그로직 */
-
-            <TagList
-              key={tag}
-              onClick={() => {
-                dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
-              }}
-            >
-              {tag}
-            </TagList>
-          ))}
+          {
+            tagData.map((tag) => (
+              /**선택한 태그로직 */
+              <TagList
+                key={tag}
+                onClick={() => {
+                  dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
+                }}
+              >
+                {tag}
+              </TagList>
+            ))
+          }
 
           <TagList>
             <AddTagInput
               id="newTagInput"
               type="text"
               placeholder="추가할 태그 입력"
-              value={tagValue}
-              onChange={(e)=>{setTagValue(e.target.value)}}
+              value={tagInputValue}
+              onChange={(e)=>{setTagInputValue(e.target.value)}}
               onKeyDown={handleEnterKey}
             />
 
             <AddTagButton
-              onClick={() => {addNewTag}}
+              onClick={addNewTag}
             >
               +
             </AddTagButton>
@@ -198,10 +217,6 @@ const SetTag = () => {
     </DropdownWrapper>
   );
 };
-
-function ShowCategory() {
-  
-}
 
 BeforeModal.propTypes = {
   toggleModal: PropTypes.func.isRequired,
