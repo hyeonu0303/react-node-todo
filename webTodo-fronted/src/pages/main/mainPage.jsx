@@ -5,7 +5,7 @@ import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-ico
 import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
-import OriginModal from "./component/todoPage";
+import TodoPage from "./component/todoPage";
 import { MainContainer } from "./mainPageStyle";
 import Calendar from './component/Calendar';
 import axios from "axios";
@@ -25,7 +25,8 @@ const MainPage = () => {
 
   const [mark, setMark] = useState();
   
-  /**날짜,todo입력정보가져옴 */
+
+  /**날짜 데이터*/
   useEffect(()=>{
     axios.get('/api/data')
       .then((result)=>{
@@ -109,7 +110,7 @@ const MainPage = () => {
           mt='2'
         >
           
-          <OriginModal/>
+          <TodoPage/>
         </GridItem>
         
         <GridItem

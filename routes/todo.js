@@ -19,19 +19,48 @@ router.post('/api/todoData',(req,res)=>{
 })
 
 /**태그저장 */
-router.post('/api/tags',(req,res)=>{
+router.post('/api/tags', async (req, res) => {
+  try {
+      const userTags = await Tags.findOne({ user: req.user._id });
+      
+      if (userTags) {
+          if (!userTags.tags.includes(req.body.tags)) {
+              await Tags.updateOne(
+                { user: req.user._id }, 
+                { $push: { tags: req.body.tags } }
+              );
+              console.log("태그 업데이트 성공");
+          } else {
+              console.log("태그가 이미 존재합니다.");
+          }
+      } else {
+          const tags = new Tags({
+              user: req.user._id,
+              tags: [req.body.tags]
+          });
 
-  console.log(req.body.tags);
-  //수정하는코드짜야함
-  /* const tags = new Tags({
-    user: req.user._id,
-    tags: req.body.tags
-  });
+          const savedTags = await tags.save();
+          console.log('태그 저장 완료:', savedTags.tags);
+      }
 
-  tags.save()
-    .then((result)=>{
-      console.log(`저장완료${result}`)
-    }) */
+      res.status(200).send({ message: "태그 처리 완료" });
+  } catch (error) {
+      console.error("태그 저장 오류:", error);
+      res.status(500).send({ message: "태그 저장 오류" });
+  }
+});
+
+
+router.get('/api/tags',(req,res)=>{
+  Tags.findOne({user:req.user._id})
+    .then(tags => {
+      if(tags){
+        res.json({tags: tags.tags});
+      }else{
+        res.json({tags:[]});
+      }
+    })
+    .catch(error=>{res.status(500).json({error: '태그조회오류'})});
 })
 
 /**메인페이지 데이터요청 */
