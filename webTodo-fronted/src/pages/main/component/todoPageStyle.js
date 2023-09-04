@@ -62,21 +62,27 @@ width: 200px;
 `;
 
 export const TagList = styled.li `
-padding: 10px;
+  padding: 10px;
+  display:flex;
+  justify-content: space-between;
+
   
 `
 
 export const AddTagInput = styled.input`
-width: 80%;
-
+  width: 80%;
   border: none;
-
+  
   background-color: transparent;
   &:focus {
     outline: none;
     background-color: transparent;
   }
+  
 `;
 export const AddTagButton = styled.button`
 width: 20%;
+&:hover {
+    background-color: var(--mainColor);
+  }
 `;

@@ -50,6 +50,25 @@ router.post('/api/tags', async (req, res) => {
   }
 });
 
+/**태그삭제 */
+router.post('/api/tags/delete', (req,res)=>{
+  //유저의 tags배열을 찾고 그것에서 삭제후 다시저장
+
+  Tags.findOne({user:req.user._id})
+  .then(result=>{
+    const deleteIndex = req.body.deleteIndex;
+    filterTags = result.tags.filter((_,index)=>{
+      return index !== deleteIndex;
+    })
+
+    result.tags = filterTags
+    return result.save();
+  })
+  /* .then(savedResult=>{
+    res.json({savedResult})
+  }) */
+})
+
 
 router.get('/api/tags',(req,res)=>{
   Tags.findOne({user:req.user._id})

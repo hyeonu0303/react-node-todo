@@ -21,12 +21,14 @@ let todo = createSlice({
     addTag(state, action) {
       state.tags.push(action.payload);
     },
+    
     changeSelectTag(state,action){
       state.selectTag = action.payload;
     }
+
   }
 
 });
-export let { changeContent, changeDate, addTag, changeSelectTag } = todo.actions;
+export let { changeContent, changeDate, addTag ,changeSelectTag } = todo.actions;
 
 export default todo;

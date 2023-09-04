@@ -55,7 +55,6 @@ function BeforeModal({ toggleModal }) {
 
 function ExpModal({ closeModal }) {
   const todoData = useSelector((state) => state.todo);
-  // console.log(todoData);
 
   /**모달창닫기와 데이터POST요청 */
   const handleAddButton = () => {
@@ -137,9 +136,6 @@ const SetTag = () => {
     setIsOpen(!isOpen);
   };
   
-
-  
-  
   /**태그추가기능 */
   const addNewTag = () => {
     if (tagInputValue !== "") {
@@ -159,17 +155,22 @@ const SetTag = () => {
     }
   };
 
-  
-  
-  /**엔터키입력시 태그추가기능 */
+  const handleTagDeletion = (index) => {
+    axios.post('/api/tags/delete',{
+      deleteIndex: index
+    })
+    .then(response=>{
+      // setTagData(response.data.tags)
+    })
+    .catch()    
+  }
+
   const handleEnterKey = (event) => {
     if (event.key === "Enter") {
       addNewTag();
     }
   };
   
-  
-
   return (
     <DropdownWrapper>
       <SetTodoButton onClick={toggleDropdown}>
@@ -179,20 +180,27 @@ const SetTag = () => {
 
         />
       </SetTodoButton>
-      {/* todoData가 있으면 todoData.map  */}
       {isOpen && (
         <DropdownMenu>
           {
-            tagData.map((tag) => (
-              /**선택한 태그로직 */
+            tagData.map((tag,index) => (
               <TagList
-                key={tag}
+                key={index}
                 onClick={() => {
                   dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
                 }}
               >
                 {tag}
+              <AddTagButton
+                onClick={(e)=>{
+                  e.stopPropagation();
+                  handleTagDeletion(index);
+                }}
+              >
+                x
+              </AddTagButton>
               </TagList>
+              
             ))
           }
 
