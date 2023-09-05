@@ -44,12 +44,10 @@ export const SetTodoButton = styled.button`
 export const DropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
-  
 `;
 
-export const DropdownMenu = styled.ul`
-width: 200px;
-
+export const DropdownMenu = styled.div`
+  width: 200px;
   position: absolute;
   top: 80%;
   left: 0;
@@ -58,15 +56,23 @@ width: 200px;
   list-style: none;
   padding: 0;
   margin: 0;
-  display: inline-block;
+  display:flex;
+  flex-direction: column;
+  
 `;
+
+export const TagContainer = styled.div`
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  width:100%;
+  padding:10px;
+`
 
 export const TagList = styled.li `
   padding: 10px;
   display:flex;
   justify-content: space-between;
-
-  
 `
 
 export const AddTagInput = styled.input`

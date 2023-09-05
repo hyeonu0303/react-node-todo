@@ -22,7 +22,9 @@ import {
   TagList,
   AddTagInput,
   AddTagButton,
+  TagContainer
 } from "./todoPageStyle";
+import { Checkbox } from "@chakra-ui/react";
 
 function App() {
   return (
@@ -184,29 +186,38 @@ const SetTag = () => {
         <DropdownMenu>
           {
             tagData.map((tag,index) => (
-              <TagList
-                key={index}
-                onClick={() => {
-                  if(tag == selectTag)
-                    dispatch(changeSelectTag(''));
-                  else
-                    dispatch(changeSelectTag(tag));
-                }}
-              >
-                {tag}
-              <AddTagButton
-                onClick={(e)=>{
-                  e.stopPropagation();
-                  handleTagDeletion(index);
-                }}
-              >
-                x
-              </AddTagButton>
-              </TagList>
-              
+              <TagContainer key={index}>
+                <Checkbox
+/*                   onClick={() => {
+                    console.log('클릭됨')
+                    if(tag == selectTag)
+                      dispatch(changeSelectTag(''));
+                    else
+                      dispatch(changeSelectTag(tag));
+                  }} */
+                  
+                  value={tag}
+                  onChange={(e)=>{
+                    if(e.target.checked == true)
+                      dispatch(changeSelectTag(tag));
+                    else
+                      dispatch(changeSelectTag(''))
+                    console.log(e.target.value)
+                  }}
+
+                >
+                  {tag}
+                </Checkbox>
+                <AddTagButton
+                  onClick={(e)=>{
+                    handleTagDeletion(index);
+                  }}
+                >
+                  x
+                </AddTagButton>
+              </TagContainer>
             ))
           }
-
           <TagList>
             <AddTagInput
               id="newTagInput"
