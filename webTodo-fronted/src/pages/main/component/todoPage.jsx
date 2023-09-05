@@ -130,7 +130,7 @@ const SetTag = () => {
       .then(result=>{
         setTagData(result.data.tags)
       })
-    },[tags])
+    },[tagData])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

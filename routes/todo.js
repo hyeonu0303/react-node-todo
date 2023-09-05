@@ -52,7 +52,6 @@ router.post('/api/tags', async (req, res) => {
 
 /**태그삭제 */
 router.post('/api/tags/delete', (req,res)=>{
-  //유저의 tags배열을 찾고 그것에서 삭제후 다시저장
 
   Tags.findOne({user:req.user._id})
   .then(result=>{
@@ -64,9 +63,7 @@ router.post('/api/tags/delete', (req,res)=>{
     result.tags = filterTags
     return result.save();
   })
-  /* .then(savedResult=>{
-    res.json({savedResult})
-  }) */
+  .catch(error=>{if(error) console.log('태그 삭제실패')})
 })
 
 
