@@ -6,14 +6,17 @@ const todoSchema = new mongoose.Schema({
     required:true,
   },
   content: {
-    type:String,
+    type: String,
     required:true
   },
   date: {
-    type:String,
+    type: String,
     required: true
   },
-  selectTag:String,
+  selectTag:{
+    type: String,
+    default: '목표'
+  },
   time: String,
   importance: String
 },{

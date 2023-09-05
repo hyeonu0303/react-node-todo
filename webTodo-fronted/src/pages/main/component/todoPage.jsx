@@ -123,7 +123,7 @@ const SetTag = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
-
+  const selectTag = useSelector(state=>state.todo.selectTag);
   /**태그 데이터 */
   useEffect(()=>{
     axios.get('/api/tags')
@@ -187,7 +187,10 @@ const SetTag = () => {
               <TagList
                 key={index}
                 onClick={() => {
-                  dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
+                  if(tag == selectTag)
+                    dispatch(changeSelectTag(''));
+                  else
+                    dispatch(changeSelectTag(tag));
                 }}
               >
                 {tag}

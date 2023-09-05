@@ -27,6 +27,9 @@ const MainPage = () => {
   
 
   /**날짜 데이터*/
+  /**
+   * @todo 재랜더링 어떤걸로 할지 정해야함
+   */
   useEffect(()=>{
     axios.get('/api/data')
       .then((result)=>{
