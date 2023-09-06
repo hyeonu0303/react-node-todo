@@ -125,6 +125,7 @@ const SetTag = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
+  const [tagSelectVaild,setTagSelectVaild] = useState(false);
   const selectTag = useSelector(state=>state.todo.selectTag);
   /**태그 데이터 */
   useEffect(()=>{
@@ -188,21 +189,17 @@ const SetTag = () => {
             tagData.map((tag,index) => (
               <TagContainer key={index}>
                 <Checkbox
-/*                   onClick={() => {
-                    console.log('클릭됨')
-                    if(tag == selectTag)
-                      dispatch(changeSelectTag(''));
-                    else
-                      dispatch(changeSelectTag(tag));
-                  }} */
-                  
+                  isDisabled={tagSelectVaild && selectTag != tagData[index]}
                   value={tag}
                   onChange={(e)=>{
-                    if(e.target.checked == true)
+                    if(e.target.checked == true){
                       dispatch(changeSelectTag(tag));
-                    else
+                      setTagSelectVaild(true);
+                    }
+                    else{
                       dispatch(changeSelectTag(''))
-                    console.log(e.target.value)
+                      setTagSelectVaild(false);
+                    }
                   }}
 
                 >
