@@ -22,7 +22,11 @@ import {
   TagList,
   AddTagInput,
   AddTagButton,
-  TagContainer
+  TagContainer,
+  SelectTag,
+  SelectDay,
+  TimeInput,
+  SelectDiv,
 } from "./todoPageStyle";
 import { Checkbox } from "@chakra-ui/react";
 
@@ -72,11 +76,11 @@ function ExpModal({ closeModal }) {
 
   return (
     <div>
-      <p>{todoData.selectTag}</p>
-
-      <SetTodoButton>
-        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
-      </SetTodoButton>
+      <SelectDiv>
+      <SelectTag>{todoData.selectTag}</SelectTag>
+      <SelectTag>{todoData.selectTime}</SelectTag>
+      </SelectDiv>
+      <SetTime/>
       <SetTag/>
 
       <AddTodoButton onClick={handleAddButton}>
@@ -231,6 +235,46 @@ const SetTag = () => {
               +
             </AddTagButton>
           </TagList>
+        </DropdownMenu>
+      )}
+    </DropdownWrapper>
+  );
+};
+
+const SetTime = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTime, setSelectedTime] = useState('');
+
+  const dispatch = useDispatch();
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleTimeChange = (event) => {
+    const newTime = event.target.value;
+    setSelectedTime(newTime);
+  };
+
+  const handleAddTag = () => {
+    // 시간 데이터를 state.todo.selectTime로 보내기
+    dispatch(changeSelectTime(selectedTime));
+
+    // 드롭다운을 닫기
+    setIsOpen(false);
+  };
+
+  return (
+    <DropdownWrapper>
+      <SetTodoButton onClick={toggleDropdown}>
+        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
+      </SetTodoButton>
+      {isOpen && (
+        <DropdownMenu>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <TimeInput type="time" value={selectedTime} onChange={handleTimeChange} />
+            <AddTagButton onClick={handleAddTag}>+</AddTagButton>
+          </div>
         </DropdownMenu>
       )}
     </DropdownWrapper>

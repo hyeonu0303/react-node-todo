@@ -92,3 +92,32 @@ width: 20%;
     background-color: var(--mainColor);
   }
 `;
+
+export const SelectTag = styled.p`
+  background-color: #d9d9d9;
+  display: inline-block;
+  margin: 20px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  `;
+
+export const SelectDay = styled.p`
+  background-color: #d9d9d9;
+  display: inline-block;
+  margin: 20px;
+  padding: 2px 5px;
+  border-radius: 5px;
+`;
+
+export const TimeInput = styled.input`
+  margin: 10px;
+  width: 80%;
+  &:focus {
+    outline: none;
+    background-color: transparent;
+  }
+  `;
+
+  export const SelectDiv = styled.div `
+  height: 50px;
+  `
