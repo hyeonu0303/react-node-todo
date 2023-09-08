@@ -1,64 +1,77 @@
 import { useState, useEffect } from "react";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouse,
+  faGear,
+  faStar,
+  faBell,
+} from "@fortawesome/free-solid-svg-icons";
 import UserStatus from "../../components/UserStatus";
-import { useDispatch } from "react-redux";
-import {login} from '../../store/userSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../store/userSlice";
 import TodoPage from "./component/todoPage";
 import TodoContent from "./component/todoContent";
-import { MainContainer } from "./mainPageStyle";
-import Calendar from './component/Calendar';
+import { CaleandarArea, ContentsWrapper, MainContainer } from "./mainPageStyle";
+import Calendar from "./component/Calendar";
 import axios from "axios";
+import Sidebar from "@containers/Sidebar";
 
 const MainPage = () => {
   let dispatch = useDispatch();
-  
-  useEffect(()=>{
+  const username = useSelector((state) => state.user.username);
+
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const googleName = urlParams.get('googleName');
-    if(googleName){
+    const googleName = urlParams.get("googleName");
+    if (googleName) {
       dispatch(login(googleName));
     }
-    const kakaoName = urlParams.get('kakaoName');
-    if(kakaoName) dispatch(login(kakaoName));
-  },[dispatch]);
+    const kakaoName = urlParams.get("kakaoName");
+    if (kakaoName) dispatch(login(kakaoName));
+  }, [dispatch]);
 
   const [mark, setMark] = useState();
   const [allData, setAllData] = useState();
 
   /**날짜 데이터*/
-  useEffect(()=>{
-    axios.get('/api/data')
-      .then((result)=>{
-        const dates = new Set();
-        
-        result.data.forEach((item,index,array) => {
-          console.log(item.date)
-          dates.add(item.date);
-          setAllData(array)          
-        });
+  useEffect(() => {
+    axios.get("/api/data").then((result) => {
+      const dates = new Set();
 
-        let datesArray = [...dates];
+      result.data.forEach((item, index, array) => {
+        console.log(item.date);
+        dates.add(item.date);
+        setAllData(array);
+      });
 
-        setMark(datesArray)
-      })
+      let datesArray = [...dates];
 
-    },[])
-    console.log(allData);
-  
+      setMark(datesArray);
+    });
+  }, []);
+  console.log(allData);
+
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
   return (
-    <MainContainer mr='3'>
-      <Grid
+    <MainContainer>
+      <Sidebar />
+      <ContentsWrapper>
+        <h1 style={{ fontSize: '32px'}}>{username}의 TODO</h1>
+        <CaleandarArea>
+          <Calendar mark={mark} />
+        </CaleandarArea>
+        <TodoPage/>
+      </ContentsWrapper>
+      {/* <Grid
         h='100%'
         templateRows={'repeat(12,1fr)'}
         templateColumns={'repeat(12,1fr)'}
         gap={4}
-      >
-        <GridItem
+      > */}
+      {/* <GridItem
           colSpan={[12,1]}
           rowSpan={[1,12]}
           bg='#c6dbf4'
@@ -92,9 +105,9 @@ const MainPage = () => {
             <UserStatus /> 
 
           </Box>
-        </GridItem>
-        
-        <GridItem
+        </GridItem> */}
+
+      {/* <GridItem
           colSpan={3}
           rowSpan={4}
           // bg='green.300'
@@ -113,8 +126,8 @@ const MainPage = () => {
           <Calendar mark={mark}/>
           </Box>
         </GridItem>
-        
-        <GridItem
+         */}
+      {/* <GridItem
           colSpan={[12,10,10,7]}
           rowSpan={2}
           // bg='blue.200'
@@ -122,9 +135,9 @@ const MainPage = () => {
         >
           
           <TodoPage/>
-        </GridItem>
-        
-        <GridItem
+        </GridItem> */}
+
+      {/* <GridItem
           colSpan={[12,10,10,7]}
           rowSpan={[8,10]}
           // bg='yellow.400'
@@ -132,9 +145,9 @@ const MainPage = () => {
           <Box>
             <TodoContent allData={allData}/>
           </Box>
-          </GridItem>
+          </GridItem> */}
 
-        <GridItem
+      {/* <GridItem
           colSpan={3}
           rowSpan={8}
           // bg='blue.800'
@@ -142,10 +155,10 @@ const MainPage = () => {
           display={['none',null,null,'block']}
         >
           캐릭터
-        </GridItem>
+        </GridItem> */}
 
-      </Grid>
-    </MainContainer>    
+      {/* </Grid> */}
+    </MainContainer>
   );
 };
 
