@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { Checkbox } from "@chakra-ui/react";
 
 import {
   changeContent,
@@ -28,7 +29,6 @@ import {
   TimeInput,
   SelectDiv,
 } from "./todoPageStyle";
-import { Checkbox } from "@chakra-ui/react";
 
 function App() {
   return (
@@ -61,6 +61,7 @@ function BeforeModal({ toggleModal }) {
 
 function ExpModal({ closeModal }) {
   const todoData = useSelector((state) => state.todo);
+  // console.log(todoData);
 
   /**모달창닫기와 데이터POST요청 */
   const handleAddButton = () => {
@@ -76,11 +77,12 @@ function ExpModal({ closeModal }) {
 
   return (
     <div>
-      <SelectDiv>
-      <SelectTag>{todoData.selectTag}</SelectTag>
-      <SelectTag>{todoData.selectTime}</SelectTag>
-      </SelectDiv>
-      <SetTime/>
+      {/* 선택한태그 */}
+      <p>{todoData.selectTag}</p>
+
+      <SetTodoButton>
+        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
+      </SetTodoButton>
       <SetTag/>
 
       <AddTodoButton onClick={handleAddButton}>
@@ -129,20 +131,19 @@ const SetTag = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
-  const [tagSelectVaild,setTagSelectVaild] = useState(false);
-  const selectTag = useSelector(state=>state.todo.selectTag);
+  const selectTag = useSelector(state=>{state.todo.selectTag})
   /**태그 데이터 */
   useEffect(()=>{
     axios.get('/api/tags')
       .then(result=>{
         setTagData(result.data.tags)
       })
-    },[tagData])
+    },[tags])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  
+
   /**태그추가기능 */
   const addNewTag = () => {
     if (tagInputValue !== "") {
@@ -162,22 +163,17 @@ const SetTag = () => {
     }
   };
 
-  const handleTagDeletion = (index) => {
-    axios.post('/api/tags/delete',{
-      deleteIndex: index
-    })
-    .then(response=>{
-      // setTagData(response.data.tags)
-    })
-    .catch()    
-  }
-
+  
+  
+  /**엔터키입력시 태그추가기능 */
   const handleEnterKey = (event) => {
     if (event.key === "Enter") {
       addNewTag();
     }
   };
   
+  
+
   return (
     <DropdownWrapper>
       <SetTodoButton onClick={toggleDropdown}>
@@ -187,23 +183,22 @@ const SetTag = () => {
 
         />
       </SetTodoButton>
+      {/* todoData가 있으면 todoData.map  */}
       {isOpen && (
         <DropdownMenu>
           {
             tagData.map((tag,index) => (
+              /**선택한 태그로직 */
               <TagContainer key={index}>
                 <Checkbox
-                  isDisabled={tagSelectVaild && selectTag != tagData[index]}
+                  colorScheme="red"
                   value={tag}
+                  disabled={selectTag && selectTag !== tag}
                   onChange={(e)=>{
-                    if(e.target.checked == true){
+                    if(e.target.checked == true)
                       dispatch(changeSelectTag(tag));
-                      setTagSelectVaild(true);
-                    }
-                    else{
+                    else
                       dispatch(changeSelectTag(''))
-                      setTagSelectVaild(false);
-                    }
                   }}
 
                 >
@@ -219,6 +214,7 @@ const SetTag = () => {
               </TagContainer>
             ))
           }
+
           <TagList>
             <AddTagInput
               id="newTagInput"

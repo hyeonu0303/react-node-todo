@@ -6,6 +6,7 @@ import UserStatus from "../../components/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '../../store/userSlice';
 import TodoPage from "./component/todoPage";
+import TodoContent from "./component/todoContent";
 import { MainContainer } from "./mainPageStyle";
 import Calendar from './component/Calendar';
 import axios from "axios";
@@ -24,19 +25,27 @@ const MainPage = () => {
   },[dispatch]);
 
   const [mark, setMark] = useState();
-  
+  const [allData, setAllData] = useState();
 
   /**날짜 데이터*/
-  /**
-   * @todo 재랜더링 어떤걸로 할지 정해야함
-   */
   useEffect(()=>{
     axios.get('/api/data')
       .then((result)=>{
-        const dates = Object.keys(result.data); //날짜데이터
-        setMark(dates);  
+        const dates = new Set();
+        
+        result.data.forEach((item,index,array) => {
+          console.log(item.date)
+          dates.add(item.date);
+          setAllData(array)          
+        });
+
+        let datesArray = [...dates];
+
+        setMark(datesArray)
       })
-  },[])
+
+    },[])
+    console.log(allData);
   
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
@@ -93,7 +102,6 @@ const MainPage = () => {
           h='400px'
           display={['none',null,null,'block']}
           p='2'
-          
         >
           <Box 
             display='flex' 
@@ -122,7 +130,7 @@ const MainPage = () => {
           // bg='yellow.400'
           >
           <Box>
-            할일내용
+            <TodoContent allData={allData}/>
           </Box>
           </GridItem>
 
