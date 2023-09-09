@@ -1,13 +1,12 @@
 import styled from "styled-components";
 
 export const TodoDiv = styled.div`
-  border: 2px solid #7f7f7f48;
   border-radius: 15px;
   text-align: left;
   cursor: pointer;
   padding: 0px;
   position: relative;
-  box-shadow: 5px 5px 20px grey;
+  box-shadow: 1px 1px 10px grey;
 `;
 
 export const TodoInput = styled.input`

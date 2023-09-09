@@ -48,7 +48,7 @@ const MainPage = () => {
     console.log(allData);
   
   const iconSize = "2x";
-  const iconMarginBottom = "1rem";
+  const iconMarginBottom = "3rem";
 
   return (
     <MainContainer mr='3'>
@@ -72,7 +72,7 @@ const MainPage = () => {
             <FontAwesomeIcon
               icon={faHouse}
               size={iconSize}
-              style={{ marginBottom: iconMarginBottom }}
+              style={{ marginBottom: iconMarginBottom, marginTop: 20 }}
             />
             <FontAwesomeIcon
               icon={faStar}

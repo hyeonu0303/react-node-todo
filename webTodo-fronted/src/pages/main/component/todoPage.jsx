@@ -78,11 +78,10 @@ function ExpModal({ closeModal }) {
   return (
     <div>
       {/* 선택한태그 */}
-      <p>{todoData.selectTag}</p>
-
-      <SetTodoButton>
-        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
-      </SetTodoButton>
+      <SelectDiv>
+      <SelectTag>{todoData.selectTag}</SelectTag>
+      </SelectDiv>
+      <SetTime/>
       <SetTag/>
 
       <AddTodoButton onClick={handleAddButton}>
@@ -162,8 +161,6 @@ const SetTag = () => {
       setTagInputValue('');
     }
   };
-
-  
   
   /**엔터키입력시 태그추가기능 */
   const handleEnterKey = (event) => {
@@ -171,7 +168,6 @@ const SetTag = () => {
       addNewTag();
     }
   };
-  
   
 
   return (
@@ -255,6 +251,7 @@ const SetTime = () => {
   const handleAddTag = () => {
     // 시간 데이터를 state.todo.selectTime로 보내기
     dispatch(changeSelectTime(selectedTime));
+    console.log("Button clicked!");
 
     // 드롭다운을 닫기
     setIsOpen(false);
