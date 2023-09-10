@@ -52,7 +52,6 @@ router.post('/api/tags', async (req, res) => {
 
 /**태그삭제 */
 router.post('/api/tags/delete', (req,res)=>{
-
   Tags.findOne({user:req.user._id})
   .then(result=>{
     const deleteIndex = req.body.deleteIndex;
@@ -61,12 +60,20 @@ router.post('/api/tags/delete', (req,res)=>{
     })
 
     result.tags = filterTags
+    console.log('태그삭제완료')
+    
     return result.save();
   })
+  .then(updatedResult => {
+    res.json({
+      tags: updatedResult.tags
+    });
+  })
+
   .catch(error=>{if(error) console.log('태그 삭제실패')})
 })
 
-
+/**태그데이터전송 */
 router.get('/api/tags',(req,res)=>{
   Tags.findOne({user:req.user._id})
     .then(tags => {
@@ -85,7 +92,6 @@ router.get("/api/data", (req, res) => {
     user: req.user._id 
   })
     .then((result) => {
-      console.log(result);
       res.json(result);
     })
     .catch((error) => {console.log('date GET요청에러')})

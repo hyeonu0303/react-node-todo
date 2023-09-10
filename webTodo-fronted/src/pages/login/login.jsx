@@ -12,8 +12,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
-import { login } from "../../store/userSlice";
-import { LoginContainer,LoginBox,LoginHeader,LoginContent, SocialContent,SocialButton, LoginFooter } from "./loginStyle";
+import { login } from "@/store/userSlice";
+import { LoginContainer,LoginBox,LoginHeader,LoginContent, SocialContent,SocialButton, LoginFooter } from "./Login.styles";
 
 function Login() {
   const navigate = useNavigate();

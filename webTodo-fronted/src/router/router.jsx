@@ -1,8 +1,7 @@
 import App from '../App';
 // import ErrorPage from '../pages/ErrorPage';
-import Login from '../pages/login/login';
-import Register from '../pages/register/register';
-import Practice from '../pages/practice';
+import Login from '@/pages/Login/Login';
+import Register from '../pages/Register/Register';
 const RouterInfo = [
   {
     path: "/",
@@ -16,10 +15,6 @@ const RouterInfo = [
     path: "/register",
     element: <Register/>,
   },
-  {
-    path:'/practice',
-    element: <Practice/>
-  }
 ];
 
 export default RouterInfo;

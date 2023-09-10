@@ -114,8 +114,6 @@ const SignUp = () => {
       passwordPattern.test(password) 
     )
   }
-  
-  
 
   return (
     <SignUpContainer>

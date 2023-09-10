@@ -1,16 +1,16 @@
 /*eslint-disable */
-import { changeDate } from "../../../store/todoSlice";
+import { changeDate } from "@/store/todoSlice";
 import Calendar from "react-calendar";
 import axios from 'axios';
 import moment from 'moment';
 import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
 import { styled } from "styled-components";
-import './reactCalendar.css'
+import './Calendar.css'
 
 const ReactCalendar = (props) => {
 
-  let dispatch = useDispatch();
+  const dispatch = useDispatch();
   /**날짜변경 */
   const handleDateChange = (date) => {
     setSelectedDate(date);

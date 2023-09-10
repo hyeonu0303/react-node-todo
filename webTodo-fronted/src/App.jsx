@@ -1,5 +1,5 @@
 import './App.css'
-import Main from './pages/main/mainPage'
+import Main from '@/pages/Main/Main'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 const customTheme = extendTheme({
