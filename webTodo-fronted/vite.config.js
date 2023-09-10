@@ -36,8 +36,8 @@ export default defineConfig({
         replacement: path.resolve(__dirname, "src/components"),
       },
       {
-        find: "@containers",
-        replacement: path.resolve(__dirname, "src/containers"),
+        find: "@layout",
+        replacement: path.resolve(__dirname, "src/layout"),
       },
       {
         find: "@pages",

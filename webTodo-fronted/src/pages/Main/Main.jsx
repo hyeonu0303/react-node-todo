@@ -1,16 +1,9 @@
 import { useState, useEffect } from "react";
-import { Grid, GridItem, Box } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
-import UserStatus from "@containers/UserStatus/UserStatus";
 import { useDispatch } from "react-redux";
 import {login} from '@/store/userSlice';
-import TodoInputModal from "@/containers/TodoInputModal";
-import TodoContent from "@/containers/TodoContent";
-import { MainContainer } from "./Main.styles";
-import Calendar from '@/containers/Calendar';
+import TodoInputModal from "@layout/Main/TodoInputModal";
 import axios from "axios";
-
+import Sidebar from "@layout/Sidebar";
 const MainPage = () => {
   let dispatch = useDispatch();
   
@@ -24,7 +17,7 @@ const MainPage = () => {
     if(kakaoName) dispatch(login(kakaoName));
   },[dispatch]);
 
-  const [mark, setMark] = useState();
+  const [markDate, setMarkDate] = useState();
   const [allData, setAllData] = useState();
 
   /**날짜 데이터*/
@@ -32,25 +25,30 @@ const MainPage = () => {
     axios.get('/api/data')
       .then((result)=>{
         const dates = new Set();
-        
+
         result.data.forEach((item) => {
           dates.add(item.date);
         });
 
         let datesArray = [...dates];
-
-        setMark(datesArray)
+        setMarkDate(datesArray)
         setAllData(result.data);
       })
-
     },[])
-    
-  const iconSize = "2x";
-  const iconMarginBottom = "1rem";
 
   return (
     <MainContainer>
-      <Grid
+      <Sidebar markDate={markDate}/>
+      <ContentWrapper>
+        <TodoInputModal/>
+      </ContentWrapper>
+      </MainContainer>    
+    )
+
+    
+
+
+    /* {/*   <Grid
         h='100%'
         templateRows={'repeat(12,1fr)'}
         templateColumns={'repeat(12,1fr)'}
@@ -146,9 +144,22 @@ const MainPage = () => {
           캐릭터
         </GridItem>
 
-      </Grid>
-    </MainContainer>    
-  );
-};
+      </Grid> */}
 
 export default MainPage;
+
+
+import styled from "styled-components";
+
+export const MainContainer= styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%
+`
+
+export const ContentWrapper = styled.div`
+  display:flex;
+  height: 100%;
+  flex:1;
+  flex-direction: column;
+`

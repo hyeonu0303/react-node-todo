@@ -1,7 +1,6 @@
 /*eslint-disable */
 import { changeDate } from "@/store/todoSlice";
 import Calendar from "react-calendar";
-import axios from 'axios';
 import moment from 'moment';
 import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
