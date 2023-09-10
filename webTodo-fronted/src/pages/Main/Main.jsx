@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse, faGear, faStar, faBell } from "@fortawesome/free-solid-svg-icons";
-import UserStatus from "../../components/UserStatus";
+import UserStatus from "@containers/UserStatus/UserStatus";
 import { useDispatch } from "react-redux";
-import {login} from '../../store/userSlice';
-import TodoPage from "./component/todoPage";
-import TodoContent from "./component/todoContent";
-import { MainContainer } from "./mainPageStyle";
-import Calendar from './component/Calendar';
+import {login} from '@/store/userSlice';
+import TodoInputModal from "@/containers/TodoInputModal";
+import TodoContent from "@/containers/TodoContent";
+import { MainContainer } from "./Main.styles";
+import Calendar from '@/containers/Calendar';
 import axios from "axios";
 
 const MainPage = () => {
@@ -33,25 +33,23 @@ const MainPage = () => {
       .then((result)=>{
         const dates = new Set();
         
-        result.data.forEach((item,index,array) => {
-          console.log(item.date)
+        result.data.forEach((item) => {
           dates.add(item.date);
-          setAllData(array)          
         });
 
         let datesArray = [...dates];
 
         setMark(datesArray)
+        setAllData(result.data);
       })
 
     },[])
-    console.log(allData);
-  
+    
   const iconSize = "2x";
   const iconMarginBottom = "1rem";
 
   return (
-    <MainContainer mr='3'>
+    <MainContainer>
       <Grid
         h='100%'
         templateRows={'repeat(12,1fr)'}
@@ -121,7 +119,7 @@ const MainPage = () => {
           mt='2'
         >
           
-          <TodoPage/>
+          <TodoInputModal/>
         </GridItem>
         
         <GridItem
@@ -130,7 +128,11 @@ const MainPage = () => {
           // bg='yellow.400'
           >
           <Box>
-            <TodoContent allData={allData}/>
+            {
+              allData ?
+              <TodoContent allData={allData}/>
+              : <p>데이터로딩중...</p>
+            }
           </Box>
           </GridItem>
 

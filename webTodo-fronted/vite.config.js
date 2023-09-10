@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
-
+import path from 'path'
 export default defineConfig({
   plugins: [
     react(),
@@ -28,6 +28,27 @@ export default defineConfig({
       }
     }),
   ],
+  resolve: {
+    alias: [
+      { find: "@", replacement: path.resolve(__dirname, "src") },
+      {
+        find: "@components",
+        replacement: path.resolve(__dirname, "src/components"),
+      },
+      {
+        find: "@containers",
+        replacement: path.resolve(__dirname, "src/containers"),
+      },
+      {
+        find: "@pages",
+        replacement: path.resolve(__dirname, "src/pages"),
+      },
+      {
+        find: "@store",
+        replacement: path.resolve(__dirname, "src/store"),
+      },
+    ],
+  },
   server: {
     proxy: {
       '/api': {
