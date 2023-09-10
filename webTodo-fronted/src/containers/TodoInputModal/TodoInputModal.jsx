@@ -12,6 +12,7 @@ import {
   addTag,
   changeSelectTag,
 } from "@/store/todoSlice";
+
 import {
   TodoDiv,
   TodoInput,
@@ -22,8 +23,10 @@ import {
   TagList,
   AddTagInput,
   AddTagButton,
+  TagContainer
 } from "./TodoInputModal.styles";
 
+import {Checkbox} from '@chakra-ui/react'
 function App() {
   return (
     <TodoDiv>
@@ -124,7 +127,7 @@ const SetTag = () => {
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
-
+  const selectTag = useSelector(state=>state.todo.selectTag);
   /**태그 데이터 */
   useEffect(()=>{
     axios.get('/api/tags')
@@ -191,13 +194,21 @@ const SetTag = () => {
           {
             tagData.map((tag,index) => (
               /**선택한 태그로직 */
-              <TagList
-                key={index}
-                onClick={() => {
-                  dispatch(changeSelectTag(tag)); //전역변수에 선택한태그넣어줌
-                }}
-              >
-                {tag}
+              <TagContainer key={index}>
+                <Checkbox
+                  colorScheme="red"
+                  value={tag}
+                  disabled={selectTag && selectTag !== tag}
+                  onChange={(e)=>{
+                    if(e.target.checked == true)
+                      dispatch(changeSelectTag(tag));
+                    else
+                      dispatch(changeSelectTag(''))
+                  }}
+
+                >
+                  {tag}
+                </Checkbox>
               <AddTagButton
               onClick={(e)=>{
                 e.stopPropagation();
@@ -206,7 +217,7 @@ const SetTag = () => {
             >
               x
             </AddTagButton>
-              </TagList>
+              </TagContainer>
             ))
           }
 
