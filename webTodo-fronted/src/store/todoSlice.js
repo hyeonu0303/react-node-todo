@@ -9,6 +9,7 @@ let todo = createSlice({
     date: '',
     tags: [],
     selectTag: '', // 선택한 태그
+    selectTime: '', // 설정한 시간
   },
 
   reducers: {
@@ -23,10 +24,16 @@ let todo = createSlice({
     },
     changeSelectTag(state,action){
       state.selectTag = action.payload;
+    },
+    setTime(state, action){
+      state.selectTime = action.payload;
+    },
+    clearTime(state) {
+      state.selectTime = '';
     }
   }
 
 });
-export let { changeContent, changeDate, addTag ,changeSelectTag } = todo.actions;
+export let { changeContent, changeDate, addTag ,changeSelectTag, setTime, clearTime } = todo.actions;
 
 export default todo;
