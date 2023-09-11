@@ -1,9 +1,11 @@
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-
+import {Checkbox} from '@chakra-ui/react'
+import openhimer from './11.png'
+import { useState } from 'react';
 const TodoContent = (props) => {
   const selectDate = useSelector(state => state.todo.date);
-  
+  const [visible, setVisible] = useState(false);
   // selectTag로 그룹화
   const groupedByTag = {};
 
@@ -19,38 +21,86 @@ const TodoContent = (props) => {
   console.log(groupedByTag);
 
   return (
-      <TodoWrapper>
+      <TodoContainer>
           {props.allData != null && selectDate ? (
               Object.keys(groupedByTag).map(tag => (
-                  <TodoContentArea key={tag}>
-                    <h2>태그:{tag}</h2>
-                    {groupedByTag[tag].map((content, index) => (
-                        <p key={index}>컨텐츠:{content}</p>
-                    ))}
-                    <hr/>
-                  </TodoContentArea>
+              <TodoWrapper key={tag}>
+
+                <TodoTagArea>
+                  {
+                    tag == ''? <h2>🦄목표</h2>:<h2>🌈{tag}</h2>
+                  }
+                </TodoTagArea>
+                <TodoContentArea>
+
+                  {
+                    groupedByTag[tag].map((content, index) => (
+                      <Checkbox key={index}>{content}</Checkbox>
+                      )
+                    )}
+                </TodoContentArea>
+              </TodoWrapper>
               ))
           ) : null}
-      </TodoWrapper>
+          {/* 나중에지워야함 */}
+          {
+            visible==true?
+            <div style={{
+              position:'absolute',
+              right:'0',
+              top:'0',
+            }}
+            onClick={()=>{setVisible(false)}}
+            >
+              <img src={openhimer} style={{borderRadius:'20px', boxShadow:'10px'}}/>
+              <em style={{fontSize:'20px',fontWeight:'bold',}}>"Now I am become Death, the destroyer of worlds."</em>
+            </div>
+            : 
+            <div style={{
+              borderRadius:'50%',
+              width:'5px',
+              height:'5px',
+              background:'#eee',
+              position:'absolute',
+              right:'0',
+              bottom:'0'
+            }}
+            onClick={()=>{setVisible(true)}}
+            >
+            </div>
+          }
+      </TodoContainer>
   );
 }
 
 export default TodoContent;
 
-const TodoWrapper = styled.div`
-  width:100%;
+
+
+const TodoContainer = styled.div`
+  width:99%;
   height: 100%;
-  margin: 50px 20px;
+  margin: 50px 10px;
   position: relative;
+  border:4px solid #eee;
+  border-radius: 10px;
+`
+
+const TodoWrapper = styled.div`
+  display:flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap:10px;
+  `
+
+const TodoTagArea = styled.div`
+  font-size:20px;
 `
 
 const TodoContentArea = styled.div`
   display:flex;
-  flex-direction: column ;
-  align-items: flex-start;
-  position:abolute;
+  flex-direction: column;
   gap:10px;
-  border: 1px solid black;
 `
 
 

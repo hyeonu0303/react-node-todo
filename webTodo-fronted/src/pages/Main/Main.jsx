@@ -46,6 +46,7 @@ const MainPage = () => {
         <TodoInputModal/>
         <TodoContent allData={allData}/>
       </ContentWrapper>
+      
     </MainContainer>    
     )
   }
@@ -62,4 +63,5 @@ const ContentWrapper = styled.div`
   height: 100%;
   flex:1;
   flex-direction: column;
+  padding-right:10px;
 `

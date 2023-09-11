@@ -15,7 +15,6 @@ const todoSchema = new mongoose.Schema({
   },
   selectTag:{
     type: String,
-    default: '목표'
   },
   time: String,
   importance: String
