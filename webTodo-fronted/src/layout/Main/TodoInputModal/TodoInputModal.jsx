@@ -7,13 +7,9 @@ import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  changeContent,
-  addTag,
-  changeSelectTag,
-} from "@/store/todoSlice";
+import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
 
-import {Checkbox} from '@chakra-ui/react'
+import { Checkbox } from "@chakra-ui/react";
 function App() {
   return (
     <TodoDiv>
@@ -61,12 +57,23 @@ function ExpModal({ closeModal }) {
 
   return (
     <div>
-      <p>{todoData.selectTag}</p>
+      <SelectDiv
+        hasContent={
+          (!!todoData.selectTag && todoData.selectTag.trim().length > 0) ||
+          (!!todoData.selectTime && todoData.selectTime.trim().length > 0)
+        }
+      >
+<SelectTag hasContent={!!todoData.selectTime && todoData.selectTime.trim().length > 0}>
+  {todoData.selectTime}
+</SelectTag>
+<SelectTag hasContent={!!todoData.selectTag && todoData.selectTag.trim().length > 0}>
+  {todoData.selectTag}
+</SelectTag>
 
-      <SetTodoButton>
-        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
-      </SetTodoButton>
-      <SetTag/>
+      </SelectDiv>
+
+      <SetTime />
+      <SetTag />
 
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
@@ -110,26 +117,23 @@ function TodoContainer() {
 
 const SetTag = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [tagInputValue, setTagInputValue] = useState('');
+  const [tagInputValue, setTagInputValue] = useState("");
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
   const selectTag = useSelector(state=>state.todo.selectTag);
   const [isSubmitting, setIsSubmitting] = useState(false);
   /**태그 데이터 */
-  useEffect(()=>{
-    axios.get('/api/tags')
-      .then(result=>{
-        setTagData(result.data.tags)
-      })
-    },[tags])
+  useEffect(() => {
+    axios.get("/api/tags").then((result) => {
+      setTagData(result.data.tags);
+    });
+  }, [tags]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  
-  
   /**태그추가기능 */
   const addNewTag = () => {
     if (tagInputValue !== "" && !isSubmitting) {
@@ -173,44 +177,35 @@ const SetTag = () => {
   return (
     <DropdownWrapper>
       <SetTodoButton onClick={toggleDropdown}>
-        <FontAwesomeIcon
-          icon={faTag}
-          style={{ color: "#000000" }}
-
-        />
+        <FontAwesomeIcon icon={faTag} style={{ color: "#000000" }} />
       </SetTodoButton>
       {/* todoData가 있으면 todoData.map  */}
       {isOpen && (
         <DropdownMenu>
-          {
-            tagData.map((tag,index) => (
-              /**선택한 태그로직 */
-              <TagContainer key={index}>
-                <Checkbox
-                  colorScheme="red"
-                  value={tag}
-                  disabled={selectTag && selectTag !== tag}
-                  onChange={(e)=>{
-                    if(e.target.checked == true)
-                      dispatch(changeSelectTag(tag));
-                    else
-                      dispatch(changeSelectTag(''))
-                  }}
-
-                >
-                  {tag}
-                </Checkbox>
+          {tagData.map((tag, index) => (
+            /**선택한 태그로직 */
+            <TagContainer key={index}>
+              <Checkbox
+                colorScheme="red"
+                value={tag}
+                disabled={selectTag && selectTag !== tag}
+                onChange={(e) => {
+                  if (e.target.checked == true) dispatch(changeSelectTag(tag));
+                  else dispatch(changeSelectTag(""));
+                }}
+              >
+                {tag}
+              </Checkbox>
               <AddTagButton
-              onClick={(e)=>{
-                e.stopPropagation();
-                handleTagDeletion(index);
-              }}
-            >
-              x
-            </AddTagButton>
-              </TagContainer>
-            ))
-          }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTagDeletion(index);
+                }}
+              >
+                x
+              </AddTagButton>
+            </TagContainer>
+          ))}
 
           <TagList>
             <AddTagInput
@@ -218,16 +213,63 @@ const SetTag = () => {
               type="text"
               placeholder="추가할 태그 입력"
               value={tagInputValue}
-              onChange={(e)=>{setTagInputValue(e.target.value)}}
+              onChange={(e) => {
+                setTagInputValue(e.target.value);
+              }}
               onKeyDown={handleEnterKey}
             />
 
-            <AddTagButton
-              onClick={addNewTag}
-            >
-              +
-            </AddTagButton>
+            <AddTagButton onClick={addNewTag}>+</AddTagButton>
           </TagList>
+        </DropdownMenu>
+      )}
+    </DropdownWrapper>
+  );
+};
+
+const SetTime = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTime, setSelectedTime] = useState("");
+
+  const dispatch = useDispatch();
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleTimeChange = (event) => {
+    const newTime = event.target.value;
+    setSelectedTime(newTime);
+  };
+
+  const addTime = () => {
+    // 시간 데이터를 state.todo.selectTime로 보내기
+    dispatch(setTime(selectedTime));
+
+    // 드롭다운을 닫기
+    setIsOpen(false);
+  };
+
+  const deleteTime = () => {
+    dispatch(clearTime());
+  }
+
+  return (
+    <DropdownWrapper>
+      <SetTodoButton onClick={toggleDropdown}>
+        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
+      </SetTodoButton>
+      {isOpen && (
+        <DropdownMenu>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <TimeInput
+              type="time"
+              value={selectedTime}
+              onChange={handleTimeChange}
+            />
+            <AddTagButton onClick={addTime}>+</AddTagButton>
+            <AddTagButton onClick={deleteTime}>x</AddTagButton>
+          </div>
         </DropdownMenu>
       )}
     </DropdownWrapper>
@@ -247,9 +289,8 @@ export default App;
 import styled from "styled-components";
 
 export const TodoDiv = styled.div`
-  margin-left:10px;
-  margin-right:10px;
-  border: 2px solid #7f7f7f48;
+  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 15px;
   text-align: left;
   cursor: pointer;
@@ -285,7 +326,6 @@ export const AddTodoButton = styled.button`
 export const SetTodoButton = styled.button`
   font-size: 20px;
   padding: 20px;
-  
 `;
 
 export const DropdownWrapper = styled.div`
@@ -303,39 +343,73 @@ export const DropdownMenu = styled.div`
   list-style: none;
   padding: 0;
   margin: 0;
-  display:flex;
+  display: flex;
   flex-direction: column;
-  
 `;
 
 export const TagContainer = styled.div`
-  display:flex;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  width:100%;
-  padding:10px;
-`
-
-export const TagList = styled.li `
+  width: 100%;
   padding: 10px;
-  display:flex;
+`;
+
+export const TagList = styled.li`
+  padding: 10px;
+  display: flex;
   justify-content: space-between;
-`
+`;
 
 export const AddTagInput = styled.input`
   width: 80%;
   border: none;
-  
+
   background-color: transparent;
   &:focus {
     outline: none;
     background-color: transparent;
   }
-  
 `;
 export const AddTagButton = styled.button`
-width: 20%;
-&:hover {
+  width: 20%;
+  border-radius: 5px;
+
+  &:hover {
     background-color: var(--mainColor);
   }
+`;
+
+export const SelectTag = styled.p`
+  background-color: ${(props) => (props.hasContent ? "#d9d9d9" : "transparent")};
+  display: inline-block;
+  margin: 20px;
+  padding: 2px 5px;
+  border-radius: 5px;
+  line-height: 1.5;
+  vertical-align: top; 
+`;
+
+
+export const SelectDay = styled.p`
+  background-color: #d9d9d9;
+  display: inline-block;
+  margin: 20px;
+  padding: 2px 5px;
+  border-radius: 5px;
+`;
+
+export const TimeInput = styled.input`
+  margin: 10px;
+  width: 80%;
+  &:focus {
+    outline: none;
+    background-color: transparent;
+  }
+`;
+
+export const SelectDiv = styled.div`
+  height: ${(props) => (props.hasContent ? "50px" : "0px")};
+  overflow: hidden;
+  transition: height 0.3s ease-out;
 `;
