@@ -63,12 +63,12 @@ function ExpModal({ closeModal }) {
           (!!todoData.selectTime && todoData.selectTime.trim().length > 0)
         }
       >
-<SelectTag hasContent={!!todoData.selectTime && todoData.selectTime.trim().length > 0}>
-  {todoData.selectTime}
-</SelectTag>
-<SelectTag hasContent={!!todoData.selectTag && todoData.selectTag.trim().length > 0}>
-  {todoData.selectTag}
-</SelectTag>
+        <SelectTag hasContent={!!todoData.selectTime && todoData.selectTime.trim().length > 0}>
+          {todoData.selectTime}
+        </SelectTag>
+        <SelectTag hasContent={!!todoData.selectTag && todoData.selectTag.trim().length > 0}>
+          {todoData.selectTag}
+        </SelectTag>
 
       </SelectDiv>
 
@@ -188,6 +188,7 @@ const SetTag = () => {
               <Checkbox
                 colorScheme="red"
                 value={tag}
+                isChecked={selectTag == tag}
                 disabled={selectTag && selectTag !== tag}
                 onChange={(e) => {
                   if (e.target.checked == true) dispatch(changeSelectTag(tag));
