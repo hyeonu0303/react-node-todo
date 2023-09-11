@@ -2,7 +2,7 @@ import { useState } from "react";
 import Calendar from "@layout/Main/Calendar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons";
-// import SidebarIcon from './SidebarIcon'
+import UserStatus from "@components/UserStatus";
 
 const Icon = ({ icon, onClick }) => (
   <FontAwesomeIcon
@@ -14,7 +14,6 @@ const Icon = ({ icon, onClick }) => (
     }}
   />
 );
-
 
 const Sidebar = ({markDate}) => {
   let [visible, setVisible] = useState(false);
@@ -31,13 +30,16 @@ const Sidebar = ({markDate}) => {
         <CalendarArea visible={visible}>
           <Calendar mark={markDate}/>
         </CalendarArea>
+        <IconArea>
+          <Icon icon={faHouse}/>
+          <Icon icon={faStar}/>  
+          <Icon icon={faCalendar} onClick={handleIconClick}/>
+          <Icon icon={faGear}/>
+        </IconArea>
+        <UserStatusArea>
+          <UserStatus/>
+        </UserStatusArea>
       </SidebarWidth>
-      <IconArea>
-        <Icon icon={faHouse}/>
-        <Icon icon={faStar}/>  
-        <Icon icon={faCalendar} onClick={handleIconClick}/>
-        <Icon icon={faGear}/>
-      </IconArea>
     </>
   );
 };
@@ -74,6 +76,7 @@ const CalendarArea = styled(SidebarWidth)`
   right:0;
   top:0;
 `
+
 const IconArea = styled.div`
   display: flex;
   justify-content: center;
@@ -82,4 +85,10 @@ const IconArea = styled.div`
   position:absolute;
   left:30px;
   top:20px;
+`
+
+const UserStatusArea = styled.div`
+  position:absolute;
+  bottom:20px;
+  left:12px;
 `

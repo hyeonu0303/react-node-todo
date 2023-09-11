@@ -96,20 +96,6 @@ router.get("/api/data", (req, res) => {
     })
     .catch((error) => {console.log('date GET요청에러')})
   });
+
   module.exports = router;
   
-  
-  
-  /* const todoData = {};
-
-  for(let i = 0; i < result.length; i++){
-    const date = result[i].date;
-    const content = result[i].content;
-    const selectTag = result[i].selectTag;
-
-    if(!todoData[date]){
-      todoData[date] = [{content, selectTag}];
-    }else{
-      todoData[date].push({content, selectTag});
-    }
-  } */

@@ -115,6 +115,7 @@ const SetTag = () => {
   const tags = useSelector((state) => state.todo.tags);
   const [tagData,setTagData] = useState([]);
   const selectTag = useSelector(state=>state.todo.selectTag);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   /**태그 데이터 */
   useEffect(()=>{
     axios.get('/api/tags')
@@ -126,35 +127,38 @@ const SetTag = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-  
 
   
   
   /**태그추가기능 */
   const addNewTag = () => {
-    if (tagInputValue !== "") {
+    if (tagInputValue !== "" && !isSubmitting) {
       dispatch(addTag(tagInputValue)); //전역변수 따로저장
-      
+      setIsSubmitting(true);
       axios.post('/api/tags', {
         tags: tagInputValue
       })
       .then(response => {
         setTagData(prevTags => [...prevTags, tagInputValue]);
+        setTagInputValue('');
       })
       .catch((error) => {
         if(error) console.log("태그저장요청에러" + error);
       })
+      .finally(()=>{
+        setIsSubmitting(false);
+      })
       
-      setTagInputValue('');
     }
   };
+
   /**태그삭제 */
   const handleTagDeletion = (index) => {
     axios.post('/api/tags/delete',{
       deleteIndex: index
     })
     .then(response=>{
-      console.log(response.data)
+      setTagData(response.data.tags)
     })
     .catch()    
   }

@@ -21,7 +21,7 @@ const MainPage = () => {
 
   const [markDate, setMarkDate] = useState();
   const [allData, setAllData] = useState();
-
+  
   /**날짜 데이터*/
   useEffect(()=>{
     axios.get('/api/data')

@@ -13,15 +13,12 @@ const UserStatus = ()=>{
   const state = useSelector((state)=> state) /**모든스테이트남음 */
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const username = useSelector((state) => state.user.username);
+
   useEffect(() => {
     console.log(username);
     console.log(isLoggedIn);
   }, [username, isLoggedIn]);
-  /**로그인한 유저이름 */
-
-  /**
-   * 로그아웃 get요청 
-  */
+  
   const handleLogout = () => {
     axios.get('/api/logout')
     .then((result)=>{
@@ -34,7 +31,6 @@ const UserStatus = ()=>{
     })
   }
 
-  /**로그인여부 로직 */
   return(
     <>
       {
