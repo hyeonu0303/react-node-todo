@@ -8,17 +8,13 @@ const Icon = ({ icon, onClick }) => (
   <FontAwesomeIcon
     icon={icon}
     size={"2xl"}
-    style={{
-      position: 'absolute',
-      cursor: "pointer",
-      padding: "16px",
-      left: "20px",
-      top: "10px",
-      borderRadius: '4px',
-    }}
     onClick={onClick}
+    style={{
+      cursor:'pointer'
+    }}
   />
 );
+
 
 const Sidebar = ({markDate}) => {
   let [visible, setVisible] = useState(false);
@@ -26,7 +22,7 @@ const Sidebar = ({markDate}) => {
   const handleIconClick = () => {
     setVisible(!visible)
   }
-  
+
   return (
     <>
       <SidebarWidth visible={visible}>
@@ -36,7 +32,12 @@ const Sidebar = ({markDate}) => {
           <Calendar mark={markDate}/>
         </CalendarArea>
       </SidebarWidth>
-      <Icon icon={faCalendar} onClick={handleIconClick}/>
+      <IconArea>
+        <Icon icon={faHouse}/>
+        <Icon icon={faStar}/>  
+        <Icon icon={faCalendar} onClick={handleIconClick}/>
+        <Icon icon={faGear}/>
+      </IconArea>
     </>
   );
 };
@@ -45,7 +46,10 @@ export default Sidebar;
 
 import styled from "styled-components";
 
-export const SidebarWidth = styled.div`
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
+const SidebarWidth = styled.div`
   width: ${(props) => (props.visible ? "510px" : "100px")};
   height: 100%;
   position: relative;
@@ -70,7 +74,12 @@ const CalendarArea = styled(SidebarWidth)`
   right:0;
   top:0;
 `
-
-
-
-
+const IconArea = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap:20px;
+  position:absolute;
+  left:30px;
+  top:20px;
+`
