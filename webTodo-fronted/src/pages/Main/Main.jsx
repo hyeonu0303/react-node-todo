@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {login} from '@/store/userSlice';
 import TodoInputModal from "@layout/Main/TodoInputModal";
+import TodoContent from "@layout/Main/TodoContent";
 import axios from "axios";
 import Sidebar from "@layout/Sidebar";
 import styled from "styled-components";
@@ -36,6 +37,7 @@ const MainPage = () => {
         setMarkDate(datesArray)
         setAllData(result.data);
       })
+    
     },[])
 
   return (
@@ -43,6 +45,7 @@ const MainPage = () => {
       <Sidebar markDate={markDate}/>
       <ContentWrapper>
         <TodoInputModal/>
+        <TodoContent allData={allData}/>
       </ContentWrapper>
     </MainContainer>    
     )

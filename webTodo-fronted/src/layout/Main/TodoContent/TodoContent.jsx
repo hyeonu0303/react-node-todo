@@ -1,12 +1,8 @@
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
 
 const TodoContent = (props) => {
   const selectDate = useSelector(state=>state.todo.date)
-  /**
-   * @todo 날짜에 맞는 데이터보여주기
-   */
+  console.log(props.allData)
   return (
     <div>
       {props.allData != null ? (
@@ -16,7 +12,7 @@ const TodoContent = (props) => {
               return (
                 <div key={item._id}>
                   <h2>{item.selectTag}</h2>
-                  <hr />
+                  <hr/>
                   <p>{item.content}</p>
                 </div>
               );
@@ -28,10 +24,5 @@ const TodoContent = (props) => {
     </div>
   );
 }
-
-TodoContent.propTypes = {
-  allData: PropTypes.array
-}
-
 
 export default TodoContent;
