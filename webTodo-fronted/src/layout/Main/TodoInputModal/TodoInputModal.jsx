@@ -41,6 +41,8 @@ function BeforeModal({ toggleModal }) {
 
 function ExpModal({ closeModal }) {
   const todoData = useSelector((state) => state.todo);
+  const [isTagOpen, setIsTagOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
   // console.log(todoData);
 
   /**모달창닫기와 데이터POST요청 */
@@ -53,6 +55,15 @@ function ExpModal({ closeModal }) {
       .then((response) => {
         console.log("요청성공" + response);
       });
+  };
+  const toggleTag = () => {
+    setIsTagOpen(!isTagOpen);
+    setIsTimeOpen(false); // 태그 드롭다운이 열릴 때, 시간 드롭다운은 닫힙니다.
+  };
+
+  const toggleTime = () => {
+    setIsTimeOpen(!isTimeOpen);
+    setIsTagOpen(false); // 시간 드롭다운이 열릴 때, 태그 드롭다운은 닫힙니다.
   };
 
   return (
@@ -72,8 +83,8 @@ function ExpModal({ closeModal }) {
 
       </SelectDiv>
 
-      <SetTime />
-      <SetTag />
+      <SetTime isOpen={isTimeOpen} toggleTime={toggleTime}/>
+      <SetTag isOpen={isTagOpen} toggleTag={toggleTag}/>
 
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
@@ -115,8 +126,7 @@ function TodoContainer() {
   );
 }
 
-const SetTag = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const SetTag = ({isOpen, toggleTag}) => {
   const [tagInputValue, setTagInputValue] = useState("");
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.todo.tags);
@@ -176,7 +186,7 @@ const SetTag = () => {
 
   return (
     <DropdownWrapper>
-      <SetTodoButton onClick={toggleDropdown}>
+      <SetTodoButton onClick={toggleTag}>
         <FontAwesomeIcon icon={faTag} style={{ color: "#000000" }} />
       </SetTodoButton>
       {/* todoData가 있으면 todoData.map  */}
@@ -228,15 +238,14 @@ const SetTag = () => {
   );
 };
 
-const SetTime = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const SetTime = ({isOpen,toggleTime}) => {
   const [selectedTime, setSelectedTime] = useState("");
 
   const dispatch = useDispatch();
 
-  const toggleDropdown = () => {
+  /* const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  };
+  }; */
 
   const handleTimeChange = (event) => {
     const newTime = event.target.value;
@@ -257,7 +266,7 @@ const SetTime = () => {
 
   return (
     <DropdownWrapper>
-      <SetTodoButton onClick={toggleDropdown}>
+      <SetTodoButton onClick={toggleTime}>
         <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
       </SetTodoButton>
       {isOpen && (
@@ -346,6 +355,7 @@ export const DropdownMenu = styled.div`
   margin: 0;
   display: flex;
   flex-direction: column;
+  z-index:1;
 `;
 
 export const TagContainer = styled.div`

@@ -28,7 +28,7 @@ const TodoContent = (props) => {
 
                 <TodoTagArea>
                   {
-                    tag == ''? <h2>🦄목표</h2>:<h2>🌈{tag}</h2>
+                    tag == ''? <h2>✅목표</h2>:<h2>😊{tag}</h2>
                   }
                 </TodoTagArea>
                 <TodoContentArea>
@@ -42,7 +42,12 @@ const TodoContent = (props) => {
               </TodoWrapper>
               ))
           ) : null}
+
           {/* 나중에지워야함 */}
+
+
+
+            
           {
             visible==true?
             <div style={{
