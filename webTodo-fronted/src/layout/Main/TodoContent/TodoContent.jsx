@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {Checkbox} from '@chakra-ui/react'
-import openhimer from './11.png'
+import oppenheimer from './Oppenheimer.png'
 import { useState } from 'react';
 const TodoContent = (props) => {
   const selectDate = useSelector(state => state.todo.date);
@@ -57,7 +57,7 @@ const TodoContent = (props) => {
             }}
             onClick={()=>{setVisible(false)}}
             >
-              <img src={openhimer} style={{borderRadius:'20px', boxShadow:'10px'}}/>
+              <img src={oppenheimer} style={{borderRadius:'20px', boxShadow:'10px'}}/>
               <em style={{fontSize:'20px',fontWeight:'bold',}}>"Now I am become Death, the destroyer of worlds."</em>
             </div>
             : 

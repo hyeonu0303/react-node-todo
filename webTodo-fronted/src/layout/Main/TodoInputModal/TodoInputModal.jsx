@@ -140,9 +140,7 @@ const SetTag = ({isOpen, toggleTag}) => {
     });
   }, [tags]);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  
 
   /**태그추가기능 */
   const addNewTag = () => {
