@@ -43,11 +43,12 @@ const TodoContent = (props) => {
               ))
           ) : null}
 
-          {/* 나중에지워야함 */}
 
 
 
-            
+
+
+          
           {
             visible==true?
             <div style={{

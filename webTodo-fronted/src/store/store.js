@@ -4,7 +4,7 @@ import storage from "redux-persist/lib/storage";
 
 import userSlice from './userSlice';
 import todoSlice from './todoSlice';
-
+import dateSlice from './dateSlice';
 const persistConfig = {
   key: "user", 
   storage: storage,
@@ -17,6 +17,7 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     todo: todoSlice.reducer,
+    date: dateSlice.reducer
   },
 });
 

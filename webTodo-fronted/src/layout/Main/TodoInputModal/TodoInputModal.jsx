@@ -43,7 +43,7 @@ function ExpModal({ closeModal }) {
   const todoData = useSelector((state) => state.todo);
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
-  // console.log(todoData);
+  console.log(todoData);
 
   /**모달창닫기와 데이터POST요청 */
   const handleAddButton = () => {
@@ -58,12 +58,12 @@ function ExpModal({ closeModal }) {
   };
   const toggleTag = () => {
     setIsTagOpen(!isTagOpen);
-    setIsTimeOpen(false); // 태그 드롭다운이 열릴 때, 시간 드롭다운은 닫힙니다.
+    setIsTimeOpen(false); 
   };
 
   const toggleTime = () => {
     setIsTimeOpen(!isTimeOpen);
-    setIsTagOpen(false); // 시간 드롭다운이 열릴 때, 태그 드롭다운은 닫힙니다.
+    setIsTagOpen(false); 
   };
 
   return (
@@ -241,10 +241,6 @@ const SetTime = ({isOpen,toggleTime}) => {
 
   const dispatch = useDispatch();
 
-  /* const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  }; */
-
   const handleTimeChange = (event) => {
     const newTime = event.target.value;
     setSelectedTime(newTime);
@@ -253,13 +249,13 @@ const SetTime = ({isOpen,toggleTime}) => {
   const addTime = () => {
     // 시간 데이터를 state.todo.selectTime로 보내기
     dispatch(setTime(selectedTime));
-
-    // 드롭다운을 닫기
-    setIsOpen(false);
+    toggleTime();
+    
   };
 
   const deleteTime = () => {
     dispatch(clearTime());
+    
   }
 
   return (
@@ -281,15 +277,8 @@ const SetTime = ({isOpen,toggleTime}) => {
         </DropdownMenu>
       )}
     </DropdownWrapper>
+    
   );
-};
-
-BeforeModal.propTypes = {
-  toggleModal: PropTypes.func.isRequired,
-};
-
-ExpModal.propTypes = {
-  closeModal: PropTypes.func.isRequired,
 };
 
 export default App;

@@ -41,12 +41,11 @@ const MainPage = () => {
 
   return (
     <MainContainer>
-      <Sidebar markDate={markDate}/>
+      <Sidebar markDate={markDate} allData={allData}/>
       <ContentWrapper>
         <TodoInputModal/>
         <TodoContent allData={allData}/>
       </ContentWrapper>
-      
     </MainContainer>    
     )
   }

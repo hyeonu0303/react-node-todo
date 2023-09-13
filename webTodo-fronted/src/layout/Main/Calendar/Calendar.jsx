@@ -3,24 +3,38 @@ import { changeDate } from "@/store/todoSlice";
 import Calendar from "react-calendar";
 import moment from 'moment';
 import { useEffect,useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { styled } from "styled-components";
+import { selectMonth } from "@/store/dateSlice";
 import './Calendar.css'
 
 const ReactCalendar = (props) => {
-
   const dispatch = useDispatch();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [getMonthYear, setGetMonthYear] = useState(moment().format('YYYY-MM'));
   /**날짜변경 */
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
-  //선택한 날짜 todoSlice에 저장
-  const [selectedDate, setSelectedDate] = useState(new Date());
+
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
-  
   useEffect(()=>{
     dispatch(changeDate(formatdate));
   },[formatdate])
+  
+  useEffect(()=>{
+    dispatch(selectMonth(getMonthYear))
+    console.log(getMonthYear)
+  },[getMonthYear]) 
+  
+  const handleActiveStartDateChange = ({ activeStartDate, view }) => {
+    if (view === 'month') { // 월 뷰일 때만 처리
+      const newMonthYear = moment(activeStartDate).format('YYYY-MM');
+      setGetMonthYear(newMonthYear);
+    }
+  };
+
+
   
   //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
@@ -34,15 +48,8 @@ const ReactCalendar = (props) => {
 
     return null;
   };
-
-  const Dot = styled.div`
-    height: 8px;
-    width: 8px;
-    background-color: #f87171;
-    border-radius: 50%;
-    margin-left:10px;
-    position:absolute;
-  `
+  
+  
   return(
     <>
       <Calendar 
@@ -56,6 +63,7 @@ const ReactCalendar = (props) => {
         prev2Label={null} //<<모양제거
         formatDay={(locale, date) => moment(date).format("DD")} //날짜 뒤 '일'제거
         tileContent={tileContent} //Dot넣어주기 위한것(Dot필요없으면 생략!)
+        onActiveStartDateChange={handleActiveStartDateChange}
       />
       {/* 선택한날짜표시 */}
     </>
@@ -63,3 +71,12 @@ const ReactCalendar = (props) => {
 }
 
 export default ReactCalendar;
+
+const Dot = styled.p`
+    height: 8px;
+    width: 8px;
+    background-color: #f87171;
+    border-radius: 50%;
+    margin-left:10px;
+    position:absolute;
+  `

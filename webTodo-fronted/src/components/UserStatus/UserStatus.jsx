@@ -10,7 +10,6 @@ import { logout } from "@/store/userSlice";
 const UserStatus = ()=>{
   let dispatch = useDispatch();
   const navigate = useNavigate();
-  const state = useSelector((state)=> state) /**모든스테이트남음 */
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const username = useSelector((state) => state.user.username);
 
@@ -34,7 +33,7 @@ const UserStatus = ()=>{
   return(
     <>
       {
-        state.user.isLoggedIn == true ? (
+        isLoggedIn == true ? (
           <>
             <p>{username}님<br/> 환영합니다!</p>
             <Button 
