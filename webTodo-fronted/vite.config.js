@@ -52,16 +52,16 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://white-brook-2764.fly.dev/', // 백엔드 서버 주소
+        target: 'http://localhost:3000/', // 백엔드 서버 주소
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/auth': {
-        target: 'https://white-brook-2764.fly.dev/',
+        target: 'http://localhost:3000/',
         changeOrigin:true
       },
       '/data': {
-        target: 'https://white-brook-2764.fly.dev/',
+        target: 'http://localhost:3000/',
         changeOrigin:true
       }
     },
@@ -69,3 +69,4 @@ export default defineConfig({
 });
 
 // target: 'http://localhost:3000/',
+// target: 'https://fly-builder-floral-sky-8617.fly.dev
