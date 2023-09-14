@@ -67,3 +67,6 @@ export default defineConfig({
     },
   },
 });
+
+// target: 'http://localhost:3000/',
+// target: 'https://fly-builder-floral-sky-8617.fly.dev

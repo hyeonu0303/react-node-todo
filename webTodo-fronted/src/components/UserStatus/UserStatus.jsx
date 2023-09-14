@@ -1,7 +1,7 @@
 
 import {useSelector, useDispatch} from 'react-redux';
 import { useEffect } from 'react';
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {Button} from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -45,12 +45,12 @@ const UserStatus = ()=>{
               로그아웃
             </Button>
           </>
-        ):(
+        ):null/* (
           <>
           <Link to="/register">회원가입</Link>
           <Link to="/">로그인</Link>
           </>
-        )
+        ) */
       }
     </>
   )

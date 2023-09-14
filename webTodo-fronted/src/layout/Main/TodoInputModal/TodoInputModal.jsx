@@ -22,6 +22,7 @@ function BeforeModal({ toggleModal }) {
   // 마우스 클릭 이벤트 전 모달
   const dispatch = useDispatch();
   let [inputValue, setInputValue] = useState("");
+
   useEffect(() => {
     dispatch(changeContent(inputValue));
   }, [inputValue]);
@@ -53,9 +54,10 @@ function ExpModal({ closeModal }) {
         todoData,
       })
       .then((response) => {
-        console.log("요청성공" + response);
+        console.log("요청성공" + response.data);
       });
   };
+
   const toggleTag = () => {
     setIsTagOpen(!isTagOpen);
     setIsTimeOpen(false); 

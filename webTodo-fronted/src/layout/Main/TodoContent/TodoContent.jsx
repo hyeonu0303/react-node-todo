@@ -31,14 +31,16 @@ const TodoContent = (props) => {
                     tag == ''? <h2>✅목표</h2>:<h2>😊{tag}</h2>
                   }
                 </TodoTagArea>
-                <TodoContentArea>
 
+                <TodoContentArea>
                   {
                     groupedByTag[tag].map((content, index) => (
                       <Checkbox key={index}>{content}</Checkbox>
                       )
-                    )}
+                    )
+                  }
                 </TodoContentArea>
+                
               </TodoWrapper>
               ))
           ) : null}
