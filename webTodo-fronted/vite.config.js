@@ -52,21 +52,22 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://webtodo1.du.r.appspot.com/', // 백엔드 서버 주소
+        target: 'http://localhost:3000/', // 백엔드 서버 주소
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/auth': {
-        target: 'https://webtodo1.du.r.appspot.com/',
+        target: 'http://localhost:3000/',
         changeOrigin:true
       },
       '/data': {
-        target: 'https://webtodo1.du.r.appspot.com/',
+        target: 'http://localhost:3000/',
         changeOrigin:true
       }
     },
   },
 });
 
+// target: 'https://webtodo1.du.r.appspot.com/',
 // target: 'http://localhost:3000/',
 // target: 'https://fly-builder-floral-sky-8617.fly.dev

@@ -15,7 +15,6 @@ const port = process.env.PORT;
 //미들웨어
 app.use(express.json());
 app.use(cors({
-  origin:'https://webtodo1.du.r.appspot.com/',
   credentials: true}
   ));
 app.use(express.urlencoded({extended: true})) 
