@@ -52,16 +52,16 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000/', // 백엔드 서버 주소
+        target: 'http://localhost:8080/', // 백엔드 서버 주소
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/auth': {
-        target: 'http://localhost:3000/',
+        target: 'http://localhost:8080/',
         changeOrigin:true
       },
       '/data': {
-        target: 'http://localhost:3000/',
+        target: 'http://localhost:8080/',
         changeOrigin:true
       }
     },

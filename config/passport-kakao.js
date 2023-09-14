@@ -6,7 +6,7 @@ const KakaoStrategy = require('passport-kakao').Strategy
 passport.use(new KakaoStrategy({
   clientID : process.env.KAKAO_CLIENT_ID,
   // clientSecret을 사용하지 않는다면 넘기지 말거나 빈 스트링을 넘길 것
-  callbackURL : 'http://localhost:3000/auth/kakao/callback'
+  callbackURL : 'http://localhost:8080/auth/kakao/callback'
 },
 (accessToken, refreshToken, profile, done) => {
   // 사용자의 정보는 profile에 들어있다.
