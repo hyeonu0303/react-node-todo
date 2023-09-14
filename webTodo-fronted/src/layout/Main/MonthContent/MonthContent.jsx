@@ -44,32 +44,38 @@ const MonthContent = ({allData}) => {
   })
 
   console.log(sortedData)
+
     return(
       <MonthWrapper>
         {
           sortedData.map((item,index)=>(
             <>
-              <p>{item.date}</p>
-              <p>{item.content}</p>
+              <p key={index}>{item.date}</p>
+              {
+                item.content.map((content,i)=>(
+                  <p key={i}>
+                    {content}
+                  </p>
+                ))
+              }
+              <br/>              
             </>
           ))
         }
       </MonthWrapper>
-    )
+    );
 }
-
-
 
 export default MonthContent;
 
 const MonthWrapper = styled.div`
-  height:400px;
-  border:1px solid black;
-  border-radius: 10px;
-  overflow-y: scroll;
+  font-size:1rem;
+  padding:0 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  
 `
 
 

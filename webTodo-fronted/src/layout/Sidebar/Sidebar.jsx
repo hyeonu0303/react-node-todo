@@ -30,12 +30,15 @@ const Sidebar = ({markDate, allData}) => {
       <SidebarWidth visible={visible}>
         <Wrapper>
         </Wrapper>
+
         <CalendarArea visible={visible}>
           <Calendar mark={markDate}/>
+        </CalendarArea>
+
         <MonthContentArea visible={visible}>
           <MonthContent allData={allData}/>
         </MonthContentArea>
-        </CalendarArea>
+
         <IconArea>
           <Icon icon={faHouse}/>
           <Icon icon={faStar}/>  
@@ -58,8 +61,7 @@ const SidebarWidth = styled.div`
   height: 100%;
   position: relative;
   transition: all 0.3s;
-  margin-bottom:10px;
-  
+  overflow:hidden;
   `
 
 const Wrapper = styled(SidebarWidth)`
@@ -71,8 +73,9 @@ const Wrapper = styled(SidebarWidth)`
   top: 0;
 `
 
-const CalendarArea = styled(SidebarWidth)`
+const CalendarArea = styled.div`
   width: 400px;
+  height:100%;
   position: absolute;
   display: ${props=>props.visible ? 'block' : 'none'};
   transition: all 0.3s;
@@ -82,11 +85,39 @@ const CalendarArea = styled(SidebarWidth)`
 
 const MonthContentArea = styled.div`
   width:400px;
+  max-height:460px;
   display: ${props=>props.visible ? 'block' : 'none'};
   transition: all 0.3s;
   position:absolute;
   top:390px;
   right:0;
+  border:4px solid #eee;
+  border-radius:10px;
+  overflow-y: scroll;
+  padding-right:10px;
+
+  
+
+
+  &::-webkit-scrollbar {
+      width: 8px;  /* 스크롤바의 너비 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+      height: 28%; /* 스크롤바의 길이 */
+      background: #8fbeff; /* 스크롤바의 색상 */
+      border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+      background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+  }
+  @font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 `
 const IconArea = styled.div`
   display: flex;
