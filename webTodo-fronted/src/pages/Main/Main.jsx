@@ -37,7 +37,7 @@ const MainPage = () => {
         setAllData(result.data);
       })
     
-    },[])
+    },[allData])
 
   return (
     <MainContainer>
