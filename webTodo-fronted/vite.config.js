@@ -52,16 +52,16 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000/', // 백엔드 서버 주소
+        target: 'https://webtodo1.du.r.appspot.com/', // 백엔드 서버 주소
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/auth': {
-        target: 'http://localhost:3000/',
+        target: 'https://webtodo1.du.r.appspot.com/',
         changeOrigin:true
       },
       '/data': {
-        target: 'http://localhost:3000/',
+        target: 'https://webtodo1.du.r.appspot.com/',
         changeOrigin:true
       }
     },
