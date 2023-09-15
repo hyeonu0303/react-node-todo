@@ -36,6 +36,7 @@ const MonthContent = ({allData}) => {
       setChangeData(groupedData); // 2. 상태 업데이트
     }
   }, [allData,YearMonth]); 
+  // allData,YearMonth
   
   const copyData = [...changeData];
   /**날짜 정렬 */

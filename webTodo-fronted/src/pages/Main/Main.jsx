@@ -22,8 +22,8 @@ const MainPage = () => {
 
   const [markDate, setMarkDate] = useState();
   const [allData, setAllData] = useState();
-  
-  useEffect(()=>{
+
+  const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{
         const dates = new Set();
@@ -35,15 +35,19 @@ const MainPage = () => {
         let datesArray = [...dates];
         setMarkDate(datesArray)
         setAllData(result.data);
+
+        console.log('get요청성공')
       })
-    
-    },[allData])
+  }
+  useEffect(()=>{
+    axiosAllData();
+  },[])
 
   return (
     <MainContainer>
       <Sidebar markDate={markDate} allData={allData}/>
       <ContentWrapper>
-        <TodoInputModal/>
+        <TodoInputModal getAllData={axiosAllData}/>
         <TodoContent allData={allData}/>
       </ContentWrapper>
     </MainContainer>    

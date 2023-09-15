@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
 
 import { Checkbox } from "@chakra-ui/react";
-function App() {
+function App({getAllData}) {
   return (
     <TodoDiv>
-      <TodoContainer />
+      <TodoContainer getAllData={getAllData}/>
     </TodoDiv>
   );
 }
@@ -40,15 +40,22 @@ function BeforeModal({ toggleModal }) {
   );
 }
 
-function ExpModal({ closeModal }) {
+function TodoContainer({getAllData}) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
-  const [isTagOpen, setIsTagOpen] = useState(false);
-  const [isTimeOpen, setIsTimeOpen] = useState(false);
   console.log(todoData);
 
-  /**모달창닫기와 데이터POST요청 */
+  const toggleModal = () => {
+    setIsModalVisible(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
   const handleAddButton = () => {
-    closeModal;
+    closeModal();
     axios
       .post("/api/todoData", {
         todoData,
@@ -56,7 +63,37 @@ function ExpModal({ closeModal }) {
       .then((response) => {
         console.log("요청성공" + response.data);
       });
+    getAllData()
   };
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={modalRef}>
+      <BeforeModal toggleModal={toggleModal} />
+      {isModalVisible && <ExpModal todoData={todoData} handleAddButton={handleAddButton}/>}
+    </div>
+  );
+}
+
+function ExpModal({ handleAddButton, todoData}) {
+
+  const [isTagOpen, setIsTagOpen] = useState(false);
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
+
+  /**모달창닫기와 데이터POST요청 */
+  
 
   const toggleTag = () => {
     setIsTagOpen(!isTagOpen);
@@ -95,39 +132,6 @@ function ExpModal({ closeModal }) {
   );
 }
 
-function TodoContainer() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const modalRef = useRef(null);
-
-  const toggleModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        closeModal();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  return (
-    <div ref={modalRef}>
-      <BeforeModal toggleModal={toggleModal} />
-      {isModalVisible && <ExpModal closeModal={closeModal} />}
-    </div>
-  );
-}
-
 const SetTag = ({isOpen, toggleTag}) => {
   const [tagInputValue, setTagInputValue] = useState("");
   const dispatch = useDispatch();
@@ -141,8 +145,6 @@ const SetTag = ({isOpen, toggleTag}) => {
       setTagData(result.data.tags);
     });
   }, [tags]);
-
-  
 
   /**태그추가기능 */
   const addNewTag = () => {
