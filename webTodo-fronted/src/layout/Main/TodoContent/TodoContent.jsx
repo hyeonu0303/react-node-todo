@@ -1,10 +1,11 @@
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import {Checkbox} from '@chakra-ui/react'
+import {Checkbox, Text} from '@chakra-ui/react'
 import oppenheimer from './Oppenheimer.png'
 import { useState } from 'react';
 const TodoContent = (props) => {
   const selectDate = useSelector(state => state.todo.date);
+  const [isChecked, setIsChecked] = useState(false);
   const [visible, setVisible] = useState(false);
   // selectTag로 그룹화
   const groupedByTag = {};
@@ -33,23 +34,28 @@ const TodoContent = (props) => {
                 </TodoTagArea>
 
                 <TodoContentArea>
-                  {
-                    groupedByTag[tag].map((content, index) => (
-                      <Checkbox key={index}>{content}</Checkbox>
-                      )
-                    )
-                  }
+                {
+                  groupedByTag[tag].map((content, index) => (
+                    <Checkbox 
+                      key={index}
+                      isChecked={isChecked[index]}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        const updatedCheckState = { ...isChecked, [index]: e.target.checked };
+                        setIsChecked(updatedCheckState);
+                      }}
+                    >
+                      <Text textDecoration={isChecked[index] ? 'line-through' : 'none'}>
+                        {content}
+                      </Text>
+                    </Checkbox>
+                  ))
+                }
                 </TodoContentArea>
                 
               </TodoWrapper>
               ))
           ) : null}
-
-
-
-
-
-
           
           {
             visible==true?
