@@ -5,12 +5,13 @@ let Tags = require('../schema/Tags');
 /**할일입력 데이터저장 */
 router.post('/api/todoData',(req,res)=>{
   let todoData = req.body.todoData;
-  
+  console.log(todoData);
   const todo = new Todo({
     user: req.user._id,
     content: todoData.content,
     date: todoData.date,
-    selectTag: todoData.selectTag
+    selectTag: todoData.selectTag,
+    selectTime: todoData.selectTime
   });
   todo.save()
     .then((result)=>{

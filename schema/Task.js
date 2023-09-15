@@ -16,7 +16,7 @@ const todoSchema = new mongoose.Schema({
   selectTag:{
     type: String,
   },
-  time: String,
+  selectTime: String,
   importance: String
 },{
   collection:'task' //내가원하는 collection이름

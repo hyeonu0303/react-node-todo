@@ -5,8 +5,8 @@ import oppenheimer from './Oppenheimer.png'
 import { useState } from 'react';
 const TodoContent = (props) => {
   const selectDate = useSelector(state => state.todo.date);
-  const [isChecked, setIsChecked] = useState(false);
   const [visible, setVisible] = useState(false);
+
   // selectTag로 그룹화
   const groupedByTag = {};
 
@@ -15,9 +15,14 @@ const TodoContent = (props) => {
           if (!groupedByTag[item.selectTag]) {
               groupedByTag[item.selectTag] = [];
           }
-          groupedByTag[item.selectTag].push(item.content);
+          groupedByTag[item.selectTag].push({
+            content:item.content,
+            selectTime:item.selectTime
+            }
+          );
       }
   });
+
 
   console.log(groupedByTag);
 
@@ -35,22 +40,18 @@ const TodoContent = (props) => {
 
                 <TodoContentArea>
                 {
-                  groupedByTag[tag].map((content, index) => (
-                    <Checkbox 
+                  groupedByTag[tag].map((array, index) => {
+                    return(
+                      <Checkbox 
                       key={index}
-                      isChecked={isChecked[index]}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        const updatedCheckState = { ...isChecked, [index]: e.target.checked };
-                        setIsChecked(updatedCheckState);
-                      }}
-                    >
-                      <Text textDecoration={isChecked[index] ? 'line-through' : 'none'}>
-                        {content}
+                      >
+                      <Text>
+                        {array.content}
+                        {array.selectTime}
                       </Text>
                     </Checkbox>
-                  ))
-                }
+                  )})
+                  }
                 </TodoContentArea>
                 
               </TodoWrapper>
