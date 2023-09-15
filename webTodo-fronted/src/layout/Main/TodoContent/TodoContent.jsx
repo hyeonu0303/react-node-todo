@@ -48,6 +48,7 @@ const TodoContent = (props) => {
                       <Text>
                         {array.content}
                         {array.selectTime}
+                        <p>깃허브연동체크</p>
                       </Text>
                     </Checkbox>
                   )})
