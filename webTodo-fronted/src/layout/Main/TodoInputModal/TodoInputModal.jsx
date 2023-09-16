@@ -285,6 +285,51 @@ const SetTime = ({isOpen,toggleTime}) => {
   );
 };
 
+const SetDay = ({isOpen,toggleTime}) => {
+  const [selectedTime, setSelectedTime] = useState("");
+
+  const dispatch = useDispatch();
+
+  const handleTimeChange = (event) => {
+    const newTime = event.target.value;
+    setSelectedTime(newTime);
+  };
+
+  const addTime = () => {
+    // 시간 데이터를 state.todo.selectTime로 보내기
+    dispatch(setTime(selectedTime));
+    toggleTime();
+    
+  };
+
+  const deleteTime = () => {
+    dispatch(clearTime());
+    
+  }
+
+  return (
+    <DropdownWrapper>
+      <SetTodoButton onClick={toggleTime}>
+        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
+      </SetTodoButton>
+      {isOpen && (
+        <DropdownMenu>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <TimeInput
+              type="time"
+              value={selectedTime}
+              onChange={handleTimeChange}
+            />
+            <AddTagButton onClick={addTime}>+</AddTagButton>
+            <AddTagButton onClick={deleteTime}>x</AddTagButton>
+          </div>
+        </DropdownMenu>
+      )}
+    </DropdownWrapper>
+    
+  );
+};
+
 export default App;
 
 import styled from "styled-components";
