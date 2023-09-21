@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTag, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTag, faClock, faCalendarPlus, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,30 +18,9 @@ function App({getAllData}) {
   );
 }
 
-function BeforeModal({ toggleModal }) {
-  // 마우스 클릭 이벤트 전 모달
-  const dispatch = useDispatch();
-  let [inputValue, setInputValue] = useState("");
-
-  useEffect(() => {
-    dispatch(changeContent(inputValue));
-  }, [inputValue]);
-
-  return (
-    <div style={{ width: "100%" }}>
-      <TodoInput
-        type="text"
-        placeholder="오늘의 할일은 무엇인가요?"
-        onClick={toggleModal}
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-    </div>
-  );
-}
-
-function TodoContainer({getAllData}) {
+function TodoContainer({ getAllData }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  let [inputValue, setInputValue] = useState("");
   const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
   console.log(todoData);
@@ -50,21 +29,22 @@ function TodoContainer({getAllData}) {
     setIsModalVisible(true);
   };
   
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
+    const closeModal = () => {
+      setIsModalVisible(false);
+    };
 
-  const handleAddButton = () => {
-    closeModal();
-    axios
-      .post("/api/todoData", {
-        todoData,
-      })
-      .then((response) => {
-        console.log("요청성공" + response.data);
-      });
-    getAllData()
-  };
+    const handleAddButton = () => {
+      closeModal();
+      axios
+        .post("/api/todoData", {
+          todoData,
+        })
+        .then((response) => {
+          console.log("요청성공" + response.data);
+        });
+      getAllData();
+      setInputValue('');
+    };
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -81,27 +61,65 @@ function TodoContainer({getAllData}) {
 
   return (
     <div ref={modalRef}>
-      <BeforeModal toggleModal={toggleModal} />
+      <BeforeModal
+      inputValue={inputValue}
+      setInputValue={setInputValue}
+        handleAddButton={handleAddButton}
+        toggleModal={toggleModal} />
       {isModalVisible && <ExpModal todoData={todoData} handleAddButton={handleAddButton}/>}
     </div>
   );
 }
 
-function ExpModal({ handleAddButton, todoData}) {
+
+function BeforeModal({ inputValue, setInputValue, handleAddButton, toggleModal }) {
+  // 마우스 클릭 이벤트 전 모달
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(changeContent(inputValue));
+  }, [inputValue]);
+
+  return (
+    <div style={{ width: "100%" }}>
+      <TodoInput
+        type="text"
+        placeholder="오늘의 할일은 무엇인가요?"
+        onClick={toggleModal}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleAddButton();
+          }
+        }
+        }
+      />
+    </div>
+  );
+}
+
+function ExpModal({ handleAddButton, todoData }) {
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
-
-  /**모달창닫기와 데이터POST요청 */
-  
+  const [isDayOpen, setIsDayOpen] = useState(false);
 
   const toggleTag = () => {
-    setIsTagOpen(!isTagOpen);
+    setIsDayOpen(false); 
     setIsTimeOpen(false); 
+    setIsTagOpen(!isTagOpen);
   };
 
   const toggleTime = () => {
+    setIsDayOpen(false); 
     setIsTimeOpen(!isTimeOpen);
+    setIsTagOpen(false); 
+  };
+
+  const toggleDay = () => {
+    setIsDayOpen(!isDayOpen);
+    setIsTimeOpen(false);
     setIsTagOpen(false); 
   };
 
@@ -121,9 +139,11 @@ function ExpModal({ handleAddButton, todoData}) {
         </SelectTag>
 
       </SelectDiv>
-
+        
+      <SetDay isOpen={isDayOpen} toggleDay={toggleDay}/>
       <SetTime isOpen={isTimeOpen} toggleTime={toggleTime}/>
       <SetTag isOpen={isTagOpen} toggleTag={toggleTag}/>
+      
 
       <AddTodoButton onClick={handleAddButton}>
         <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
@@ -254,7 +274,6 @@ const SetTime = ({isOpen,toggleTime}) => {
     // 시간 데이터를 state.todo.selectTime로 보내기
     dispatch(setTime(selectedTime));
     toggleTime();
-    
   };
 
   const deleteTime = () => {
@@ -285,48 +304,82 @@ const SetTime = ({isOpen,toggleTime}) => {
   );
 };
 
-const SetDay = ({isOpen,toggleTime}) => {
-  const [selectedTime, setSelectedTime] = useState("");
+const SetDay = ({isOpen, toggleDay}) => {
 
   const dispatch = useDispatch();
 
-  const handleTimeChange = (event) => {
-    const newTime = event.target.value;
-    setSelectedTime(newTime);
-  };
-
-  const addTime = () => {
-    // 시간 데이터를 state.todo.selectTime로 보내기
-    dispatch(setTime(selectedTime));
-    toggleTime();
-    
-  };
-
-  const deleteTime = () => {
-    dispatch(clearTime());
-    
-  }
+  const [isDailyChecked, setIsDailyChecked] = useState(false); // 매일
+  const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
+  const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
 
   return (
     <DropdownWrapper>
-      <SetTodoButton onClick={toggleTime}>
-        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
+      <SetTodoButton onClick={toggleDay}>
+        <FontAwesomeIcon icon={faCalendarPlus} style={{ color: "#000000" }} />
       </SetTodoButton>
+  
       {isOpen && (
         <DropdownMenu>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <TimeInput
-              type="time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-            />
-            <AddTagButton onClick={addTime}>+</AddTagButton>
-            <AddTagButton onClick={deleteTime}>x</AddTagButton>
+            <DayList>
+            <CheckboxContainer>
+        <Checkbox 
+          checked={isDailyChecked}
+          onChange={(e) => setIsDailyChecked(e.target.checked)}
+          disabled={isWeekChecked || isDayChecked}
+          style={{ width: '110px' }}
+        >
+          매일 반복
+        </Checkbox>
+      </CheckboxContainer>
+      
+      <CheckboxContainer>
+        <Checkbox 
+          checked={isWeekChecked}
+          onChange={(e) => {
+            setIsWeekChecked(e.target.checked);
+            if (e.target.checked) {
+              setIsDailyChecked(false);
+            }
+          }}
+          disabled={isDailyChecked || isDayChecked}
+          style={{ width: '110px' }}
+        >
+          요일 반복
+        </Checkbox>
+        <ComboBox disabled={!isWeekChecked}>
+          {["월", "화", "수", "목", "금", "토", "일"].map(day => (
+            <option key={day} value={day}>{day}</option>
+          ))}
+        </ComboBox>
+      </CheckboxContainer>
+
+      <CheckboxContainer>
+        <Checkbox 
+          checked={isDayChecked}
+          onChange={(e) => {
+            setIsDayChecked(e.target.checked);
+            if (e.target.checked) {
+              setIsDailyChecked(false);
+            }
+          }}
+          disabled={isDailyChecked || isWeekChecked}
+          style={{ width: '110px' }}
+        >
+          날짜 선택
+        </Checkbox>
+        <AddTagButton>
+          <FontAwesomeIcon 
+            icon={faCalendar}
+            style={{ color: isDayChecked ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
+          />
+        </AddTagButton>
+      </CheckboxContainer>
+            </DayList>
           </div>
         </DropdownMenu>
       )}
     </DropdownWrapper>
-    
   );
 };
 
@@ -368,6 +421,7 @@ export const AddTodoButton = styled.button`
     background-color: var(--mainColor);
   }
 `;
+
 
 export const SetTodoButton = styled.button`
   font-size: 20px;
@@ -459,4 +513,24 @@ export const SelectDiv = styled.div`
   height: ${(props) => (props.hasContent ? "50px" : "0px")};
   overflow: hidden;
   transition: height 0.3s ease-out;
+`;
+
+// SetDay Style
+export const DayList = styled.li`
+  padding: 10px;
+  line-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+export const CheckboxContainer = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const ComboBox = styled.select`
+  margin-left: 10px;
+  width: 50px;
 `;
