@@ -32,7 +32,7 @@ const TodoContent = (props) => {
 
   // 투두 삭제 기능
   const deleteTodo = () => {};
-  onOpen();
+
   // 투두 수정 기능
   const modifyTodo = () => {
     onOpen();
@@ -146,15 +146,4 @@ const TodoContentText = styled.div`
   margin-right: 30px;
   text-align: left;
   display: inline-block;
-`;
-
-const TodoChangeButton = styled.button`
-  margin: 10px;
-  display: inline-block;
-  padding: 5px;
-  border-radius: 5px;
-  &:hover {
-    background-color: var(--mainColor);
-    transition: right 1s ease;
-  }
 `;
