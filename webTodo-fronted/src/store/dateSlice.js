@@ -4,16 +4,19 @@ let date = createSlice({
   name: "date", //name: 'state이름~'
 
   initialState: {
-    selectMonth:''
+    selectMonth:'',
+    selectDay:null,
   },
 
   reducers: {
     selectMonth(state,action){
       state.selectMonth = action.payload
+    },
+    changeDayNum(state,action){
+      state.selectDay = action.payload
     }
   }
-
 });
-export let {selectMonth} = date.actions;
+export let {selectMonth, changeDayNum} = date.actions;
 
 export default date;

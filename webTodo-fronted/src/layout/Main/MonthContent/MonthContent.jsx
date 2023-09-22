@@ -44,6 +44,9 @@ const MonthContent = ({allData}) => {
     return parseInt(a.date) - parseInt(b.date);
   })
 
+  /**
+   * {date:'', content:[]} 이런식으로 데이터변형
+   */
   console.log(sortedData)
 
     return(

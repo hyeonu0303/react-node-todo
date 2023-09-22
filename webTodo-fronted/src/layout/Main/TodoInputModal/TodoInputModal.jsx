@@ -1,15 +1,13 @@
 /*eslint-disable */
 import { useState, useRef, useEffect } from "react";
-
-import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock, faCalendarPlus, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-
+import {changeDayNum} from '@/store/dateSlice';
 import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
-
 import { Checkbox } from "@chakra-ui/react";
+
 function App({getAllData}) {
   return (
     <TodoDiv>
@@ -307,18 +305,36 @@ const SetTime = ({isOpen,toggleTime}) => {
 const SetDay = ({isOpen, toggleDay}) => {
 
   const dispatch = useDispatch();
-
+  const dayNum = useSelector(state=>state.date.selectDay)
   const [isDailyChecked, setIsDailyChecked] = useState(false); // 매일
   const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
   const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
   const [selectedDay, setSelectedDay] = useState('');
-
+  const [DayNum, getDayNum] = useState();
+  
   const handleDayChange = (e) =>{
     e.stopPropagation();
     setSelectedDay(e.target.value);
   }
 
-  console.log(selectedDay);
+  const dayMapping = {
+    "월": 1,
+    "화": 2,
+    "수": 3,
+    "목": 4,
+    "금": 5,
+    "토": 6,
+    "일": 0,
+  };
+
+  const number = dayMapping[selectedDay];
+  if (number !== undefined) {
+    /**dateSlice에 월에대한 숫자를 넘김 */
+    dispatch(changeDayNum(number));
+  }
+
+  console.log(dayNum)
+  
 
   return (
     <DropdownWrapper>
@@ -356,7 +372,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                     요일 반복
                   </Checkbox>
                 <ComboBox disabled={!isWeekChecked} value={selectedDay} onChange={handleDayChange}>
-                  <option value='' disabled selected>일</option>
+                  <option value='' disabled selected>선택</option>
                   {["월", "화", "수", "목", "금", "토", "일"].map(day => (
                     <option key={day} value={day} >{day}</option>
                   ))}
@@ -395,6 +411,7 @@ const SetDay = ({isOpen, toggleDay}) => {
 export default App;
 
 import styled from "styled-components";
+import store from "@/store/store";
 
 export const TodoDiv = styled.div`
   margin-left: 10px;
