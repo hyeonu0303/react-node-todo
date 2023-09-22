@@ -124,15 +124,16 @@ function ExpModal({ handleAddButton, todoData }) {
   return (
     <div>
       <SelectDiv
-        hasContent={
+        hascontent={
           (!!todoData.selectTag && todoData.selectTag.trim().length > 0) ||
           (!!todoData.selectTime && todoData.selectTime.trim().length > 0)
+          ?"true": undefined
         }
       >
-        <SelectTag hasContent={!!todoData.selectTime && todoData.selectTime.trim().length > 0}>
+        <SelectTag hascontent={!!todoData.selectTime && todoData.selectTime.trim().length > 0 ? "true" : undefined}>
           {todoData.selectTime}
         </SelectTag>
-        <SelectTag hasContent={!!todoData.selectTag && todoData.selectTag.trim().length > 0}>
+        <SelectTag hascontent={!!todoData.selectTag && todoData.selectTag.trim().length > 0 ? "true" : undefined}>
           {todoData.selectTag}
         </SelectTag>
 
@@ -305,12 +306,10 @@ const SetTime = ({isOpen,toggleTime}) => {
 const SetDay = ({isOpen, toggleDay}) => {
 
   const dispatch = useDispatch();
-  const dayNum = useSelector(state=>state.date.selectDay)
   const [isDailyChecked, setIsDailyChecked] = useState(false); // 매일
   const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
   const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
   const [selectedDay, setSelectedDay] = useState('');
-  const [DayNum, getDayNum] = useState();
   
   const handleDayChange = (e) =>{
     e.stopPropagation();
@@ -326,15 +325,14 @@ const SetDay = ({isOpen, toggleDay}) => {
     "토": 6,
     "일": 0,
   };
-
-  const number = dayMapping[selectedDay];
-  if (number !== undefined) {
-    /**dateSlice에 월에대한 숫자를 넘김 */
-    dispatch(changeDayNum(number));
-  }
-
-  console.log(dayNum)
   
+  useEffect(()=>{
+    if(selectedDay !== ''){
+      const number = dayMapping[selectedDay];
+      if(number !== undefined)
+        dispatch(changeDayNum(number))
+    }
+  },[selectedDay])
 
   return (
     <DropdownWrapper>
@@ -372,7 +370,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                     요일 반복
                   </Checkbox>
                 <ComboBox disabled={!isWeekChecked} value={selectedDay} onChange={handleDayChange}>
-                  <option value='' disabled selected>선택</option>
+                  <option value='' disabled>선택</option>
                   {["월", "화", "수", "목", "금", "토", "일"].map(day => (
                     <option key={day} value={day} >{day}</option>
                   ))}
@@ -411,7 +409,6 @@ const SetDay = ({isOpen, toggleDay}) => {
 export default App;
 
 import styled from "styled-components";
-import store from "@/store/store";
 
 export const TodoDiv = styled.div`
   margin-left: 10px;
@@ -508,7 +505,7 @@ export const AddTagButton = styled.button`
 `;
 
 export const SelectTag = styled.p`
-  background-color: ${(props) => (props.hasContent ? "#d9d9d9" : "transparent")};
+  background-color: ${(props) => (props.hascontent ? "#d9d9d9" : "transparent")};
   display: inline-block;
   margin: 20px;
   padding: 2px 5px;
@@ -536,7 +533,7 @@ export const TimeInput = styled.input`
 `;
 
 export const SelectDiv = styled.div`
-  height: ${(props) => (props.hasContent ? "50px" : "0px")};
+  height: ${(props) => (props.hascontent ? "50px" : "0px")};
   overflow: hidden;
   transition: height 0.3s ease-out;
 `;

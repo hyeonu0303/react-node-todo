@@ -87,10 +87,11 @@ const TodoContent = (props) => {
           <img
             src={oppenheimer}
             style={{ borderRadius: "20px", boxShadow: "10px" }}
+            alt="oppenheimer"
           />
           <em style={{ fontSize: "20px", fontWeight: "bold" }}>
-            "Now I am become Death, the destroyer of worlds."
-          </em>
+              &quot;Now I am become Death, the destroyer of worlds.&quot;
+            </em>
         </div>
       ) : (
         <div

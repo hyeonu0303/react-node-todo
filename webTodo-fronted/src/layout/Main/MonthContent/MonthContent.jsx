@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "@emotion/styled";
 import { useEffect, useState} from "react";
 import { useSelector } from 'react-redux'
@@ -53,8 +54,8 @@ const MonthContent = ({allData}) => {
       <MonthWrapper>
         {
           sortedData.map((item,index)=>(
-            <>
-              <p key={index}>{item.date}</p>
+            <React.Fragment key={index}>
+              <p>{item.date}</p>
               {
                 item.content.map((content,i)=>(
                   <p key={i}>
@@ -63,7 +64,7 @@ const MonthContent = ({allData}) => {
                 ))
               }
               <br/>              
-            </>
+              </React.Fragment>
           ))
         }
       </MonthWrapper>

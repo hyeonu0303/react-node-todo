@@ -25,17 +25,18 @@ const Sidebar = ({markDate, allData}) => {
     setVisible(!visible)
   }
 
+  
   return (
     <>
-      <SidebarWidth visible={visible}>
+      <SidebarWidth visible={visible ? "true" : undefined}>
         <Wrapper>
         </Wrapper>
 
-        <CalendarArea visible={visible}>
+        <CalendarArea visible={visible ? "true" : undefined}>
           <Calendar mark={markDate}/>
         </CalendarArea>
 
-        <MonthContentArea visible={visible}>
+        <MonthContentArea visible={visible ? "true" : undefined}>
           <MonthContent allData={allData}/>
         </MonthContentArea>
 
