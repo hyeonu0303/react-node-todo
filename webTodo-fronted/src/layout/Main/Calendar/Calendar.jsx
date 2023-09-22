@@ -12,10 +12,8 @@ const ReactCalendar = (props) => {
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [getMonthYear, setGetMonthYear] = useState(moment().format('YYYY-MM'));
-  /**날짜변경 */
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  const [mondays, setMondays] = useState([]);
+  
 
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
   useEffect(()=>{
@@ -24,7 +22,6 @@ const ReactCalendar = (props) => {
   
   useEffect(()=>{
     dispatch(selectMonth(getMonthYear))
-    console.log(getMonthYear)
   },[getMonthYear]) 
   
   const handleActiveStartDateChange = ({ activeStartDate, view }) => {
@@ -33,6 +30,35 @@ const ReactCalendar = (props) => {
       setGetMonthYear(newMonthYear);
     }
   };
+
+  const getMondaysInMonth = (date) =>{
+    const mondays = [];
+    const month = date.getMonth();
+    date.setDate(1);
+
+    while (date.getMonth() === month){
+      if(date.getDay()===1){
+        mondays.push(new Date(date));
+      }
+      date.setDate(date.getDate() + 1)
+    }
+
+    return mondays;
+  }
+
+  /**날짜변경 */
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if(date.getDay() == 1){
+      const mondaysInMonth = getMondaysInMonth(new Date(date));
+      setMondays(mondaysInMonth);
+      console.log(mondaysInMonth);
+    }
+    console.log(date.getDay())
+  };
+
+
+
 
 
   
