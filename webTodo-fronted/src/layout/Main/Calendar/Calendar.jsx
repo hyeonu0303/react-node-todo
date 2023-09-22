@@ -14,9 +14,7 @@ const ReactCalendar = (props) => {
   const [getMonthYear, setGetMonthYear] = useState(moment().format('YYYY-MM'));
   const [weekDay, setWeekDay] = useState([]);
 
-  const dayNum = useSelector(state=>state.date.selectDay);
-  console.log(dayNum)
-  console.log(selectedDate)
+  const pickedDayNumber = useSelector(state=>state.date.selectDay);
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
 
   useEffect(()=>{
@@ -34,36 +32,40 @@ const ReactCalendar = (props) => {
     }
   };
 
-  const getWeekDaysInMonth = (date) =>{
-    const mondays = [];
-    const month = date.getMonth();
-    date.setDate(1);
+  /**
+   *daysInMoth 배열데이터를 date로 저장해야함
+   */
+  
 
-    while (date.getMonth() == month){
-      if(date.getDay()==dayNum){
-        mondays.push(new Date(date));
+  const addMatchingDate = (calendar) =>{
+    const matchDate = [];
+    const getThisMonth = calendar.getMonth();
+    calendar.setDate(1); //그달의 첫날부터시작
+
+    while (calendar.getMonth() == getThisMonth){
+      if(calendar.getDay()==pickedDayNumber){
+        const formatDate = moment(calendar).format('YYYY-MM-DD');
+        matchDate.push(formatDate);
       }
-      date.setDate(date.getDate() + 1)
+      calendar.setDate(calendar.getDate() + 1)
     }
-    
-    return mondays;
+    return matchDate;
   }
+
+  useEffect(() => {
+    const isMatchDateInMonth = addMatchingDate(new Date(selectedDate));
+    setWeekDay(isMatchDateInMonth);
+    console.log(isMatchDateInMonth);
+  }, [pickedDayNumber]);
   
   /**날짜변경 */
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  /**
-   *daysInMoth 배열데이터를 date로 저장해야함
-   */
-  useEffect(() => {
-    const daysInMonth = getWeekDaysInMonth(new Date(selectedDate));
-    setWeekDay(daysInMonth);
-    console.log(daysInMonth);
-  }, [dayNum]);
   
-  console.log(selectedDate)
+
+  console.log(weekDay);
   //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
     if (!props.mark) {

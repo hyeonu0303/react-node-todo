@@ -124,16 +124,16 @@ function ExpModal({ handleAddButton, todoData }) {
   return (
     <div>
       <SelectDiv
-        hascontent={
+        hasContent={
           (!!todoData.selectTag && todoData.selectTag.trim().length > 0) ||
           (!!todoData.selectTime && todoData.selectTime.trim().length > 0)
           ?"true": undefined
         }
       >
-        <SelectTag hascontent={!!todoData.selectTime && todoData.selectTime.trim().length > 0 ? "true" : undefined}>
+        <SelectTag hasContent={!!todoData.selectTime && todoData.selectTime.trim().length > 0 ? "true" : undefined}>
           {todoData.selectTime}
         </SelectTag>
-        <SelectTag hascontent={!!todoData.selectTag && todoData.selectTag.trim().length > 0 ? "true" : undefined}>
+        <SelectTag hasContent={!!todoData.selectTag && todoData.selectTag.trim().length > 0 ? "true" : undefined}>
           {todoData.selectTag}
         </SelectTag>
 
@@ -505,7 +505,7 @@ export const AddTagButton = styled.button`
 `;
 
 export const SelectTag = styled.p`
-  background-color: ${(props) => (props.hascontent ? "#d9d9d9" : "transparent")};
+  background-color: ${(props) => (props.hasContent ? "#d9d9d9" : "transparent")};
   display: inline-block;
   margin: 20px;
   padding: 2px 5px;
@@ -533,7 +533,7 @@ export const TimeInput = styled.input`
 `;
 
 export const SelectDiv = styled.div`
-  height: ${(props) => (props.hascontent ? "50px" : "0px")};
+  height: ${(props) => (props.hasContent ? "50px" : "0px")};
   overflow: hidden;
   transition: height 0.3s ease-out;
 `;
