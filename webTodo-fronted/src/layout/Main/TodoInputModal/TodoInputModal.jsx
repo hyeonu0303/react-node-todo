@@ -311,6 +311,14 @@ const SetDay = ({isOpen, toggleDay}) => {
   const [isDailyChecked, setIsDailyChecked] = useState(false); // 매일
   const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
   const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
+  const [selectedDay, setSelectedDay] = useState('');
+
+  const handleDayChange = (e) =>{
+    e.stopPropagation();
+    setSelectedDay(e.target.value);
+  }
+
+  console.log(selectedDay);
 
   return (
     <DropdownWrapper>
@@ -322,59 +330,60 @@ const SetDay = ({isOpen, toggleDay}) => {
         <DropdownMenu>
           <div style={{ display: "flex", alignItems: "center" }}>
             <DayList>
-            <CheckboxContainer>
-        <Checkbox 
-          checked={isDailyChecked}
-          onChange={(e) => setIsDailyChecked(e.target.checked)}
-          disabled={isWeekChecked || isDayChecked}
-          style={{ width: '110px' }}
-        >
-          매일 반복
-        </Checkbox>
-      </CheckboxContainer>
-      
-      <CheckboxContainer>
-        <Checkbox 
-          checked={isWeekChecked}
-          onChange={(e) => {
-            setIsWeekChecked(e.target.checked);
-            if (e.target.checked) {
-              setIsDailyChecked(false);
-            }
-          }}
-          disabled={isDailyChecked || isDayChecked}
-          style={{ width: '110px' }}
-        >
-          요일 반복
-        </Checkbox>
-        <ComboBox disabled={!isWeekChecked}>
-          {["월", "화", "수", "목", "금", "토", "일"].map(day => (
-            <option key={day} value={day}>{day}</option>
-          ))}
-        </ComboBox>
-      </CheckboxContainer>
+              <CheckboxContainer>
+                  <Checkbox 
+                    checked={isDailyChecked}
+                    onChange={(e) => setIsDailyChecked(e.target.checked)}
+                    disabled={isWeekChecked || isDayChecked}
+                    style={{ width: '110px' }}
+                  >
+                    매일 반복
+                  </Checkbox>
+                </CheckboxContainer>
+                
+                <CheckboxContainer>
+                  <Checkbox 
+                    checked={isWeekChecked}
+                    onChange={(e) => {
+                      setIsWeekChecked(e.target.checked);
+                      if (e.target.checked) {
+                        setIsDailyChecked(false);
+                      }
+                    }}
+                    disabled={isDailyChecked || isDayChecked}
+                    style={{ width: '110px' }}
+                  >
+                    요일 반복
+                  </Checkbox>
+                <ComboBox disabled={!isWeekChecked} value={selectedDay} onChange={handleDayChange}>
+                  <option value='' disabled selected>일</option>
+                  {["월", "화", "수", "목", "금", "토", "일"].map(day => (
+                    <option key={day} value={day} >{day}</option>
+                  ))}
+                </ComboBox>
+              </CheckboxContainer>
 
-      <CheckboxContainer>
-        <Checkbox 
-          checked={isDayChecked}
-          onChange={(e) => {
-            setIsDayChecked(e.target.checked);
-            if (e.target.checked) {
-              setIsDailyChecked(false);
-            }
-          }}
-          disabled={isDailyChecked || isWeekChecked}
-          style={{ width: '110px' }}
-        >
-          날짜 선택
-        </Checkbox>
-        <AddTagButton>
-          <FontAwesomeIcon 
-            icon={faCalendar}
-            style={{ color: isDayChecked ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
-          />
-        </AddTagButton>
-      </CheckboxContainer>
+                <CheckboxContainer>
+                  <Checkbox 
+                    checked={isDayChecked}
+                    onChange={(e) => {
+                      setIsDayChecked(e.target.checked);
+                      if (e.target.checked) {
+                        setIsDailyChecked(false);
+                      }
+                    }}
+                    disabled={isDailyChecked || isWeekChecked}
+                    style={{ width: '110px' }}
+                  >
+                    날짜 선택
+                  </Checkbox>
+                  <AddTagButton>
+                    <FontAwesomeIcon 
+                      icon={faCalendar}
+                      style={{ color: isDayChecked ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
+                    />
+                  </AddTagButton>
+                </CheckboxContainer>
             </DayList>
           </div>
         </DropdownMenu>

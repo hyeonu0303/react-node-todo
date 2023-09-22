@@ -31,6 +31,16 @@ const ReactCalendar = (props) => {
     }
   };
 
+  const 선택한요일 = {
+    0:'일',
+    1:'월',
+    2:'화',
+    3:'수',
+    4:'목',
+    5:'금',
+    6:'토'
+  }
+
   const getMondaysInMonth = (date) =>{
     const mondays = [];
     const month = date.getMonth();
@@ -46,6 +56,7 @@ const ReactCalendar = (props) => {
     return mondays;
   }
 
+  
   /**날짜변경 */
   const handleDateChange = (date) => {
     setSelectedDate(date);
