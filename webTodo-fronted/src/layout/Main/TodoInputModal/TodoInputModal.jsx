@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {changeDayNum} from '@/store/dateSlice';
 import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
 import { Checkbox } from "@chakra-ui/react";
-
+import Button from "@components/Button/Button";
 function App({getAllData}) {
   return (
     <TodoDiv>
@@ -418,7 +418,7 @@ export const TodoDiv = styled.div`
   cursor: pointer;
   padding: 0px;
   position: relative;
-  box-shadow: 5px 5px 20px grey;
+  border:4px solid #eee;
 `;
 
 export const TodoInput = styled.input`

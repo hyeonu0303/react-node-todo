@@ -56,14 +56,9 @@ const TodoContent = (props) => {
                           {item.content}
                           {item.selectTime}
                         </TodoContentText>
-                        <Button onClick={() => modifyTodo(item.id)}>
-                          <FontAwesomeIcon icon={faPen} size="sm" />
-                        </Button>
+                        <Button name={<FontAwesomeIcon icon={faPen} size="sm" />} onClick={() => modifyTodo(item.id)} />
                         <ModifyModal isOpen={isOpen} onClose={onClose} />
-                        <Button onClick={() => deleteTodo(item.id)}>
-                          <FontAwesomeIcon icon={faXmark} size="lg" />
-                        </Button>
-                        <DeleteModal isOpen={isOpen} onClose={onClose} />
+                        <Button name={<FontAwesomeIcon icon={faXmark} size="sm" />} onClick={() => deleteTodo(item.id)}/>
                       </Text>
                     </Checkbox>
                   );
@@ -118,11 +113,24 @@ export default TodoContent;
 const TodoContainer = styled.div`
   width: 99%;
   height: 100%;
-  margin: 50px 10px;
   padding: 20px;
   position: relative;
-
+  overflow-y: scroll;
   border-radius: 10px;
+  
+  &::-webkit-scrollbar {
+      width: 5px;  /* 스크롤바의 너비 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+      height: 28%; /* 스크롤바의 길이 */
+      background: #cecece; /* 스크롤바의 색상 */
+      border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+      background: none;  /*스크롤바 뒷 배경 색상*/
+  }
 `;
 
 const TodoWrapper = styled.div`

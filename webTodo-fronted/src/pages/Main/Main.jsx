@@ -58,7 +58,8 @@ export default MainPage;
 const MainContainer= styled.div`
   display: flex;
   width: 100%;
-  height: 100%
+  height: 100%;
+
 `
 
 const ContentWrapper = styled.div`
@@ -67,4 +68,5 @@ const ContentWrapper = styled.div`
   flex:1;
   flex-direction: column;
   padding-right:10px;
+  padding-top: 10px;
 `
