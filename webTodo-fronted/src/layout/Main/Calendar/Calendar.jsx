@@ -13,7 +13,7 @@ const ReactCalendar = (props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [getMonthInYear, setGetMonthInYear] = useState(moment().format('YYYY-MM'));
   const [matchDateInWeek, setMatchDateInWeek] = useState([]);
-  const [matchEveryDate, setMatchEveryDate] = useState([]);
+  // const [matchEveryDate, setMatchEveryDate] = useState([]);
   const [month, setMonth] = useState();
   const pickedDayNumber = useSelector(state=>state.date.selectDay);
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
@@ -36,18 +36,7 @@ const ReactCalendar = (props) => {
     dispatch(selectMonth(getMonthInYear))
   },[getMonthInYear]) 
   
-  /**
-   * react calendar option 
-   * 달력의 월이 바뀔때 이벤트 발생 
-   */
-  const handleActiveStartDateChange = ({ activeStartDate, view }) => {
-    if (view === 'month') { // 월 뷰일 때만 처리
-      const newMonthYear = moment(activeStartDate).format('YYYY-MM');
-      setGetMonthInYear(newMonthYear);
-      const newMonth = moment(activeStartDate).format('M');
-      setMonth(newMonth);
-    }
-  };
+  
 
   /**
    * 하루씩 더해가면서 매칭되는 날짜 담는 로직
@@ -69,7 +58,6 @@ const ReactCalendar = (props) => {
     }
     
     if(selectCalendarOption.checkedType=='week'){
-      
       calendar.setDate(1); //그달의 첫날부터시작
       while (calendar.getMonth() == getThisMonth){
         const formatDate = moment(calendar).format('YYYY-MM-DD');
@@ -89,6 +77,19 @@ const ReactCalendar = (props) => {
     setMatchDateInWeek(isMatchDateInMonth);
     console.log(isMatchDateInMonth);
   }, [pickedDayNumber]);
+  
+  /**
+   * react calendar option 
+   * 달력의 월이 바뀔때 이벤트 발생 
+   */
+  const handleActiveStartDateChange = ({ activeStartDate, view }) => {
+    if (view === 'month') { // 월 뷰일 때만 처리
+      const newMonthYear = moment(activeStartDate).format('YYYY-MM');
+      setGetMonthInYear(newMonthYear);
+      const newMonth = moment(activeStartDate).format('M');
+      setMonth(newMonth);
+    }
+  };
   
   /**날짜변경 */
   const handleDateChange = (date) => {

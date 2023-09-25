@@ -158,6 +158,7 @@ const SetTag = ({isOpen, toggleTag}) => {
   const [tagData,setTagData] = useState([]);
   const selectTag = useSelector(state=>state.todo.selectTag);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   /**태그 데이터 */
   useEffect(() => {
     axios.get("/api/tags").then((result) => {
@@ -310,7 +311,8 @@ const SetDay = ({isOpen, toggleDay}) => {
   const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
   const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
   const [selectedDay, setSelectedDay] = useState('');
-  const isCheckedValid = useSelector(state => state.date)
+  const checkedType = useSelector(state => state.date.checkedType)
+  const checkedValid = useSelector(state => state.date.checkValid)
 
   const handleDayChange = (e) =>{
     e.stopPropagation();
@@ -326,8 +328,6 @@ const SetDay = ({isOpen, toggleDay}) => {
     "토": 6,
     "일": 0,
   };
-  
-  
 
   useEffect(()=>{
     if(selectedDay !== ''){
@@ -349,12 +349,12 @@ const SetDay = ({isOpen, toggleDay}) => {
             <DayList>
               <CheckboxContainer>
                   <Checkbox 
-                    checked={isDailyChecked}
+                    isChecked={checkedType == 'daily' && checkedValid == true}
                     onChange={(e) => {
                       setIsDailyChecked(e.target.checked)
                       dispatch(changeCheckVaild({type:'daily', checked:e.target.checked}))
                     }}
-                    disabled={isWeekChecked || isDayChecked}
+                    disabled={checkedType != 'daily' && checkedValid != false}
                     style={{ width: '110px' }}
                   >
                     매일 반복
@@ -363,7 +363,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                 
                 <CheckboxContainer>
                   <Checkbox 
-                    checked={isWeekChecked}
+                    isChecked={checkedType == 'week' && checkedValid == true}
                     onChange={(e) => {
                       setIsWeekChecked(e.target.checked);
                       dispatch(changeCheckVaild({type:'week', checked:e.target.checked}))
@@ -371,12 +371,16 @@ const SetDay = ({isOpen, toggleDay}) => {
                         setIsDailyChecked(false);
                       }
                     }}
-                    disabled={isDailyChecked || isDayChecked}
+                    disabled={checkedType != 'week' && checkedValid != false}
                     style={{ width: '110px' }}
                   >
                     요일 반복
                   </Checkbox>
-                <ComboBox disabled={!isWeekChecked} value={selectedDay} onChange={handleDayChange}>
+                <ComboBox 
+                  disabled={checkedType != 'week' && checkedValid != false} 
+                  value={selectedDay} 
+                  onChange={handleDayChange}
+                >
                   <option value='' disabled>선택</option>
                   {["월", "화", "수", "목", "금", "토", "일"].map(day => (
                     <option key={day} value={day} >{day}</option>
@@ -386,7 +390,7 @@ const SetDay = ({isOpen, toggleDay}) => {
 
                 <CheckboxContainer>
                   <Checkbox 
-                    checked={isDayChecked}
+                    isChecked={checkedType == 'day' && checkedValid == true}
                     onChange={(e) => {
                       setIsDayChecked(e.target.checked);
                       dispatch(changeCheckVaild({type:'day', checked:e.target.checked}))
@@ -395,7 +399,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                         setIsDailyChecked(false);
                       }
                     }}
-                    disabled={isDailyChecked || isWeekChecked}
+                    disabled={checkedType != 'day' && checkedValid != false}
                     style={{ width: '110px' }}
                   >
                     날짜 선택
