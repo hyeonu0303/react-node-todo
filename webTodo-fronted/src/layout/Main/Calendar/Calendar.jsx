@@ -11,31 +11,44 @@ import './Calendar.css'
 const ReactCalendar = (props) => {
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [getMonthYear, setGetMonthYear] = useState(moment().format('YYYY-MM'));
-  const [matchingDateArr, setMatchingDateArr] = useState([]);
+  const [getMonthInYear, setGetMonthInYear] = useState(moment().format('YYYY-MM'));
+  const [matchDateInWeek, setMatchDateInWeek] = useState([]);
+  const [matchEveryDate, setMatchEveryDate] = useState([]);
   const [month, setMonth] = useState();
   const pickedDayNumber = useSelector(state=>state.date.selectDay);
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
+  const selectCalendarOption = useSelector(state=>state.date);
 
+
+  /**
+   * 매일,주 요일 date 전역 값넣기
+   */
   useEffect(()=>{
-    dispatch(changeDate(formatdate));
-  },[formatdate])
+    if(selectCalendarOption.checkedType){
+      dispatch(changeDate(matchDateInWeek));
+    }
+    if(selectCalendarOption.checkValid == false){
+      dispatch(changeDate(formatdate));
+    }
+  },[selectCalendarOption.checkValid,formatdate,pickedDayNumber,matchDateInWeek])
   
   useEffect(()=>{
-    dispatch(selectMonth(getMonthYear))
-  },[getMonthYear]) 
+    dispatch(selectMonth(getMonthInYear))
+  },[getMonthInYear]) 
   
+  /**
+   * react calendar option 
+   * 달력의 월이 바뀔때 이벤트 발생 
+   */
   const handleActiveStartDateChange = ({ activeStartDate, view }) => {
     if (view === 'month') { // 월 뷰일 때만 처리
       const newMonthYear = moment(activeStartDate).format('YYYY-MM');
-      setGetMonthYear(newMonthYear);
+      setGetMonthInYear(newMonthYear);
       const newMonth = moment(activeStartDate).format('M');
       setMonth(newMonth);
     }
   };
 
-  console.log(month);
-  
   /**
    * 하루씩 더해가면서 매칭되는 날짜 담는 로직
    * @param {*} calendar 캘린더 날짜 가져옴
@@ -44,22 +57,36 @@ const ReactCalendar = (props) => {
   const addMatchingDate = (calendar) =>{
     const matchDate = [];
     const getThisMonth = calendar.getMonth();
-    calendar.setDate(1); //그달의 첫날부터시작
-
-    while (calendar.getMonth() == getThisMonth){
-      if(calendar.getDay()==pickedDayNumber){
-        const formatDate = moment(calendar).format('YYYY-MM-DD');
-        matchDate.push(formatDate);
+    
+    if(selectCalendarOption.checkedType == 'daily'){
+      const today = new Date();
+      const startDay = today.getDate();
+      
+      for(let day = startDay; day <= moment(calendar).endOf('month').date(); day++){
+        const dateToAdd = new Date(calendar.getFullYear(), getThisMonth, day);
+        matchDate.push(moment(dateToAdd).format('YYYY-MM-DD'));
       }
-      calendar.setDate(calendar.getDate() + 1)
     }
+    
+    if(selectCalendarOption.checkedType=='week'){
+      
+      calendar.setDate(1); //그달의 첫날부터시작
+      while (calendar.getMonth() == getThisMonth){
+        const formatDate = moment(calendar).format('YYYY-MM-DD');
+        if(calendar.getDay()==pickedDayNumber){
+          matchDate.push(formatDate);
+        }
+        calendar.setDate(calendar.getDate() + 1)
+      }
+    }
+
     return matchDate;
   }
 
   useEffect(() => {
-    const calendarDate = moment(getMonthYear).toDate();
+    const calendarDate = moment(getMonthInYear).toDate();
     const isMatchDateInMonth = addMatchingDate(calendarDate);
-    setMatchingDateArr(isMatchDateInMonth);
+    setMatchDateInWeek(isMatchDateInMonth);
     console.log(isMatchDateInMonth);
   }, [pickedDayNumber]);
   
@@ -68,7 +95,7 @@ const ReactCalendar = (props) => {
     setSelectedDate(date);
   };
 
-  console.log(matchingDateArr);
+  console.log(matchDateInWeek);
   //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
     if (!props.mark) {

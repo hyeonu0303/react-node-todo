@@ -6,6 +6,8 @@ let date = createSlice({
   initialState: {
     selectMonth:'',
     selectDay:null,
+    checkValid:false,
+    checkedType: '',
   },
 
   reducers: {
@@ -14,9 +16,13 @@ let date = createSlice({
     },
     changeDayNum(state,action){
       state.selectDay = action.payload
+    },
+    changeCheckVaild(state,action){
+      state.checkValid = action.payload.checked;
+      state.checkedType = action.payload.type;
     }
   }
 });
-export let {selectMonth, changeDayNum} = date.actions;
+export let {selectMonth, changeDayNum, changeCheckVaild} = date.actions;
 
 export default date;

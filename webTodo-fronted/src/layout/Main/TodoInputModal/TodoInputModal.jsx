@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTag, faClock, faCalendarPlus, faCalendar } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {changeDayNum} from '@/store/dateSlice';
+import {changeCheckVaild, changeDayNum} from '@/store/dateSlice';
 import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
 import { Checkbox } from "@chakra-ui/react";
 
@@ -310,7 +310,8 @@ const SetDay = ({isOpen, toggleDay}) => {
   const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
   const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
   const [selectedDay, setSelectedDay] = useState('');
-  
+  const isCheckedValid = useSelector(state => state.date)
+
   const handleDayChange = (e) =>{
     e.stopPropagation();
     setSelectedDay(e.target.value);
@@ -326,6 +327,8 @@ const SetDay = ({isOpen, toggleDay}) => {
     "일": 0,
   };
   
+  
+
   useEffect(()=>{
     if(selectedDay !== ''){
       const number = dayMapping[selectedDay];
@@ -347,7 +350,10 @@ const SetDay = ({isOpen, toggleDay}) => {
               <CheckboxContainer>
                   <Checkbox 
                     checked={isDailyChecked}
-                    onChange={(e) => setIsDailyChecked(e.target.checked)}
+                    onChange={(e) => {
+                      setIsDailyChecked(e.target.checked)
+                      dispatch(changeCheckVaild({type:'daily', checked:e.target.checked}))
+                    }}
                     disabled={isWeekChecked || isDayChecked}
                     style={{ width: '110px' }}
                   >
@@ -360,6 +366,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                     checked={isWeekChecked}
                     onChange={(e) => {
                       setIsWeekChecked(e.target.checked);
+                      dispatch(changeCheckVaild({type:'week', checked:e.target.checked}))
                       if (e.target.checked) {
                         setIsDailyChecked(false);
                       }
@@ -382,6 +389,8 @@ const SetDay = ({isOpen, toggleDay}) => {
                     checked={isDayChecked}
                     onChange={(e) => {
                       setIsDayChecked(e.target.checked);
+                      dispatch(changeCheckVaild({type:'day', checked:e.target.checked}))
+                      
                       if (e.target.checked) {
                         setIsDailyChecked(false);
                       }
