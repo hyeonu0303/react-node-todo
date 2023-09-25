@@ -68,7 +68,7 @@ const SidebarWidth = styled.div`
 const Wrapper = styled(SidebarWidth)`
   width: 100px;
   height: 100%;
-  background: #c6dbf4;
+  background: var(--mainColor);
   position: absolute;
   left: 0;
   top: 0;
@@ -82,11 +82,12 @@ const CalendarArea = styled.div`
   transition: all 0.3s;
   right:0;
   top:0;
+  margin-top: 10px;
 `
 
 const MonthContentArea = styled.div`
   width:400px;
-  max-height:460px;
+  max-height:515px;
   display: ${props=>props.visible ? 'block' : 'none'};
   transition: all 0.3s;
   position:absolute;
@@ -96,22 +97,20 @@ const MonthContentArea = styled.div`
   border-radius:10px;
   overflow-y: scroll;
   padding-right:10px;
-
-  
-
+  margin-top: 10px;
 
   &::-webkit-scrollbar {
-      width: 8px;  /* 스크롤바의 너비 */
+      width: 5px;  /* 스크롤바의 너비 */
   }
 
   &::-webkit-scrollbar-thumb {
       height: 28%; /* 스크롤바의 길이 */
-      background: #8fbeff; /* 스크롤바의 색상 */
+      background: #eee; /* 스크롤바의 색상 */
       border-radius: 5px;
   }
 
   &::-webkit-scrollbar-track {
-      background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+      background: none;  /*스크롤바 뒷 배경 색상*/
   }
   @font-face {
     font-family: 'GmarketSansMedium';
