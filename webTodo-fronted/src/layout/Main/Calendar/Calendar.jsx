@@ -28,7 +28,7 @@ const ReactCalendar = (props) => {
       dispatch(changeDate(matchDateInWeek));
     }
     if(selectCalendarOption.checkValid == false){
-      dispatch(changeDate(formatdate));
+      dispatch(changeDate([formatdate]));
     }
   },[selectCalendarOption.checkValid,formatdate,pickedDayNumber,matchDateInWeek])
   
@@ -76,7 +76,7 @@ const ReactCalendar = (props) => {
     const isMatchDateInMonth = addMatchingDate(calendarDate);
     setMatchDateInWeek(isMatchDateInMonth);
     console.log(isMatchDateInMonth);
-  }, [pickedDayNumber]);
+  }, [pickedDayNumber,selectCalendarOption.checkedType]);
   
   /**
    * react calendar option 

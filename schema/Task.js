@@ -10,7 +10,7 @@ const todoSchema = new mongoose.Schema({
     required:true
   },
   date: {
-    type: String,
+    type: [String],
     required: true
   },
   selectTag:{

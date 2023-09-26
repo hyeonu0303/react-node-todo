@@ -4,7 +4,6 @@ import { useEffect, useState} from "react";
 import { useSelector } from 'react-redux'
 import moment from "moment";
 const MonthContent = ({allData}) => {
-
   console.log(allData); // 모든 데이터
 
   let YearMonth = useSelector(state => state.date.selectMonth)
@@ -19,9 +18,9 @@ const MonthContent = ({allData}) => {
       const targetDate = YearMonth;
 
       const filterDataByMonth = allData
-          .filter(item => item.date.startsWith(targetDate))
+          .filter(item => item.date[0].startsWith(targetDate))
           .map(item => ({
-            date: moment(item.date).format('DD'),
+            date: moment(item.date[0]).format('DD'),
             content: item.content}));
 
       const groupedData = filterDataByMonth.reduce((acc, curr) => {
@@ -69,6 +68,7 @@ const MonthContent = ({allData}) => {
         }
       </MonthWrapper>
     );
+  
 }
 
 export default MonthContent;
@@ -78,8 +78,9 @@ const MonthWrapper = styled.div`
   padding:0 16px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-`
+  align-items: flex-start; 
+  `
+
 
 
 

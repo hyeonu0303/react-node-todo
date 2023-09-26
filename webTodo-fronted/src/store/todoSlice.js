@@ -6,7 +6,7 @@ let todo = createSlice({
 
   initialState: {
     content: '',
-    date: '',
+    date: [],
     tags: [],
     selectTag: '', // 선택한 태그
     selectTime: '', // 설정한 시간
