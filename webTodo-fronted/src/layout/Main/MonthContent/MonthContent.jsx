@@ -14,28 +14,35 @@ const MonthContent = ({allData}) => {
    * 모든데이터 date:01, content:[Array] 형식으로 변경로직
    */
   useEffect(() => {
-    if (allData) {
-      const targetDate = YearMonth;
-
-      const filterDataByMonth = allData
-          .filter(item => item.date[0].startsWith(targetDate))
-          .map(item => ({
-            date: moment(item.date[0]).format('DD'),
-            content: item.content}));
-
-      const groupedData = filterDataByMonth.reduce((acc, curr) => {
+    if (allData && YearMonth) {
+      // 현재 선택된 년도와 월에 해당하는 데이터만 필터링
+      const filteredData = allData.filter(item => 
+        item.date.some(d => d.startsWith(YearMonth))
+      );
+  
+      // 필터링된 데이터를 기반으로 새로운 배열 생성
+      const newArr = filteredData.flatMap(({content, date}) => 
+        date.map(c => ({
+          content: content,
+          date: moment(c).format('DD')
+        }))
+      );
+  
+      // 새로운 배열을 그룹화
+      const groupedData = newArr.reduce((acc, curr) => {
         const existingItem = acc.find(item => item.date === curr.date);
         if (existingItem) {
-            existingItem.content.push(curr.content);
+          existingItem.content.push(curr.content);
         } else {
-            acc.push({ date: curr.date, content: [curr.content] });
+          acc.push({ date: curr.date, content: [curr.content] });
         }
         return acc;
       }, []);
-
-      setChangeData(groupedData); // 2. 상태 업데이트
+  
+      setChangeData(groupedData);
     }
-  }, [allData,YearMonth]); 
+  }, [allData, YearMonth]);
+  
   // allData,YearMonth
   
   const copyData = [...changeData];

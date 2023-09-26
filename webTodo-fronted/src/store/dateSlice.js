@@ -8,6 +8,7 @@ let date = createSlice({
     selectDay:null,
     checkValid:false,
     checkedType: '',
+    allUniqueDates: [],
   },
 
   reducers: {
@@ -20,9 +21,12 @@ let date = createSlice({
     changeCheckVaild(state,action){
       state.checkValid = action.payload.checked;
       state.checkedType = action.payload.type;
+    },
+    setAllUniqueDates(state,action){
+      state.allUniqueDates = action.payload
     }
   }
 });
-export let {selectMonth, changeDayNum, changeCheckVaild} = date.actions;
+export let {selectMonth, changeDayNum, changeCheckVaild, setAllUniqueDates} = date.actions;
 
 export default date;

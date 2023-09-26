@@ -7,17 +7,22 @@ import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPen } from "@fortawesome/free-solid-svg-icons";
 import ModifyModal from "@components/Modal/ModifyModal";
-import DeleteModal from "@components/Modal/DeleteModal";
+// import DeleteModal from "@components/Modal/DeleteModal";
+
 const TodoContent = (props) => {
   const selectDate = useSelector((state) => state.todo.date);
+  const allUniqueDates = useSelector(state => state.date.allUniqueDates);
+  console.log(allUniqueDates);
   const [visible, setVisible] = useState(false);
-
+  console.log(selectDate);
   // selectTag로 그룹화
   const groupedByTag = {};
 
   props.allData &&
     props.allData.forEach((item) => {
-      if (item.date === selectDate) {
+      const findDate = allUniqueDates.find(date=>date == selectDate[0]);
+      console.log(findDate);
+      if (findDate == selectDate[0]) {
         if (!groupedByTag[item.selectTag]) {
           groupedByTag[item.selectTag] = [];
         }
@@ -40,7 +45,7 @@ const TodoContent = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <TodoContainer>
-      {props.allData != null && selectDate
+      {props.allData != null && selectDate[0]
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>

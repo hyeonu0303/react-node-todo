@@ -6,6 +6,7 @@ import TodoContent from "@layout/Main/TodoContent";
 import axios from "axios";
 import Sidebar from "@layout/Sidebar";
 import styled from "styled-components";
+import { setAllUniqueDates } from "@/store/dateSlice";
 
 const MainPage = () => {
   let dispatch = useDispatch();
@@ -27,17 +28,14 @@ const MainPage = () => {
     axios.get('/api/data')
       .then((result)=>{
 
-        const allDates = result.data.flatMap(item=> item.date);
-        console.log(allDates);
+        const allDates = result.data.map(item => item.date).flat();
+        console.log(allDates.sort());
 
-        const uniqueDates = [...new Set(allDates)];
+        const uniqueDates = [...new Set(allDates.sort())];
 
-        console.log(uniqueDates);
-
+        dispatch(setAllUniqueDates(uniqueDates))
         setMarkDate(uniqueDates);
-
         setAllData(result.data);
-
       })
   }
 
