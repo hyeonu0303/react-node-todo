@@ -26,19 +26,23 @@ const MainPage = () => {
   const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{
-        const dates = new Set();
 
-        result.data.forEach((item) => {
-          dates.add(item.date);
-        });
+        const allDates = result.data.flatMap(item=> item.date);
+        console.log(allDates);
 
-        let datesArray = [...dates];
-        setMarkDate(datesArray)
+        const uniqueDates = [...new Set(allDates)];
+
+        console.log(uniqueDates);
+
+        setMarkDate(uniqueDates);
+
         setAllData(result.data);
 
-        console.log('get요청성공')
       })
   }
+
+  console.log(markDate);
+  
   useEffect(()=>{
     axiosAllData();
   },[])
