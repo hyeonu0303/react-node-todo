@@ -307,9 +307,6 @@ const SetTime = ({isOpen,toggleTime}) => {
 const SetDay = ({isOpen, toggleDay}) => {
 
   const dispatch = useDispatch();
-  const [isDailyChecked, setIsDailyChecked] = useState(false); // 매일
-  const [isWeekChecked, setIsWeekChecked] = useState(false);  // 요일
-  const [isDayChecked, setIsDayChecked] = useState(false); // 특정 날짜
   const [selectedDay, setSelectedDay] = useState('');
   const checkedType = useSelector(state => state.date.checkedType)
   const checkedValid = useSelector(state => state.date.checkValid)
@@ -351,7 +348,6 @@ const SetDay = ({isOpen, toggleDay}) => {
                   <Checkbox 
                     isChecked={checkedType == 'daily' && checkedValid == true}
                     onChange={(e) => {
-                      setIsDailyChecked(e.target.checked)
                       dispatch(changeCheckVaild({type:'daily', checked:e.target.checked}))
                     }}
                     disabled={checkedType != 'daily' && checkedValid != false}
@@ -365,11 +361,10 @@ const SetDay = ({isOpen, toggleDay}) => {
                   <Checkbox 
                     isChecked={checkedType == 'week' && checkedValid == true}
                     onChange={(e) => {
-                      setIsWeekChecked(e.target.checked);
                       dispatch(changeCheckVaild({type:'week', checked:e.target.checked}))
-                      if (e.target.checked) {
+                      /* if (e.target.checked) {
                         setIsDailyChecked(false);
-                      }
+                      } */
                     }}
                     disabled={checkedType != 'week' && checkedValid != false}
                     style={{ width: '110px' }}
@@ -392,12 +387,11 @@ const SetDay = ({isOpen, toggleDay}) => {
                   <Checkbox 
                     isChecked={checkedType == 'day' && checkedValid == true}
                     onChange={(e) => {
-                      setIsDayChecked(e.target.checked);
                       dispatch(changeCheckVaild({type:'day', checked:e.target.checked}))
                       
-                      if (e.target.checked) {
+                      /* if (e.target.checked) {
                         setIsDailyChecked(false);
-                      }
+                      } */
                     }}
                     disabled={checkedType != 'day' && checkedValid != false}
                     style={{ width: '110px' }}
@@ -407,7 +401,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                   <AddTagButton>
                     <FontAwesomeIcon 
                       icon={faCalendar}
-                      style={{ color: isDayChecked ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
+                      style={{ color: checkedType == 'day' &&checkedValid ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
                     />
                   </AddTagButton>
                 </CheckboxContainer>
