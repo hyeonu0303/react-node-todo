@@ -372,7 +372,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                     요일 반복
                   </Checkbox>
                 <ComboBox 
-                  disabled={checkedType != 'week' && checkedValid != false} 
+                  disabled={checkedType == 'week' && checkedValid == false} 
                   value={selectedDay} 
                   onChange={handleDayChange}
                 >
@@ -401,7 +401,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                   <AddTagButton>
                     <FontAwesomeIcon 
                       icon={faCalendar}
-                      style={{ color: checkedType == 'day' &&checkedValid ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
+                      style={{ color: checkedType == 'day' && checkedValid ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
                     />
                   </AddTagButton>
                 </CheckboxContainer>
