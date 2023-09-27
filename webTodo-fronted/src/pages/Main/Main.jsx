@@ -29,7 +29,6 @@ const MainPage = () => {
       .then((result)=>{
 
         const allDates = result.data.map(item => item.date).flat();
-        console.log(allDates.sort());
 
         const uniqueDates = [...new Set(allDates.sort())];
 

@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { styled } from "styled-components";
-import { selectMonth } from "@/store/dateSlice";
+import { changeCalendarDate, selectMonth } from "@/store/dateSlice";
 import './Calendar.css'
 
 const ReactCalendar = (props) => {
@@ -18,7 +18,6 @@ const ReactCalendar = (props) => {
   const pickedDayNumber = useSelector(state=>state.date.selectDay);
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
   const selectCalendarOption = useSelector(state=>state.date);
-
 
   /**
    * 매일,주 요일 date 전역 값넣기
@@ -36,6 +35,9 @@ const ReactCalendar = (props) => {
     dispatch(selectMonth(getMonthInYear))
   },[getMonthInYear]) 
   
+  useEffect(()=>{
+    dispatch(changeCalendarDate(selectedDate))
+  },[selectedDate])
   
 
   /**
@@ -75,7 +77,6 @@ const ReactCalendar = (props) => {
     const calendarDate = moment(getMonthInYear).toDate();
     const isMatchDateInMonth = addMatchingDate(calendarDate);
     setMatchDateInWeek(isMatchDateInMonth);
-    console.log(isMatchDateInMonth);
   }, [pickedDayNumber,selectCalendarOption.checkedType]);
   
   /**

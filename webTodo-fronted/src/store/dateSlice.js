@@ -6,6 +6,7 @@ let date = createSlice({
   initialState: {
     selectMonth:'',
     selectDay:null,
+    selectCalendarDate:'',
     checkValid:false,
     checkedType: '',
     allUniqueDates: [],
@@ -24,9 +25,13 @@ let date = createSlice({
     },
     setAllUniqueDates(state,action){
       state.allUniqueDates = action.payload
+    },
+    changeCalendarDate(state,action){
+      state.selectCalendarDate = action.payload;
     }
+    
   }
 });
-export let {selectMonth, changeDayNum, changeCheckVaild, setAllUniqueDates} = date.actions;
+export let {selectMonth, changeDayNum, changeCheckVaild, setAllUniqueDates, changeCalendarDate} = date.actions;
 
 export default date;

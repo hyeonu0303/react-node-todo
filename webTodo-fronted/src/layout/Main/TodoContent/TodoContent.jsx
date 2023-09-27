@@ -11,21 +11,21 @@ import ModifyModal from "@components/Modal/ModifyModal";
 // import DeleteModal from "@components/Modal/DeleteModal";
 
 const TodoContent = (props) => {
-  const selectDate = useSelector((state) => state.todo.date);
+  const dateArr = useSelector((state) => state.todo.date);
   const allUniqueDates = useSelector((state) => state.date.allUniqueDates);
-
+  const selectCalendarDate = useSelector(state=>state.date.selectCalendarDate)
   const [visible, setVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
   // selectTag로 그룹화
   useEffect(() => {
     if (props.allData) {
       const findMatchDate = allUniqueDates.find(
-        (element) => element === selectDate[0]
+        (element) => element === dateArr[0]
       );
       const filteredData = props.allData.filter((data) =>
         data.date.includes(findMatchDate)
       );
-
+  
       const groupedByTag = filteredData.reduce((acc, curr) => {
         const { selectTag, content, selectTime } = curr;
         if (acc[selectTag]) acc[selectTag].push({ content, time: selectTime });
@@ -34,9 +34,7 @@ const TodoContent = (props) => {
       }, {});
       setGroupedByTag(groupedByTag);
     }
-  }, [props.allData]);
-
-  console.log(groupedByTag);
+  }, [props.allData,selectCalendarDate]);
   // 투두 삭제 기능
   const deleteTodo = () => {};
 

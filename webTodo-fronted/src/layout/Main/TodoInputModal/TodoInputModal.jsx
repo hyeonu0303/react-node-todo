@@ -21,7 +21,6 @@ function TodoContainer({ getAllData }) {
   let [inputValue, setInputValue] = useState("");
   const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
-  console.log(todoData);
 
   const toggleModal = () => {
     setIsModalVisible(true);
@@ -372,7 +371,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                     요일 반복
                   </Checkbox>
                 <ComboBox 
-                  disabled={checkedType == 'week' && checkedValid == false} 
+                  disabled={!checkedValid || checkedType !== 'week'} 
                   value={selectedDay} 
                   onChange={handleDayChange}
                 >
