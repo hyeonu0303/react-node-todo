@@ -24,7 +24,7 @@ const MonthContent = ({allData}) => {
       const newArr = filteredData.flatMap(({content, date}) => 
         date.map(c => ({
           content: content,
-          date: moment(c).format('MM-DD')
+          date: moment(c).format('DD')
         }))
       );
       console.log(newArr);

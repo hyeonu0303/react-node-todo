@@ -78,16 +78,17 @@ const TodoContent = (props) => {
                   );
                 })}
               </TodoContentArea>
+
             </TodoWrapper>
           ))
-        : null}
-
+        : null
+      }
       {visible == true ? (
         <div
           style={{
             position: "absolute",
             right: "0",
-            top: "0",
+            bottom: "0",
           }}
           onClick={() => {
             setVisible(false);
@@ -106,12 +107,12 @@ const TodoContent = (props) => {
         <div
           style={{
             borderRadius: "50%",
-            width: "5px",
-            height: "5px",
+            width: "10px",
+            height: "10px",
             background: "#eee",
             position: "absolute",
             right: "0",
-            bottom: "0",
+            bottom: "20px",
           }}
           onClick={() => {
             setVisible(true);
