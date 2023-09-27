@@ -1,8 +1,9 @@
+/*eslint-disable*/
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { Checkbox, Text, useDisclosure } from "@chakra-ui/react";
 import oppenheimer from "./Oppenheimer.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPen } from "@fortawesome/free-solid-svg-icons";
@@ -11,30 +12,31 @@ import ModifyModal from "@components/Modal/ModifyModal";
 
 const TodoContent = (props) => {
   const selectDate = useSelector((state) => state.todo.date);
-  const allUniqueDates = useSelector(state => state.date.allUniqueDates);
-  console.log(allUniqueDates);
-  const [visible, setVisible] = useState(false);
-  console.log(selectDate);
-  // selectTag로 그룹화
-  const groupedByTag = {};
+  const allUniqueDates = useSelector((state) => state.date.allUniqueDates);
 
-  props.allData &&
-    props.allData.forEach((item) => {
-      const findDate = allUniqueDates.find(date=>date == selectDate[0]);
-      console.log(findDate);
-      if (findDate == selectDate[0]) {
-        if (!groupedByTag[item.selectTag]) {
-          groupedByTag[item.selectTag] = [];
-        }
-        groupedByTag[item.selectTag].push({
-          content: item.content,
-          selectTime: item.selectTime,
-        });
-      }
-    });
+  const [visible, setVisible] = useState(false);
+  const [groupedByTag, setGroupedByTag] = useState({});
+  // selectTag로 그룹화
+  useEffect(() => {
+    if (props.allData) {
+      const findMatchDate = allUniqueDates.find(
+        (element) => element === selectDate[0]
+      );
+      const filteredData = props.allData.filter((data) =>
+        data.date.includes(findMatchDate)
+      );
+
+      const groupedByTag = filteredData.reduce((acc, curr) => {
+        const { selectTag, content, selectTime } = curr;
+        if (acc[selectTag]) acc[selectTag].push({ content, time: selectTime });
+        else acc[selectTag] = [{ content, time: selectTime }];
+        return acc;
+      }, {});
+      setGroupedByTag(groupedByTag);
+    }
+  }, [selectDate, props.allData]);
 
   console.log(groupedByTag);
-
   // 투두 삭제 기능
   const deleteTodo = () => {};
 
@@ -45,7 +47,7 @@ const TodoContent = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <TodoContainer>
-      {props.allData != null && selectDate[0]
+      {props.allData != undefined
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>
@@ -59,11 +61,18 @@ const TodoContent = (props) => {
                       <Text>
                         <TodoContentText>
                           {item.content}
-                          {item.selectTime}
+                          {/* {item.time != "" ? <>{item.time}</> : null} */}
+                          {item.time}
                         </TodoContentText>
-                        <Button name={<FontAwesomeIcon icon={faPen} size="sm" />} onClick={() => modifyTodo(item.id)} />
+                        <Button
+                          name={<FontAwesomeIcon icon={faPen} size="sm" />}
+                          onClick={() => modifyTodo(item.id)}
+                        />
                         <ModifyModal isOpen={isOpen} onClose={onClose} />
-                        <Button name={<FontAwesomeIcon icon={faXmark} size="sm" />} onClick={() => deleteTodo(item.id)}/>
+                        <Button
+                          name={<FontAwesomeIcon icon={faXmark} size="sm" />}
+                          onClick={() => deleteTodo(item.id)}
+                        />
                       </Text>
                     </Checkbox>
                   );
@@ -90,8 +99,8 @@ const TodoContent = (props) => {
             alt="oppenheimer"
           />
           <em style={{ fontSize: "20px", fontWeight: "bold" }}>
-              &quot;Now I am become Death, the destroyer of worlds.&quot;
-            </em>
+            &quot;Now I am become Death, the destroyer of worlds.&quot;
+          </em>
         </div>
       ) : (
         <div
@@ -122,19 +131,19 @@ const TodoContainer = styled.div`
   position: relative;
   overflow-y: scroll;
   border-radius: 10px;
-  
+
   &::-webkit-scrollbar {
-      width: 5px;  /* 스크롤바의 너비 */
+    width: 5px; /* 스크롤바의 너비 */
   }
 
   &::-webkit-scrollbar-thumb {
-      height: 28%; /* 스크롤바의 길이 */
-      background: #cecece; /* 스크롤바의 색상 */
-      border-radius: 5px;
+    height: 28%; /* 스크롤바의 길이 */
+    background: #cecece; /* 스크롤바의 색상 */
+    border-radius: 5px;
   }
 
   &::-webkit-scrollbar-track {
-      background: none;  /*스크롤바 뒷 배경 색상*/
+    background: none; /*스크롤바 뒷 배경 색상*/
   }
 `;
 

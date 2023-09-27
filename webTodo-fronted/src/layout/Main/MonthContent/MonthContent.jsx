@@ -24,13 +24,14 @@ const MonthContent = ({allData}) => {
       const newArr = filteredData.flatMap(({content, date}) => 
         date.map(c => ({
           content: content,
-          date: moment(c).format('DD')
+          date: moment(c).format('MM-DD')
         }))
       );
-  
+      console.log(newArr);
       // 새로운 배열을 그룹화
       const groupedData = newArr.reduce((acc, curr) => {
         const existingItem = acc.find(item => item.date === curr.date);
+        console.log(existingItem);
         if (existingItem) {
           existingItem.content.push(curr.content);
         } else {
@@ -44,6 +45,7 @@ const MonthContent = ({allData}) => {
   }, [allData, YearMonth]);
   
   // allData,YearMonth
+  
   
   const copyData = [...changeData];
   /**날짜 정렬 */
