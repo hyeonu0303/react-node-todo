@@ -34,7 +34,7 @@ const TodoContent = (props) => {
       }, {});
       setGroupedByTag(groupedByTag);
     }
-  }, [selectDate, props.allData]);
+  }, [props.allData]);
 
   console.log(groupedByTag);
   // 투두 삭제 기능

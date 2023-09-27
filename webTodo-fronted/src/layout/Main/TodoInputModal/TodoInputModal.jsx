@@ -376,6 +376,7 @@ const SetDay = ({isOpen, toggleDay}) => {
                   value={selectedDay} 
                   onChange={handleDayChange}
                 >
+                  
                   <option value='' disabled>선택</option>
                   {["월", "화", "수", "목", "금", "토", "일"].map(day => (
                     <option key={day} value={day} >{day}</option>
