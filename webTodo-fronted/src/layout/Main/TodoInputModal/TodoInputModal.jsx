@@ -21,6 +21,7 @@ function TodoContainer({ getAllData }) {
   let [inputValue, setInputValue] = useState("");
   const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
+  console.log('할일입력 전체데이터: ',todoData);
 
   const toggleModal = () => {
     setIsModalVisible(true);
@@ -74,7 +75,9 @@ function BeforeModal({ inputValue, setInputValue, handleAddButton, toggleModal }
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(changeContent(inputValue));
+    setTimeout(()=>{
+      dispatch(changeContent(inputValue));
+    },500)
   }, [inputValue]);
 
   return (

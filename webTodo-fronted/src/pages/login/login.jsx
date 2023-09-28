@@ -14,13 +14,16 @@ import { useDispatch } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
 import { login } from "@/store/userSlice";
 import styled from "styled-components";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   let dispatch = useDispatch();
-
+  
+  const inputRef = useRef();
   
   /**로그인POST */
   let handleLogin = () => {
@@ -48,11 +51,18 @@ function Login() {
   /**id입력란 input값 가져오는 함수*/
   const handleSetId = (e) => {
     setUserName(e.target.value);
+    inputRef.current.focus();
   };
   /** pw입력란 input값 가져오는함수*/
   const handleSetPw = (e) => {
     setPassword(e.target.value);
   };
+
+  useEffect(()=>{
+    console.log('inputRef:', inputRef);
+    inputRef.current.focus();
+  },[])
+  
   
   return (
     <LoginContainer>
@@ -63,7 +73,7 @@ function Login() {
         <LoginContent>
           <FormControl isRequired>
             <FormLabel>아이디</FormLabel>
-            <Input type="text" value={userName} onChange={handleSetId}/>
+            <Input ref={inputRef} type="text" value={userName} onChange={handleSetId}/>
             <FormLabel>비밀번호</FormLabel>
             <Input type="password" value={password} onChange={handleSetPw} />
             <Button

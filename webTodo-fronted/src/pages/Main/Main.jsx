@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {login} from '@/store/userSlice';
