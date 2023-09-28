@@ -97,7 +97,7 @@ const ReactCalendar = (props) => {
     setSelectedDate(date);
   };
 
-  console.log(matchDateInWeek);
+  console.log("요일반복데이터",matchDateInWeek);
   //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
     if (!props.mark) {

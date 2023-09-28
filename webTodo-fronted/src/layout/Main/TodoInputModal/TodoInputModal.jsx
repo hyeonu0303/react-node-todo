@@ -37,7 +37,7 @@ function TodoContainer({ getAllData }) {
           todoData,
         })
         .then((response) => {
-          console.log("요청성공" + response.data);
+          console.log("할일 저장완료:", response.data);
         });
       getAllData();
       setInputValue('');

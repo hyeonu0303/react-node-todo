@@ -37,8 +37,6 @@ const MainPage = () => {
         setAllData(result.data);
       })
   }
-
-  console.log(markDate);
   
   useEffect(()=>{
     axiosAllData();

@@ -4,7 +4,7 @@ import { useEffect, useState} from "react";
 import { useSelector } from 'react-redux'
 import moment from "moment";
 const MonthContent = ({allData}) => {
-  console.log(allData); // 모든 데이터
+  console.log('전체데이터: ',allData); // 모든 데이터
 
   let YearMonth = useSelector(state => state.date.selectMonth)
 

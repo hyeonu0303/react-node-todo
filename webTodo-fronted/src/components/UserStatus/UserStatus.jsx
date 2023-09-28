@@ -12,12 +12,9 @@ const UserStatus = ()=>{
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const username = useSelector((state) => state.user.username);
 
-  
-  
   const handleLogout = () => {
     axios.get('/api/logout')
-    .then((result)=>{
-      console.log(result.data)
+    .then(()=>{
       dispatch(logout());
       navigate('/');
     })
