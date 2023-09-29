@@ -34,7 +34,7 @@ function TodoContainer({ getAllData }) {
     const handleAddButton = () => {
       closeModal();
       axios
-        .post("/api/tododata", {
+        .post("/api/todo", {
           todoData,
         })
         .then((response) => {

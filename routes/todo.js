@@ -1,9 +1,10 @@
 let router = require('express').Router();
 let Todo = require('../schema/Task');
 let Tags = require('../schema/Tags');
+const Task = require('../schema/Task');
 
 /**할일입력 데이터저장 */
-router.post('/api/tododata',(req,res)=>{
+router.post('/api/todo',(req,res)=>{
   let todoData = req.body.todoData;
   console.log(todoData);
   const todo = new Todo({
@@ -18,6 +19,15 @@ router.post('/api/tododata',(req,res)=>{
       console.log(`저장완료: ${result}`);
       res.json(result);
     })
+})
+
+router.post('/api/todo/delete',(req,res)=>{
+  let id = req.body._id
+
+  if(!id) return res.status(400).json({status:400, error:'id 값 필요'})
+  Task.deleteOne({_id : id})
+    .then(response=> res.json({status:200,response:response.data}))
+    .catch(error=>res.status(500).json({status: 500, error: error}))
 })
 
 /**태그저장 */
