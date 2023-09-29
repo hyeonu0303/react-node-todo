@@ -16,6 +16,7 @@ const TodoContent = (props) => {
   const selectCalendarDate = useSelector(state=>state.date.selectCalendarDate)
   const [visible, setVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
+
   // selectTag로 그룹화
   useEffect(() => {
     if (props.allData) {
@@ -36,8 +37,11 @@ const TodoContent = (props) => {
     }
   }, [props.allData,selectCalendarDate]);
   // 투두 삭제 기능
-  const deleteTodo = () => {};
+  const deleteTodo = (a) => {
+    console.log(a)
+  };
 
+  console.log(groupedByTag)
   // 투두 수정 기능
   const modifyTodo = () => {
     onOpen();
@@ -49,29 +53,24 @@ const TodoContent = (props) => {
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>
-                {tag == "" ? <h2>✅목표</h2> : <h2>😊{tag}</h2>}
+                {tag == "" ? <h2 style={{fontSize:'1.4rem'}}>😚할일</h2> : <h2 style={{fontSize:'1.4rem'}}>😊{tag}</h2>}
               </TodoTagArea>
 
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
                   return (
                     <Checkbox key={index}>
-                      <Text>
-                        <TodoContentText>
-                          {item.content}
-                          {/* {item.time != "" ? <>{item.time}</> : null} */}
-                          {item.time}
-                        </TodoContentText>
-                        <Button
-                          name={<FontAwesomeIcon icon={faPen} size="sm" />}
-                          onClick={() => modifyTodo(item.id)}
-                        />
-                        <ModifyModal isOpen={isOpen} onClose={onClose} />
-                        <Button
-                          name={<FontAwesomeIcon icon={faXmark} size="sm" />}
-                          onClick={() => deleteTodo(item.id)}
-                        />
-                      </Text>
+                      <span>{item.content}</span>
+                      <span>{item.time}</span>
+                      <Button
+                        name={<FontAwesomeIcon icon={faPen} size="sm" />}
+                        onClick={() => modifyTodo()}
+                      />
+                      <ModifyModal isOpen={isOpen} onClose={onClose} />
+                      <Button
+                        name={<FontAwesomeIcon icon={faXmark} size="sm" />}
+                        onClick={() => deleteTodo()}
+                      />
                     </Checkbox>
                   );
                 })}
@@ -124,7 +123,7 @@ const TodoContent = (props) => {
 export default TodoContent;
 
 const TodoContainer = styled.div`
-  width: 99%;
+  width: 100%;
   height: 100%;
   padding: 20px;
   position: relative;
@@ -150,6 +149,7 @@ const TodoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  flex-wrap: nowrap;
   gap: 10px;
 `;
 
@@ -164,8 +164,3 @@ const TodoContentArea = styled.div`
   gap: 10px;
 `;
 
-const TodoContentText = styled.div`
-  margin-right: 30px;
-  text-align: left;
-  display: inline-block;
-`;
