@@ -3,7 +3,7 @@ let Todo = require('../schema/Task');
 let Tags = require('../schema/Tags');
 
 /**할일입력 데이터저장 */
-router.post('/api/todoData',(req,res)=>{
+router.post('/api/tododata',(req,res)=>{
   let todoData = req.body.todoData;
   console.log(todoData);
   const todo = new Todo({
@@ -16,6 +16,7 @@ router.post('/api/todoData',(req,res)=>{
   todo.save()
     .then((result)=>{
       console.log(`저장완료: ${result}`);
+      res.json(result);
     })
 })
 

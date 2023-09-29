@@ -34,13 +34,13 @@ function TodoContainer({ getAllData }) {
     const handleAddButton = () => {
       closeModal();
       axios
-        .post("/api/todoData", {
+        .post("/api/tododata", {
           todoData,
         })
         .then((response) => {
           console.log("할일 저장완료:", response.data);
+          getAllData();
         });
-      getAllData();
       setInputValue('');
     };
   
@@ -75,9 +75,7 @@ function BeforeModal({ inputValue, setInputValue, handleAddButton, toggleModal }
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(()=>{
       dispatch(changeContent(inputValue));
-    },500)
   }, [inputValue]);
 
   return (
