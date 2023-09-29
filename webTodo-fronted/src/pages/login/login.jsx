@@ -48,6 +48,10 @@ function Login() {
       }
     });
   }
+  const handleOnKeyPress = e => {
+    if(e.key == 'Enter')
+      handleLogin()
+  }
   /**id입력란 input값 가져오는 함수*/
   const handleSetId = (e) => {
     setUserName(e.target.value);
@@ -71,7 +75,7 @@ function Login() {
           <Heading as='h2'>Todo</Heading>
         </LoginHeader>
         <LoginContent>
-          <FormControl isRequired>
+          <FormControl isRequired onKeyPress={handleOnKeyPress}>
             <FormLabel>아이디</FormLabel>
             <Input ref={inputRef} type="text" value={userName} onChange={handleSetId}/>
             <FormLabel>비밀번호</FormLabel>
