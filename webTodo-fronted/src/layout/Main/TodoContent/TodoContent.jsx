@@ -8,14 +8,18 @@ import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPen } from "@fortawesome/free-solid-svg-icons";
 import ModifyModal from "@components/Modal/ModifyModal";
-// import DeleteModal from "@components/Modal/DeleteModal";
+import DeleteModal from "@components/Modal/DeleteModal";
 
 const TodoContent = (props) => {
   const dateArr = useSelector((state) => state.todo.date);
   const allUniqueDates = useSelector((state) => state.date.allUniqueDates);
-  const selectCalendarDate = useSelector(state=>state.date.selectCalendarDate)
+  const selectCalendarDate = useSelector(
+    (state) => state.date.selectCalendarDate
+  );
   const [visible, setVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
+  const [modalOpenStates, setModalOpenStates] = useState({});
+  const [deleteModalOpenStates, setDeleteModalOpenStates] = useState({});
 
   // selectTag로 그룹화
   useEffect(() => {
@@ -26,7 +30,7 @@ const TodoContent = (props) => {
       const filteredData = props.allData.filter((data) =>
         data.date.includes(findMatchDate)
       );
-  
+
       const groupedByTag = filteredData.reduce((acc, curr) => {
         const { selectTag, content, selectTime } = curr;
         if (acc[selectTag]) acc[selectTag].push({ content, time: selectTime });
@@ -35,17 +39,44 @@ const TodoContent = (props) => {
       }, {});
       setGroupedByTag(groupedByTag);
     }
-  }, [props.allData,selectCalendarDate]);
-  // 투두 삭제 기능
-  const deleteTodo = (a) => {
-    console.log(a)
+  }, [props.allData, selectCalendarDate]);
+
+  // 투두 수정 모달
+  
+  const openModal = (tag, index) => {
+    const uniqueKey = `${tag}-${index}`;
+    setModalOpenStates((prevState) => ({
+      ...prevState,
+      [uniqueKey]: true,
+    }));
   };
 
-  console.log(groupedByTag)
-  // 투두 수정 기능
-  const modifyTodo = () => {
-    onOpen();
+  const closeModal = (tag, index) => {
+    const uniqueKey = `${tag}-${index}`;
+    setModalOpenStates((prevState) => ({
+      ...prevState,
+      [uniqueKey]: false,
+    }));
   };
+
+  // 투두 삭제 모달
+
+  const openDeleteModal = (tag, index) => {
+    const uniqueKey = `${tag}-${index}`;
+    setDeleteModalOpenStates((prevState) => ({
+      ...prevState,
+      [uniqueKey]: true,
+    }));
+  };
+
+  const closeDeleteModal = (tag, index) => {
+    const uniqueKey = `${tag}-${index}`;
+    setDeleteModalOpenStates((prevState) => ({
+      ...prevState,
+      [uniqueKey]: false,
+    }));
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <TodoContainer>
@@ -53,33 +84,44 @@ const TodoContent = (props) => {
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>
-                {tag == "" ? <h2 style={{fontSize:'1.4rem'}}>😚할일</h2> : <h2 style={{fontSize:'1.4rem'}}>😊{tag}</h2>}
+                {tag == "" ? (
+                  <h2 style={{ fontSize: "1.4rem" }}>😚할일</h2>
+                ) : (
+                  <h2 style={{ fontSize: "1.4rem" }}>😊{tag}</h2>
+                )}
               </TodoTagArea>
 
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
+                  const uniqueKey = `${tag}-${index}`;
                   return (
-                    <Checkbox key={index}>
+                    <Checkbox key={uniqueKey}>
                       <span>{item.content}</span>
                       <span>{item.time}</span>
                       <Button
                         name={<FontAwesomeIcon icon={faPen} size="sm" />}
-                        onClick={() => modifyTodo()}
+                        onClick={() => openModal(tag, index)}
                       />
-                      <ModifyModal isOpen={isOpen} onClose={onClose} />
+                      <ModifyModal
+                        isOpen={modalOpenStates[uniqueKey]}
+                        onClose={() => closeModal(tag, index)}
+                      />
                       <Button
                         name={<FontAwesomeIcon icon={faXmark} size="sm" />}
-                        onClick={() => deleteTodo()}
+                        onClick={() => openDeleteModal(tag, index)}
+                      />
+
+                      <DeleteModal
+                        isOpen={deleteModalOpenStates[uniqueKey]}
+                        onClose={() => closeDeleteModal(tag, index)}
                       />
                     </Checkbox>
                   );
                 })}
               </TodoContentArea>
-
             </TodoWrapper>
           ))
-        : null
-      }
+        : null}
       {visible == true ? (
         <div
           style={{
@@ -163,4 +205,3 @@ const TodoContentArea = styled.div`
   flex-direction: column;
   gap: 10px;
 `;
-
