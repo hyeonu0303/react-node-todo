@@ -19,7 +19,7 @@ const TodoContent = (props) => {
 
   const [hiddenVisible, setHiddenVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
-  const [buttonVisible, setButtonVisible] = useState(false);
+  const [visibleButton, setVisibleButton] = useState([]);
   const [modalOpenStates, setModalOpenStates] = useState({});
   const [deleteModalOpenStates, setDeleteModalOpenStates] = useState({});
 
@@ -34,15 +34,16 @@ const TodoContent = (props) => {
       );
 
       const groupedByTag = filteredData.reduce((acc, curr) => {
-        const { selectTag, content, selectTime } = curr;
-        if (acc[selectTag]) acc[selectTag].push({ content, time: selectTime });
-        else acc[selectTag] = [{ content, time: selectTime }];
+        const { selectTag, _id ,content, selectTime } = curr;
+        if (acc[selectTag]) acc[selectTag].push({ _id,content, time: selectTime });
+        else acc[selectTag] = [{ _id,content, time: selectTime }];
         return acc;
       }, {});
       setGroupedByTag(groupedByTag);
     }
   }, [props.allData, selectCalendarDate]);
 
+  console.log('태그묶음',groupedByTag)
   // 투두 수정 모달
   
   const openModal = (tag, index) => {
@@ -79,6 +80,13 @@ const TodoContent = (props) => {
     }));
   };
 
+  const handleMouseOver = (uniqueKey)=>{
+    setVisibleButton(prev => ({ ...prev, [uniqueKey]: true }));
+  }
+
+  const handleMouseOut = (uniqueKey) => {
+    setVisibleButton(prev => ({ ...prev, [uniqueKey]: false }));
+  }
   return (
     <TodoContainer>
       {props.allData != undefined
@@ -104,18 +112,20 @@ const TodoContent = (props) => {
                         </Checkbox>
                       </TodoContentGroup>
                       <TodoButtonGroup
-                        onMouseOver={()=>{setButtonVisible(true)}}
-                        onMouseOut={()=>{setButtonVisible(false)}}
+                        onMouseOver={()=>{handleMouseOver(uniqueKey)}}
+                        onMouseOut={()=>{handleMouseOut(uniqueKey)}}
                       >
-                        <VisibleButton setButtonVisible={buttonVisible}>
-                          <FontAwesomeIcon icon={faEllipsisVertical} />
-                        </VisibleButton>
-                        
-                        <HideButton setButtonVisible={buttonVisible} >
+
+                        <HideButton setButtonVisible={visibleButton[uniqueKey]} >
                           <TodoButton buttoncolor='red'>수정</TodoButton>
                           <TodoButton buttoncolor='blue'>삭제</TodoButton>
                           <TodoButton>중요</TodoButton>
                         </HideButton>
+
+                        <VisibleButton setButtonVisible={visibleButton[uniqueKey]}>
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </VisibleButton>
+                        
                       </TodoButtonGroup>
                     </TodoContentBox>
                   );
@@ -234,12 +244,13 @@ const TodoButton = styled.button`
 `
 
 const VisibleButton = styled.div`
-  display: ${props=>props.setButtonVisible == false ? 'block': 'none'};
-`
+  opacity: ${props => (props.setButtonVisible ? 0 : 1)};
+`;
 
 const HideButton = styled.div`
-  display: ${props=>props.setButtonVisible == true ? 'block': 'none'};
-  transition: all 1s;
-  position:relative;
-`
+  opacity: ${props => (props.setButtonVisible ? 1 : 0)};
+  visibility: ${props => (props.setButtonVisible ? 'visible' : 'hidden')};
+  transition: all 0.5s;
+`;
+
 
