@@ -6,7 +6,7 @@ import oppenheimer from "./Oppenheimer.png";
 import { useState, useEffect } from "react";
 import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faPen,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import ModifyModal from "@components/Modal/ModifyModal";
 import DeleteModal from "@components/Modal/DeleteModal";
 
@@ -16,8 +16,10 @@ const TodoContent = (props) => {
   const selectCalendarDate = useSelector(
     (state) => state.date.selectCalendarDate
   );
-  const [visible, setVisible] = useState(false);
+
+  const [hiddenVisible, setHiddenVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
+  const [buttonVisible, setButtonVisible] = useState(false);
   const [modalOpenStates, setModalOpenStates] = useState({});
   const [deleteModalOpenStates, setDeleteModalOpenStates] = useState({});
 
@@ -77,7 +79,6 @@ const TodoContent = (props) => {
     }));
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <TodoContainer>
       {props.allData != undefined
@@ -90,39 +91,40 @@ const TodoContent = (props) => {
                   <h2 style={{ fontSize: "1.4rem" }}>😊{tag}</h2>
                 )}
               </TodoTagArea>
-
+              
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
                   const uniqueKey = `${tag}-${index}`;
                   return (
-                    <Checkbox key={uniqueKey}>
-                      <span>{item.content}</span>
-                      <span>{item.time}</span>
-                      <Button
-                        name={<FontAwesomeIcon icon={faPen} size="sm" />}
-                        onClick={() => openModal(tag, index)}
-                      />
-                      <ModifyModal
-                        isOpen={modalOpenStates[uniqueKey]}
-                        onClose={() => closeModal(tag, index)}
-                      />
-                      <Button
-                        name={<FontAwesomeIcon icon={faXmark} size="sm" />}
-                        onClick={() => openDeleteModal(tag, index)}
-                      />
-
-                      <DeleteModal
-                        isOpen={deleteModalOpenStates[uniqueKey]}
-                        onClose={() => closeDeleteModal(tag, index)}
-                      />
-                    </Checkbox>
+                    <TodoContentBox key={uniqueKey}>
+                      <TodoContentGroup>
+                        <Checkbox>
+                          <span>{item.content}</span>
+                          <span>{item.time}</span>
+                        </Checkbox>
+                      </TodoContentGroup>
+                      <TodoButtonGroup
+                        onMouseOver={()=>{setButtonVisible(true)}}
+                        onMouseOut={()=>{setButtonVisible(false)}}
+                      >
+                        <VisibleButton setButtonVisible={buttonVisible}>
+                          <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </VisibleButton>
+                        
+                        <HideButton setButtonVisible={buttonVisible} >
+                          <TodoButton buttoncolor='red'>수정</TodoButton>
+                          <TodoButton buttoncolor='blue'>삭제</TodoButton>
+                          <TodoButton>중요</TodoButton>
+                        </HideButton>
+                      </TodoButtonGroup>
+                    </TodoContentBox>
                   );
                 })}
               </TodoContentArea>
             </TodoWrapper>
           ))
         : null}
-      {visible == true ? (
+      {hiddenVisible == true ? (
         <div
           style={{
             position: "absolute",
@@ -130,7 +132,7 @@ const TodoContent = (props) => {
             bottom: "0",
           }}
           onClick={() => {
-            setVisible(false);
+            setHiddenVisible(false);
           }}
         >
           <img
@@ -154,7 +156,7 @@ const TodoContent = (props) => {
             bottom: "20px",
           }}
           onClick={() => {
-            setVisible(true);
+            setHiddenVisible(true);
           }}
         ></div>
       )}
@@ -203,5 +205,41 @@ const TodoTagArea = styled.div`
 const TodoContentArea = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  width:100%;
+  gap:10px;
 `;
+
+
+const TodoContentBox = styled.div`
+  width:100%;
+  align-items: center;
+  display:flex;
+  justify-content: space-between;
+  gap:10px;
+`
+
+
+const TodoContentGroup = styled.div`
+  padding:10px;
+`
+const TodoButtonGroup = styled.div`
+  display:flex;
+  align-items: center;
+`
+
+const TodoButton = styled.button`
+  padding:10px;
+  background: ${({ buttoncolor }) => (buttoncolor ? buttoncolor : '')};
+  margin-left:3px;
+`
+
+const VisibleButton = styled.div`
+  display: ${props=>props.setButtonVisible == false ? 'block': 'none'};
+`
+
+const HideButton = styled.div`
+  display: ${props=>props.setButtonVisible == true ? 'block': 'none'};
+  transition: all 1s;
+  position:relative;
+`
+
