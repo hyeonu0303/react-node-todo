@@ -43,7 +43,6 @@ const TodoContent = (props) => {
     }
   }, [props.allData, selectCalendarDate]);
 
-  console.log('태그묶음',groupedByTag)
   // 투두 수정 모달
   
   const openModal = (tag, index) => {
@@ -102,7 +101,7 @@ const TodoContent = (props) => {
               
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
-                  const uniqueKey = `${tag}-${index}`;
+                  const uniqueKey = item._id
                   return (
                     <TodoContentBox key={uniqueKey}>
                       <TodoContentGroup>
@@ -116,13 +115,13 @@ const TodoContent = (props) => {
                         onMouseOut={()=>{handleMouseOut(uniqueKey)}}
                       >
 
-                        <HideButton setButtonVisible={visibleButton[uniqueKey]} >
+                        <HideButton visible={visibleButton[uniqueKey]} >
                           <TodoButton buttoncolor='red'>수정</TodoButton>
                           <TodoButton buttoncolor='blue'>삭제</TodoButton>
                           <TodoButton>중요</TodoButton>
                         </HideButton>
 
-                        <VisibleButton setButtonVisible={visibleButton[uniqueKey]}>
+                        <VisibleButton visible={visibleButton[uniqueKey]}>
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </VisibleButton>
                         
@@ -244,12 +243,12 @@ const TodoButton = styled.button`
 `
 
 const VisibleButton = styled.div`
-  opacity: ${props => (props.setButtonVisible ? 0 : 1)};
+  opacity: ${props => (props.visible ? 0 : 1)};
 `;
 
 const HideButton = styled.div`
-  opacity: ${props => (props.setButtonVisible ? 1 : 0)};
-  visibility: ${props => (props.setButtonVisible ? 'visible' : 'hidden')};
+  opacity: ${props => (props.visible ? 1 : 0)};
+  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
   transition: all 0.5s;
 `;
 
