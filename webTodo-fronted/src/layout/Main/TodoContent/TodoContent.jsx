@@ -7,6 +7,8 @@ import { useState, useEffect } from "react";
 import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faPen,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-regular-svg-icons";
+
 import ModifyModal from "@components/Modal/ModifyModal";
 import DeleteModal from "@components/Modal/DeleteModal";
 
@@ -20,9 +22,11 @@ const TodoContent = (props) => {
   const [hiddenVisible, setHiddenVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
   const [visibleButton, setVisibleButton] = useState([]);
-  const [modalOpenStates, setModalOpenStates] = useState({});
-  const [deleteModalOpenStates, setDeleteModalOpenStates] = useState({});
 
+  const [modalInfo, setModalInfo] = useState({
+    type: null,
+    data: null
+  })
   // selectTag로 그룹화
   useEffect(() => {
     if (props.allData) {
@@ -43,41 +47,18 @@ const TodoContent = (props) => {
     }
   }, [props.allData, selectCalendarDate]);
 
+  useEffect(()=>{
+    console.log(groupedByTag)
+  },[])
   // 투두 수정 모달
   
-  const openModal = (tag, index) => {
-    const uniqueKey = `${tag}-${index}`;
-    setModalOpenStates((prevState) => ({
-      ...prevState,
-      [uniqueKey]: true,
-    }));
-  };
+  const handleOpenModal = (type, item) => {
+    setModalInfo({type, data:item})
+  }
 
-  const closeModal = (tag, index) => {
-    const uniqueKey = `${tag}-${index}`;
-    setModalOpenStates((prevState) => ({
-      ...prevState,
-      [uniqueKey]: false,
-    }));
-  };
-
-  // 투두 삭제 모달
-
-  const openDeleteModal = (tag, index) => {
-    const uniqueKey = `${tag}-${index}`;
-    setDeleteModalOpenStates((prevState) => ({
-      ...prevState,
-      [uniqueKey]: true,
-    }));
-  };
-
-  const closeDeleteModal = (tag, index) => {
-    const uniqueKey = `${tag}-${index}`;
-    setDeleteModalOpenStates((prevState) => ({
-      ...prevState,
-      [uniqueKey]: false,
-    }));
-  };
+  const handleCloseModal = (type,item) => {
+    setModalInfo({type, data:item})
+  }
 
   const handleMouseOver = (uniqueKey)=>{
     setVisibleButton(prev => ({ ...prev, [uniqueKey]: true }));
@@ -116,9 +97,17 @@ const TodoContent = (props) => {
                       >
 
                         <HideButton visible={visibleButton[uniqueKey]} >
-                          <TodoButton buttoncolor='red'>수정</TodoButton>
-                          <TodoButton buttoncolor='blue'>삭제</TodoButton>
-                          <TodoButton>중요</TodoButton>
+                          <Button 
+                            name={<FontAwesomeIcon icon={faPen} size="sm" />}
+                            onClick={() => handleOpenModal('modify', item)}
+                          />
+                          
+                          <Button 
+                            name={<FontAwesomeIcon icon={faXmark} size="sm" />}
+                            onClick={() => handleOpenModal('delete', item)}
+                          />
+                          
+                          <Button name={<FontAwesomeIcon icon={faStar} size='sm'/>}/>
                         </HideButton>
 
                         <VisibleButton visible={visibleButton[uniqueKey]}>
@@ -126,6 +115,17 @@ const TodoContent = (props) => {
                         </VisibleButton>
                         
                       </TodoButtonGroup>
+                      {/* 버튼 */}
+                      <ModifyModal
+                        isOpen={modalInfo.type === 'modify'}
+                        onClose={handleCloseModal}
+                        contentData = {modalInfo.data? modalInfo.data:''}
+                      />    
+                      <DeleteModal
+                        isOpen={modalInfo.type === 'delete'}
+                        onClose={handleCloseModal}
+                        contentData = {modalInfo.data? modalInfo.data:''}
+                      />
                     </TodoContentBox>
                   );
                 })}
@@ -239,6 +239,7 @@ const TodoButtonGroup = styled.div`
 const TodoButton = styled.button`
   padding:10px;
   background: ${({ buttoncolor }) => (buttoncolor ? buttoncolor : '')};
+  border-radius:4px;
   margin-left:3px;
 `
 
