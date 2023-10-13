@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {changeCheckVaild, changeDayNum} from '@/store/dateSlice';
 import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
 import { Checkbox } from "@chakra-ui/react";
-import Button from "@components/Button/Button";
 function App({getAllData}) {
   return (
     <TodoDiv>
@@ -18,31 +17,35 @@ function App({getAllData}) {
 
 function TodoContainer({ getAllData }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  let [inputValue, setInputValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
-  console.log('할일입력 전체데이터: ',todoData);
 
   const toggleModal = () => {
     setIsModalVisible(true);
   };
   
-    const closeModal = () => {
-      setIsModalVisible(false);
-    };
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
-    const handleAddButton = () => {
-      closeModal();
-      axios
-        .post("/api/todo", {
-          todoData,
-        })
-        .then((response) => {
-          console.log("할일 저장완료:", response.data);
-          getAllData();
-        });
-      setInputValue('');
-    };
+  const handleAddButton = () => {
+    if (isSubmitting) return;  
+    setIsSubmitting(true);
+  
+    closeModal();
+    axios
+    .post("/api/todo", {
+      todoData,
+    })
+    .then((response) => {
+      console.log("할일 저장완료:", response.data);
+      getAllData();
+    })
+    .finally(() => {
+      setIsSubmitting(false);  
+    });
+  };
   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,23 +63,34 @@ function TodoContainer({ getAllData }) {
   return (
     <div ref={modalRef}>
       <BeforeModal
-      inputValue={inputValue}
-      setInputValue={setInputValue}
         handleAddButton={handleAddButton}
-        toggleModal={toggleModal} />
-      {isModalVisible && <ExpModal todoData={todoData} handleAddButton={handleAddButton}/>}
+        toggleModal={toggleModal} 
+      />
+        {
+          isModalVisible && 
+            <ExpModal todoData={todoData} handleAddButton={handleAddButton}
+          />
+        }
     </div>
   );
 }
 
 
-function BeforeModal({ inputValue, setInputValue, handleAddButton, toggleModal }) {
-  // 마우스 클릭 이벤트 전 모달
+function BeforeModal({ handleAddButton, toggleModal }) {
   const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState('')
 
-  useEffect(() => {
-      dispatch(changeContent(inputValue));
-  }, [inputValue]);
+  const handleInputChange = (e) => {
+    dispatch(changeContent(e.target.value))
+    setInputValue(e.target.value)
+  }
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter' && !e.defaultPrevented) {
+      e.preventDefault()
+      handleAddButton()
+      setInputValue('')
+    }
+  }
 
   return (
     <div style={{ width: "100%" }}>
@@ -85,13 +99,8 @@ function BeforeModal({ inputValue, setInputValue, handleAddButton, toggleModal }
         placeholder="오늘의 할일은 무엇인가요?"
         onClick={toggleModal}
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            handleAddButton();
-          }
-        }
-        }
+        onChange={handleInputChange}
+        onKeyDown={handleEnterPress}
       />
     </div>
   );

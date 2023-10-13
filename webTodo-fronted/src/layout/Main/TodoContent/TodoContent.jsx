@@ -115,12 +115,12 @@ const TodoContent = (props) => {
                         </VisibleButton>
                         
                       </TodoButtonGroup>
-                      {/* 버튼 */}
+
                       <ModifyModal
                         isOpen={modalInfo.type === 'modify'}
                         onClose={handleCloseModal}
                         contentData = {modalInfo.data? modalInfo.data:''}
-                      />    
+                      />
                       <DeleteModal
                         isOpen={modalInfo.type === 'delete'}
                         onClose={handleCloseModal}

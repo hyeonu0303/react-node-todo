@@ -21,14 +21,23 @@ router.post('/api/todo',(req,res)=>{
     })
 })
 
-
-router.post('/api/todo/delete',(req,res)=>{
+/**컨텐츠 삭제요청 */
+router.post('/api/delete/content',(req,res)=>{
   let id = req.body._id
 
   if(!id) return res.status(400).json({status:400, error:'id 값 필요'})
   Task.deleteOne({_id : id})
     .then(response=> res.json({status:200,response:response.data}))
     .catch(error=>res.status(500).json({status: 500, error: error}))
+})
+/**컨텐츠 수정요청 */
+router.post('/api/update/content',(req,res)=>{
+  const id = req.body._id
+  const content = req.body.content
+
+  Task.updateOne({_id:id},{content:content})
+    .then(result=>res.json(result.data),console.log('수정완료'))
+    .catch(error=>res.status(500).json(error))
 })
 
 /**태그저장 */
