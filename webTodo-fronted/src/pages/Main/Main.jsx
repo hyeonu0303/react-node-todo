@@ -10,8 +10,7 @@ import styled from "styled-components";
 import { setAllUniqueDates } from "@/store/dateSlice";
 
 const MainPage = () => {
-  let dispatch = useDispatch();
-  
+  const dispatch = useDispatch();
   useEffect(()=>{
     const urlParams = new URLSearchParams(window.location.search);
     const googleName = urlParams.get('googleName');
@@ -24,7 +23,6 @@ const MainPage = () => {
 
   const [markDate, setMarkDate] = useState();
   const [allData, setAllData] = useState();
-
   const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{

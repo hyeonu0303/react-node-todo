@@ -1,21 +1,15 @@
 /*eslint-disable */
 import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTag, faClock, faCalendarPlus, faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import SetTime from "@components/Button/TimeIcon/TimeButton";
+import SetTag from "@components/Button/TagIcon/TagButton";
+import SetDay from "@components/Button/CalendarIcon/CalndarButton";
 import { useDispatch, useSelector } from "react-redux";
-import {changeCheckVaild, changeDayNum} from '@/store/dateSlice';
-import { changeContent, addTag, changeSelectTag, setTime, clearTime } from "@/store/todoSlice";
-import { Checkbox } from "@chakra-ui/react";
-function App({getAllData}) {
-  return (
-    <TodoDiv>
-      <TodoContainer getAllData={getAllData}/>
-    </TodoDiv>
-  );
-}
+import { changeContent} from "@/store/todoSlice";
 
-function TodoContainer({ getAllData }) {
+const TodoInputModal = ({ getAllData })=> {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const modalRef = useRef(null);
@@ -32,7 +26,7 @@ function TodoContainer({ getAllData }) {
   const handleAddButton = () => {
     if (isSubmitting) return;  
     setIsSubmitting(true);
-  
+    
     closeModal();
     axios
     .post("/api/todo", {
@@ -61,22 +55,23 @@ function TodoContainer({ getAllData }) {
   }, []);
 
   return (
-    <div ref={modalRef}>
-      <BeforeModal
-        handleAddButton={handleAddButton}
-        toggleModal={toggleModal} 
-      />
-        {
-          isModalVisible && 
-            <ExpModal todoData={todoData} handleAddButton={handleAddButton}
-          />
-        }
-    </div>
+    <TodoDiv>
+      <div ref={modalRef}>
+        <BeforeModal
+          handleAddButton={handleAddButton}
+          toggleModal={toggleModal} 
+        />
+          {
+            isModalVisible && 
+              <AfterModal todoData={todoData} handleAddButton={handleAddButton}
+            />
+          }
+      </div>
+    </TodoDiv>
   );
 }
 
-
-function BeforeModal({ handleAddButton, toggleModal }) {
+const BeforeModal = ({ handleAddButton, toggleModal }) => {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState('')
 
@@ -106,7 +101,7 @@ function BeforeModal({ handleAddButton, toggleModal }) {
   );
 }
 
-function ExpModal({ handleAddButton, todoData }) {
+const AfterModal = ({ handleAddButton, todoData }) => {
 
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isTimeOpen, setIsTimeOpen] = useState(false);
@@ -160,270 +155,7 @@ function ExpModal({ handleAddButton, todoData }) {
   );
 }
 
-const SetTag = ({isOpen, toggleTag}) => {
-  const [tagInputValue, setTagInputValue] = useState("");
-  const dispatch = useDispatch();
-  const tags = useSelector((state) => state.todo.tags);
-  const [tagData,setTagData] = useState([]);
-  const selectTag = useSelector(state=>state.todo.selectTag);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  /**태그 데이터 */
-  useEffect(() => {
-    axios.get("/api/tags").then((result) => {
-      setTagData(result.data.tags);
-    });
-  }, [tags]);
-
-  /**태그추가기능 */
-  const addNewTag = () => {
-    if (tagInputValue !== "" && !isSubmitting) {
-      dispatch(addTag(tagInputValue)); //전역변수 따로저장
-      setIsSubmitting(true);
-      axios.post('/api/tags', {
-        tags: tagInputValue
-      })
-      .then(response => {
-        setTagData(prevTags => [...prevTags, tagInputValue]);
-        setTagInputValue('');
-      })
-      .catch((error) => {
-        if(error) console.log("태그저장요청에러" + error);
-      })
-      .finally(()=>{
-        setIsSubmitting(false);
-      })
-      
-    }
-  };
-
-  /**태그삭제 */
-  const handleTagDeletion = (index) => {
-    axios.post('/api/tags/delete',{
-      deleteIndex: index
-    })
-    .then(response=>{
-      setTagData(response.data.tags)
-    })
-    .catch()    
-  }
-
-  /**엔터키입력시 태그추가기능 */
-  const handleEnterKey = (event) => {
-    if (event.key === "Enter") {
-      addNewTag();
-    }
-  };
-
-  return (
-    <DropdownWrapper>
-      <SetTodoButton onClick={toggleTag}>
-        <FontAwesomeIcon icon={faTag} style={{ color: "#000000" }} />
-      </SetTodoButton>
-      {/* todoData가 있으면 todoData.map  */}
-      {isOpen && (
-        <DropdownMenu>
-          {tagData.map((tag, index) => (
-            /**선택한 태그로직 */
-            <TagContainer key={index}>
-              <Checkbox
-                colorScheme="red"
-                value={tag}
-                isChecked={selectTag == tag}
-                disabled={selectTag && selectTag !== tag}
-                onChange={(e) => {
-                  if (e.target.checked == true) dispatch(changeSelectTag(tag));
-                  else dispatch(changeSelectTag(""));
-                }}
-              >
-                {tag}
-              </Checkbox>
-              <AddTagButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleTagDeletion(index);
-                }}
-              >
-                x
-              </AddTagButton>
-            </TagContainer>
-          ))}
-
-          <TagList>
-            <AddTagInput
-              id="newTagInput"
-              type="text"
-              placeholder="추가할 태그 입력"
-              value={tagInputValue}
-              onChange={(e) => {
-                setTagInputValue(e.target.value);
-              }}
-              onKeyDown={handleEnterKey}
-            />
-
-            <AddTagButton onClick={addNewTag}>+</AddTagButton>
-          </TagList>
-        </DropdownMenu>
-      )}
-    </DropdownWrapper>
-  );
-};
-
-const SetTime = ({isOpen,toggleTime}) => {
-  const [selectedTime, setSelectedTime] = useState("");
-
-  const dispatch = useDispatch();
-
-  const handleTimeChange = (event) => {
-    const newTime = event.target.value;
-    setSelectedTime(newTime);
-  };
-
-  const addTime = () => {
-    // 시간 데이터를 state.todo.selectTime로 보내기
-    dispatch(setTime(selectedTime));
-    toggleTime();
-  };
-
-  const deleteTime = () => {
-    dispatch(clearTime());
-    
-  }
-
-  return (
-    <DropdownWrapper>
-      <SetTodoButton onClick={toggleTime}>
-        <FontAwesomeIcon icon={faClock} style={{ color: "#000000" }} />
-      </SetTodoButton>
-      {isOpen && (
-        <DropdownMenu>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <TimeInput
-              type="time"
-              value={selectedTime}
-              onChange={handleTimeChange}
-            />
-            <AddTagButton onClick={addTime}>+</AddTagButton>
-            <AddTagButton onClick={deleteTime}>x</AddTagButton>
-          </div>
-        </DropdownMenu>
-      )}
-    </DropdownWrapper>
-    
-  );
-};
-
-const SetDay = ({isOpen, toggleDay}) => {
-
-  const dispatch = useDispatch();
-  const [selectedDay, setSelectedDay] = useState('');
-  const checkedType = useSelector(state => state.date.checkedType)
-  const checkedValid = useSelector(state => state.date.checkValid)
-
-  const handleDayChange = (e) =>{
-    e.stopPropagation();
-    setSelectedDay(e.target.value);
-  }
-
-  const dayMapping = {
-    "월": 1,
-    "화": 2,
-    "수": 3,
-    "목": 4,
-    "금": 5,
-    "토": 6,
-    "일": 0,
-  };
-
-  useEffect(()=>{
-    if(selectedDay !== ''){
-      const number = dayMapping[selectedDay];
-      if(number !== undefined)
-        dispatch(changeDayNum(number))
-    }
-  },[selectedDay])
-
-  return (
-    <DropdownWrapper>
-      <SetTodoButton onClick={toggleDay}>
-        <FontAwesomeIcon icon={faCalendarPlus} style={{ color: "#000000" }} />
-      </SetTodoButton>
-  
-      {isOpen && (
-        <DropdownMenu>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <DayList>
-              <CheckboxContainer>
-                  <Checkbox 
-                    isChecked={checkedType == 'daily' && checkedValid == true}
-                    onChange={(e) => {
-                      dispatch(changeCheckVaild({type:'daily', checked:e.target.checked}))
-                    }}
-                    disabled={checkedType != 'daily' && checkedValid != false}
-                    style={{ width: '110px' }}
-                  >
-                    매일 반복
-                  </Checkbox>
-                </CheckboxContainer>
-                
-                <CheckboxContainer>
-                  <Checkbox 
-                    isChecked={checkedType == 'week' && checkedValid == true}
-                    onChange={(e) => {
-                      dispatch(changeCheckVaild({type:'week', checked:e.target.checked}))
-                      /* if (e.target.checked) {
-                        setIsDailyChecked(false);
-                      } */
-                    }}
-                    disabled={checkedType != 'week' && checkedValid != false}
-                    style={{ width: '110px' }}
-                  >
-                    요일 반복
-                  </Checkbox>
-                <ComboBox 
-                  disabled={!checkedValid || checkedType !== 'week'} 
-                  value={selectedDay} 
-                  onChange={handleDayChange}
-                >
-                  
-                  <option value='' disabled>선택</option>
-                  {["월", "화", "수", "목", "금", "토", "일"].map(day => (
-                    <option key={day} value={day} >{day}</option>
-                  ))}
-                </ComboBox>
-              </CheckboxContainer>
-
-                <CheckboxContainer>
-                  <Checkbox 
-                    isChecked={checkedType == 'day' && checkedValid == true}
-                    onChange={(e) => {
-                      dispatch(changeCheckVaild({type:'day', checked:e.target.checked}))
-                      
-                      /* if (e.target.checked) {
-                        setIsDailyChecked(false);
-                      } */
-                    }}
-                    disabled={checkedType != 'day' && checkedValid != false}
-                    style={{ width: '110px' }}
-                  >
-                    날짜 선택
-                  </Checkbox>
-                  <AddTagButton>
-                    <FontAwesomeIcon 
-                      icon={faCalendar}
-                      style={{ color: checkedType == 'day' && checkedValid ? "#000000" : "#C0C0C0",  marginLeft:"7px" }}
-                    />
-                  </AddTagButton>
-                </CheckboxContainer>
-            </DayList>
-          </div>
-        </DropdownMenu>
-      )}
-    </DropdownWrapper>
-  );
-};
-
-export default App;
+export default TodoInputModal;
 
 import styled from "styled-components";
 

@@ -6,8 +6,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-} from "@chakra-ui/react"; // Assuming you're using Chakra UI for modal based on the given code.
-// import axios from "axios";
+} from "@chakra-ui/react"; 
 import Button from "@components/Button/Button";
 
 const DeleteModal = ({ isOpen, onClose,contentData }) => {

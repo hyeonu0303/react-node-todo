@@ -8,7 +8,6 @@ import {
   AbsoluteCenter,
   Box,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
@@ -26,8 +25,9 @@ function Login() {
   const inputRef = useRef();
   
   /**로그인POST */
+
   let handleLogin = () => {
-    axios.post("/api/login", {
+    login({
       userName: userName,
       password: password,
     })
@@ -48,6 +48,7 @@ function Login() {
       }
     });
   }
+
   const handleOnKeyPress = e => {
     if(e.key == 'Enter')
       handleLogin()
@@ -66,8 +67,7 @@ function Login() {
     console.log('inputRef:', inputRef);
     inputRef.current.focus();
   },[])
-  
-  
+
   return (
     <LoginContainer>
       <LoginBox>

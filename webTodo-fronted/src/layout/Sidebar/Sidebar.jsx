@@ -58,7 +58,7 @@ export default Sidebar;
 
 
 const SidebarWidth = styled.div`
-  width: ${(props) => (props.visible ? "510px" : "100px")};
+  width: ${(props) => (props.visible ? "512px" : "100px")};
   height: 100%;
   position: relative;
   transition: all 0.3s;
