@@ -24,9 +24,7 @@ const TodoInputModal = ({ getAllData })=> {
     setIsSubmitting(true);
 
     closeModal();
-    
-    axios
-    .post("/api/todo", {
+    axios.post("/api/todo", {
       todoData,
     })
     .then((response) => {
