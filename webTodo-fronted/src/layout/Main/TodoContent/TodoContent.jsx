@@ -54,12 +54,13 @@ const TodoContent = (props) => {
   // 투두 수정 모달
   
   const handleOpenModal = (type, item) => {
-    setModalInfo({type, data:item})
-  }
-
-  const handleCloseModal = (type,item) => {
-    setModalInfo({type, data:item})
-  }
+    setModalInfo({ type, data: item, id: item._id }); // Use the unique _id of the todo item.
+  };
+  
+  const handleCloseModal = () => {
+    setModalInfo(prev => ({ ...prev, type: null })); // Reset only the type.
+  };
+  
 
   const handleMouseOver = (uniqueKey)=>{
     setVisibleButton(prev => ({ ...prev, [uniqueKey]: true }));
@@ -114,22 +115,23 @@ const TodoContent = (props) => {
                         <VisibleButton visible={visibleButton[uniqueKey]}>
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </VisibleButton>
-                        
+                        <ModifyModal
+  isOpen={modalInfo.type === 'modify' && modalInfo.id === item._id}
+  onClose={handleCloseModal}
+  contentData={modalInfo.data || ''}
+/>
+<DeleteModal
+  isOpen={modalInfo.type === 'delete' && modalInfo.id === item._id}
+  onClose={handleCloseModal}
+  contentData={modalInfo.data || ''}
+/>
                       </TodoButtonGroup>
                     </TodoContentBox>
                   );
                 })}
               </TodoContentArea>
-              <ModifyModal
-                        isOpen={modalInfo.type === 'modify'}
-                        onClose={handleCloseModal}
-                        contentData = {modalInfo.data? modalInfo.data:''}
-                      />
-                      <DeleteModal
-                        isOpen={modalInfo.type === 'delete'}
-                        onClose={handleCloseModal}
-                        contentData = {modalInfo.data? modalInfo.data:''}
-                      />
+              
+
             </TodoWrapper>
           ))
         : null}
