@@ -1,58 +1,90 @@
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalCloseButton,
-    ModalBody,
-    ModalFooter,
-    Input,
-
-  } from "@chakra-ui/react";
-  import Button from "@components/Button/Button";
-  import { useRef } from "react";
-  import { useState } from "react";
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Input,
+} from "@chakra-ui/react";
+import Button from "@components/Button/Button";
+import { useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
 
-  const ModifyModal = ({ isOpen, onClose,contentData , getAllData}) => {
-    const inputRef = useRef()
-    const [updateInputValue,setUpdateInputValue] = useState('')
+const ModifyModal = ({
+  isOpen,
+  onClose,
+  contentData,
+  getAllData,
+  handleMouseOut,
+  uniqueKey
 
-    const fetchUpdateContent = () => {
+}) => {
+  const inputRef = useRef();
+  const [updateInputValue, setUpdateInputValue] = useState("");
+  const [cautionMassage, setCautionMassage] =
+    useState("수정할 내용을 입력하세요");
+  const [messageColor, setMessageColor] = useState("black");
+
+  const closeModal = () => {
+    handleMouseOut(uniqueKey);
       onClose();
-      axios.post('/api/update/content',{
-        _id:contentData._id,
-        content:updateInputValue
-      })
-      .then(()=>{
-        getAllData();
-      })
-      .catch(error=>console.log(error))
     }
 
-    return (
-      <Modal isOpen={isOpen} onClose={onClose} >
-        <ModalOverlay />
-        <ModalContent>  
-          <ModalHeader>
-          <b><i>{contentData.content}</i></b> 수정하기
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <p>수정할 내용을 입력하세요.</p><br/>
-            <Input ref={inputRef} size='md' onChange={(e)=>{setUpdateInputValue(e.target.value)}}/>
-          </ModalBody>
-          <ModalFooter>
-          <Button 
-            name="Ok" 
-            onClick={fetchUpdateContent}
-          />
-          <Button name="Cancle" onClick={onClose} />
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    );
+  const fetchUpdateContent = () => {
+    if (updateInputValue === "") {
+      setCautionMassage("빈 내용은 입력할 수 없어요");
+      setMessageColor("red");
+    } else {
+      closeModal();
+      axios
+        .post("/api/update/content", {
+          _id: contentData._id,
+          content: updateInputValue,
+        })
+        .then(() => {
+          getAllData();
+        })
+        .catch((error) => console.log(error));
+    }
   };
-  
-  export default ModifyModal;
-  
+
+  return (
+    <Modal isOpen={isOpen} onClose={closeModal}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          <b>
+            <i>{contentData.content}</i>
+          </b>{" "}
+          수정하기
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <p style={{ color: messageColor }}>{cautionMassage}</p>
+          <br />
+          <Input
+            ref={inputRef}
+            size="md"
+            onChange={(e) => {
+              setUpdateInputValue(e.target.value);
+            }}
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button name="Ok" onClick={fetchUpdateContent} />
+          <Button
+            name="Cancle"
+            onClick={() => {
+              closeModal();
+            }}
+          />
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default ModifyModal;

@@ -57,23 +57,23 @@ const TodoContent = (props ) => {
     console.log(groupedByTag);
   }, []);
 
+  // 투두 설정 버튼 visible
+const handleMouseOver = (uniqueKey) => {
+  setVisibleButton((prev) => ({ ...prev, [uniqueKey]: true }));
+};
+
+const handleMouseOut = (uniqueKey) => {
+  setVisibleButton((prev) => ({ ...prev, [uniqueKey]: false }));
+};
   // 투두 수정삭제 모달 open / close
   const handleOpenModal = (type, item) => {
-    setModalInfo({ type, data: item, id: item._id }); // Use the unique _id of the todo item.
+    setModalInfo({ type, data: item, id: item._id });
   };
 
   const handleCloseModal = () => {
-    setModalInfo((prev) => ({ ...prev, type: null })); // Reset only the type.
+    setModalInfo((prev) => ({ ...prev, type: null })); 
   };
 
-    // 투두 설정 버튼
-  const handleMouseOver = (uniqueKey) => {
-    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: true }));
-  };
-
-  const handleMouseOut = (uniqueKey) => {
-    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: false }));
-  };
   return (
     <TodoContainer>
       {props.allData != undefined
@@ -133,6 +133,8 @@ const TodoContent = (props ) => {
                           onClose={handleCloseModal}
                           contentData={modalInfo.data || ""}
                           getAllData={props.getAllData}
+                          handleMouseOut={handleMouseOut}
+                          uniqueKey={uniqueKey}
                         />
                         <DeleteModal
                           isOpen={
@@ -142,6 +144,9 @@ const TodoContent = (props ) => {
                           onClose={handleCloseModal}
                           contentData={modalInfo.data || ""}
                           getAllData={props.getAllData}
+                          handleMouseOut={handleMouseOut}
+                          uniqueKey={uniqueKey}
+                          
                         />
                       </TodoButtonGroup>
                     </TodoContentBox>

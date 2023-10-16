@@ -10,9 +10,21 @@ import {
 import Button from "@components/Button/Button";
 import axios from "axios";
 
-const DeleteModal = ({ isOpen, onClose, contentData, getAllData }) => {
-  const deleteContent = () => {
+const DeleteModal = ({
+  isOpen,
+  onClose,
+  contentData,
+  getAllData,
+  handleMouseOut,
+  uniqueKey
+}) => {
+
+  const closeModal = () => {
+  handleMouseOut(uniqueKey);
     onClose();
+  }
+  const deleteContent = () => {
+    closeModal();
     axios
       .post("/api/delete/content", {
         _id: contentData._id,
@@ -24,7 +36,7 @@ const DeleteModal = ({ isOpen, onClose, contentData, getAllData }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={closeModal}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
@@ -39,7 +51,12 @@ const DeleteModal = ({ isOpen, onClose, contentData, getAllData }) => {
         </ModalBody>
         <ModalFooter>
           <Button name="Ok" onClick={deleteContent} />
-          <Button name="Cancle" onClick={onClose} />
+          <Button
+            name="Cancle"
+            onClick={() => {
+              closeModal();
+            }}
+          />
         </ModalFooter>
       </ModalContent>
     </Modal>
