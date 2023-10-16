@@ -11,10 +11,12 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link,useNavigate } from "react-router-dom";
-import { login } from "@/store/userSlice";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { login } from "@/store/userSlice";
+import axios from "axios";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -27,9 +29,9 @@ function Login() {
   /**로그인POST */
 
   let handleLogin = () => {
-    login({
-      userName: userName,
-      password: password,
+    axios.post('/api/login',{
+      userName :userName,
+      password: password
     })
     .then((result) => {
       const username = result.data.user.displayName;
@@ -94,7 +96,6 @@ function Login() {
           </FormControl>
         </LoginContent>
         <SocialContent>
-          {/* <p style={{marginTop:'10px',fontSize:'0.9rem'}}>소셜로그인</p> */}
           <Box position='relative' p='4'>
             <Divider/>
             <AbsoluteCenter bg='white' px='4'>소셜로그인</AbsoluteCenter>

@@ -11,8 +11,6 @@ import {
   } from "@chakra-ui/react";
   import Button from "@components/Button/Button";
   import { useRef } from "react";
-  // import { useDispatch, useSelector } from "react-redux";
-  // import { updateContentFetch,updateContent } from "@/store/editContentSlice";
   import { useState } from "react";
 import axios from "axios";
 
@@ -20,10 +18,6 @@ import axios from "axios";
     const inputRef = useRef()
     const [updateInputValue,setUpdateInputValue] = useState('')
 
-    /* const updatedContent = useSelector(state=>state.editContent.updateContent)
-    const handleUpdate = () => {
-      dispatch(updateContentFetch(updatedContent))
-    } */
     const fetchUpdateContent = () => {
       axios.post('/api/update/content',{
         _id:contentData._id,

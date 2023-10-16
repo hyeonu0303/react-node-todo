@@ -1,16 +1,16 @@
 /*eslint-disable*/
 import { useSelector } from "react-redux";
-import styled from "styled-components";
-import { Checkbox, Text, useDisclosure } from "@chakra-ui/react";
-import oppenheimer from "./Oppenheimer.png";
 import { useState, useEffect } from "react";
-import Button from "@components/Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Checkbox } from "@chakra-ui/react";
 import { faXmark, faPen,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-regular-svg-icons";
+import styled from "styled-components";
 
-import ModifyModal from "@components/Modal/ModifyModal";
-import DeleteModal from "@components/Modal/DeleteModal";
+import oppenheimer from "./Oppenheimer.png";
+import Button from "@components/Button/Button";
+import ModifyModal from "@layout/Main/Modal/ModifyModal";
+import DeleteModal from "@layout/Main/Modal/DeleteModal";
 
 const TodoContent = (props) => {
   const dateArr = useSelector((state) => state.todo.date);
@@ -27,6 +27,7 @@ const TodoContent = (props) => {
     type: null,
     data: null
   })
+  
   // selectTag로 그룹화
   useEffect(() => {
     if (props.allData) {
