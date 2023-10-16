@@ -116,8 +116,11 @@ const TodoContent = (props) => {
                         </VisibleButton>
                         
                       </TodoButtonGroup>
-
-                      <ModifyModal
+                    </TodoContentBox>
+                  );
+                })}
+              </TodoContentArea>
+              <ModifyModal
                         isOpen={modalInfo.type === 'modify'}
                         onClose={handleCloseModal}
                         contentData = {modalInfo.data? modalInfo.data:''}
@@ -127,10 +130,6 @@ const TodoContent = (props) => {
                         onClose={handleCloseModal}
                         contentData = {modalInfo.data? modalInfo.data:''}
                       />
-                    </TodoContentBox>
-                  );
-                })}
-              </TodoContentArea>
             </TodoWrapper>
           ))
         : null}
