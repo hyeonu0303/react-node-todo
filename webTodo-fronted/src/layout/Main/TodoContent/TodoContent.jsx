@@ -3,7 +3,11 @@ import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Checkbox } from "@chakra-ui/react";
-import { faXmark, faPen,faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import {
+  faXmark,
+  faPen,
+  faEllipsisVertical,
+} from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-regular-svg-icons";
 import styled from "styled-components";
 
@@ -12,7 +16,7 @@ import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 
-const TodoContent = (props) => {
+const TodoContent = (props ) => {
   const dateArr = useSelector((state) => state.todo.date);
   const allUniqueDates = useSelector((state) => state.date.allUniqueDates);
   const selectCalendarDate = useSelector(
@@ -25,9 +29,9 @@ const TodoContent = (props) => {
 
   const [modalInfo, setModalInfo] = useState({
     type: null,
-    data: null
-  })
-  
+    data: null,
+  });
+
   // selectTag로 그룹화
   useEffect(() => {
     if (props.allData) {
@@ -39,36 +43,37 @@ const TodoContent = (props) => {
       );
 
       const groupedByTag = filteredData.reduce((acc, curr) => {
-        const { selectTag, _id ,content, selectTime } = curr;
-        if (acc[selectTag]) acc[selectTag].push({ _id,content, time: selectTime });
-        else acc[selectTag] = [{ _id,content, time: selectTime }];
+        const { selectTag, _id, content, selectTime } = curr;
+        if (acc[selectTag])
+          acc[selectTag].push({ _id, content, time: selectTime });
+        else acc[selectTag] = [{ _id, content, time: selectTime }];
         return acc;
       }, {});
       setGroupedByTag(groupedByTag);
     }
   }, [props.allData, selectCalendarDate]);
 
-  useEffect(()=>{
-    console.log(groupedByTag)
-  },[])
-  // 투두 수정 모달
-  
+  useEffect(() => {
+    console.log(groupedByTag);
+  }, []);
+
+  // 투두 수정삭제 모달 open / close
   const handleOpenModal = (type, item) => {
     setModalInfo({ type, data: item, id: item._id }); // Use the unique _id of the todo item.
   };
-  
-  const handleCloseModal = () => {
-    setModalInfo(prev => ({ ...prev, type: null })); // Reset only the type.
-  };
-  
 
-  const handleMouseOver = (uniqueKey)=>{
-    setVisibleButton(prev => ({ ...prev, [uniqueKey]: true }));
-  }
+  const handleCloseModal = () => {
+    setModalInfo((prev) => ({ ...prev, type: null })); // Reset only the type.
+  };
+
+    // 투두 설정 버튼
+  const handleMouseOver = (uniqueKey) => {
+    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: true }));
+  };
 
   const handleMouseOut = (uniqueKey) => {
-    setVisibleButton(prev => ({ ...prev, [uniqueKey]: false }));
-  }
+    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: false }));
+  };
   return (
     <TodoContainer>
       {props.allData != undefined
@@ -81,10 +86,10 @@ const TodoContent = (props) => {
                   <h2 style={{ fontSize: "1.4rem" }}>😊{tag}</h2>
                 )}
               </TodoTagArea>
-              
+
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
-                  const uniqueKey = item._id
+                  const uniqueKey = item._id;
                   return (
                     <TodoContentBox key={uniqueKey}>
                       <TodoContentGroup>
@@ -94,44 +99,55 @@ const TodoContent = (props) => {
                         </Checkbox>
                       </TodoContentGroup>
                       <TodoButtonGroup
-                        onMouseOver={()=>{handleMouseOver(uniqueKey)}}
-                        onMouseOut={()=>{handleMouseOut(uniqueKey)}}
+                        onMouseOver={() => {
+                          handleMouseOver(uniqueKey);
+                        }}
+                        onMouseOut={() => {
+                          handleMouseOut(uniqueKey);
+                        }}
                       >
-
-                        <HideButton visible={visibleButton[uniqueKey]} >
-                          <Button 
+                        <HideButton visible={visibleButton[uniqueKey]}>
+                          <Button
                             name={<FontAwesomeIcon icon={faPen} size="sm" />}
-                            onClick={() => handleOpenModal('modify', item)}
+                            onClick={() => handleOpenModal("modify", item)}
                           />
-                          
-                          <Button 
+
+                          <Button
                             name={<FontAwesomeIcon icon={faXmark} size="sm" />}
-                            onClick={() => handleOpenModal('delete', item)}
+                            onClick={() => handleOpenModal("delete", item)}
                           />
-                          
-                          <Button name={<FontAwesomeIcon icon={faStar} size='sm'/>}/>
+
+                          <Button
+                            name={<FontAwesomeIcon icon={faStar} size="sm" />}
+                          />
                         </HideButton>
 
                         <VisibleButton visible={visibleButton[uniqueKey]}>
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </VisibleButton>
                         <ModifyModal
-  isOpen={modalInfo.type === 'modify' && modalInfo.id === item._id}
-  onClose={handleCloseModal}
-  contentData={modalInfo.data || ''}
-/>
-<DeleteModal
-  isOpen={modalInfo.type === 'delete' && modalInfo.id === item._id}
-  onClose={handleCloseModal}
-  contentData={modalInfo.data || ''}
-/>
+                          isOpen={
+                            modalInfo.type === "modify" &&
+                            modalInfo.id === item._id
+                          }
+                          onClose={handleCloseModal}
+                          contentData={modalInfo.data || ""}
+                          getAllData={props.getAllData}
+                        />
+                        <DeleteModal
+                          isOpen={
+                            modalInfo.type === "delete" &&
+                            modalInfo.id === item._id
+                          }
+                          onClose={handleCloseModal}
+                          contentData={modalInfo.data || ""}
+                          getAllData={props.getAllData}
+                        />
                       </TodoButtonGroup>
                     </TodoContentBox>
                   );
                 })}
               </TodoContentArea>
-              
-
             </TodoWrapper>
           ))
         : null}
@@ -216,43 +232,39 @@ const TodoTagArea = styled.div`
 const TodoContentArea = styled.div`
   display: flex;
   flex-direction: column;
-  width:100%;
-  gap:10px;
+  width: 100%;
+  gap: 10px;
 `;
 
-
 const TodoContentBox = styled.div`
-  width:100%;
+  width: 100%;
   align-items: center;
-  display:flex;
+  display: flex;
   justify-content: space-between;
-  gap:10px;
-`
-
+  gap: 10px;
+`;
 
 const TodoContentGroup = styled.div`
-  padding:10px;
-`
+  padding: 10px;
+`;
 const TodoButtonGroup = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
-`
+`;
 
 const TodoButton = styled.button`
-  padding:10px;
-  background: ${({ buttoncolor }) => (buttoncolor ? buttoncolor : '')};
-  border-radius:4px;
-  margin-left:3px;
-`
+  padding: 10px;
+  background: ${({ buttoncolor }) => (buttoncolor ? buttoncolor : "")};
+  border-radius: 4px;
+  margin-left: 3px;
+`;
 
 const VisibleButton = styled.div`
-  opacity: ${props => (props.visible ? 0 : 1)};
+  opacity: ${(props) => (props.visible ? 0 : 1)};
 `;
 
 const HideButton = styled.div`
-  opacity: ${props => (props.visible ? 1 : 0)};
-  visibility: ${props => (props.visible ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  visibility: ${(props) => (props.visible ? "visible" : "hidden")};
   transition: all 0.5s;
 `;
-
-

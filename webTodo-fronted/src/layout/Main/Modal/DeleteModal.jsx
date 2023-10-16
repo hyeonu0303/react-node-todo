@@ -6,25 +6,34 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-} from "@chakra-ui/react"; 
+} from "@chakra-ui/react";
 import Button from "@components/Button/Button";
 import axios from "axios";
 
-const DeleteModal = ({ isOpen, onClose,contentData }) => {
+const DeleteModal = ({ isOpen, onClose, contentData, getAllData }) => {
   const deleteContent = () => {
-    axios.post('/api/delete/content',{
-      _id:contentData._id,
-    })
-    .then(()=>{window.location.href='/main'})
-    .catch(error=>console.log(error))
-  }
+    onClose();
+    axios
+      .post("/api/delete/content", {
+        _id: contentData._id,
+      })
+      .then(() => {
+        getAllData();
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader><b><i>{contentData.content}</i></b> 삭제하기</ModalHeader>
-        <ModalCloseButton/>
+        <ModalHeader>
+          <b>
+            <i>{contentData.content}</i>
+          </b>{" "}
+          삭제하기
+        </ModalHeader>
+        <ModalCloseButton />
         <ModalBody>
           <p>정말 삭제하시겠습니까?</p>
         </ModalBody>

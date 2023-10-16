@@ -14,21 +14,24 @@ import {
   import { useState } from "react";
 import axios from "axios";
 
-  const ModifyModal = ({ isOpen, onClose,contentData }) => {
+  const ModifyModal = ({ isOpen, onClose,contentData , getAllData}) => {
     const inputRef = useRef()
     const [updateInputValue,setUpdateInputValue] = useState('')
 
     const fetchUpdateContent = () => {
+      onClose();
       axios.post('/api/update/content',{
         _id:contentData._id,
         content:updateInputValue
       })
-      .then(()=>{window.location.href='/main'})
+      .then(()=>{
+        getAllData();
+      })
       .catch(error=>console.log(error))
     }
 
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} >
         <ModalOverlay />
         <ModalContent>  
           <ModalHeader>

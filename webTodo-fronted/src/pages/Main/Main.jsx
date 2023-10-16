@@ -23,6 +23,7 @@ const MainPage = () => {
 
   const [markDate, setMarkDate] = useState();
   const [allData, setAllData] = useState();
+  
   const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{
@@ -46,7 +47,7 @@ const MainPage = () => {
       <Sidebar markDate={markDate} allData={allData}/>
       <ContentWrapper>
         <TodoInputModal getAllData={axiosAllData}/>
-        <TodoContent allData={allData}/>
+        <TodoContent allData={allData} getAllData={axiosAllData}/>
       </ContentWrapper>
     </MainContainer>    
     )
