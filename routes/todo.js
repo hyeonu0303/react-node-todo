@@ -30,6 +30,7 @@ router.post('/api/delete/content',(req,res)=>{
     .then(response=> res.json({status:200,response:response.data}))
     .catch(error=>res.status(500).json({status: 500, error: error}))
 })
+
 /**컨텐츠 수정요청 */
 router.post('/api/update/content',(req,res)=>{
   const id = req.body._id
