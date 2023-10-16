@@ -32,11 +32,11 @@ import axios from "axios";
         <ModalOverlay />
         <ModalContent>  
           <ModalHeader>
-            투두 수정하기
+          <b><i>{contentData.content}</i></b> 수정하기
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <p>{contentData.content} 수정하시겠습니까?</p>
+            <p>수정할 내용을 입력하세요.</p><br/>
             <Input ref={inputRef} size='md' onChange={(e)=>{setUpdateInputValue(e.target.value)}}/>
           </ModalBody>
           <ModalFooter>

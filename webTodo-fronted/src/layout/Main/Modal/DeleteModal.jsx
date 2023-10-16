@@ -23,10 +23,10 @@ const DeleteModal = ({ isOpen, onClose,contentData }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>투두 삭제하기</ModalHeader>
+        <ModalHeader><b><i>{contentData.content}</i></b> 삭제하기</ModalHeader>
         <ModalCloseButton/>
         <ModalBody>
-          <p>{contentData.content}를 삭제하시겠습니까?</p>
+          <p>정말 삭제하시겠습니까?</p>
         </ModalBody>
         <ModalFooter>
           <Button name="Ok" onClick={deleteContent} />
