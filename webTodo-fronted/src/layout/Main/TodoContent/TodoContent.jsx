@@ -16,17 +16,17 @@ import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 
-const TodoContent = (props ) => {
+const TodoContent = (props) => {
   const dateArr = useSelector((state) => state.todo.date);
   const allUniqueDates = useSelector((state) => state.date.allUniqueDates);
   const selectCalendarDate = useSelector(
     (state) => state.date.selectCalendarDate
   );
-
+  
   const [hiddenVisible, setHiddenVisible] = useState(false);
   const [groupedByTag, setGroupedByTag] = useState({});
   const [visibleButton, setVisibleButton] = useState([]);
-
+  const allData = useSelector(state=>state.data.data)
   const [modalInfo, setModalInfo] = useState({
     type: null,
     data: null,
@@ -34,11 +34,11 @@ const TodoContent = (props ) => {
 
   // selectTag로 그룹화
   useEffect(() => {
-    if (props.allData) {
+    if (allData) {
       const findMatchDate = allUniqueDates.find(
         (element) => element === dateArr[0]
       );
-      const filteredData = props.allData.filter((data) =>
+      const filteredData = allData.filter((data) =>
         data.date.includes(findMatchDate)
       );
 
@@ -51,7 +51,7 @@ const TodoContent = (props ) => {
       }, {});
       setGroupedByTag(groupedByTag);
     }
-  }, [props.allData, selectCalendarDate]);
+  }, [allData, selectCalendarDate]);
 
   useEffect(() => {
     console.log(groupedByTag);
@@ -76,7 +76,7 @@ const handleMouseOut = (uniqueKey) => {
 
   return (
     <TodoContainer>
-      {props.allData != undefined
+      {allData != []
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>

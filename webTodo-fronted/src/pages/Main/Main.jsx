@@ -1,6 +1,6 @@
 /*eslint-disable */
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {login} from '@/store/userSlice';
 import TodoInputModal from "@layout/Main/TodoInputModal";
 import TodoContent from "@layout/Main/TodoContent";
@@ -8,9 +8,11 @@ import axios from "axios";
 import Sidebar from "@layout/Sidebar";
 import styled from "styled-components";
 import { setAllUniqueDates } from "@/store/dateSlice";
+import { insertData, insertMarkDate } from "@/store/dataSlice";
 
 const MainPage = () => {
   const dispatch = useDispatch();
+  const allData = useSelector(state=>state.data.data)
   useEffect(()=>{
     const urlParams = new URLSearchParams(window.location.search);
     const googleName = urlParams.get('googleName');
@@ -20,10 +22,7 @@ const MainPage = () => {
     const kakaoName = urlParams.get('kakaoName');
     if(kakaoName) dispatch(login(kakaoName));
   },[dispatch]);
-
-  const [markDate, setMarkDate] = useState();
-  const [allData, setAllData] = useState();
-  
+    
   const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{
@@ -33,21 +32,24 @@ const MainPage = () => {
         const uniqueDates = [...new Set(allDates.sort())];
 
         dispatch(setAllUniqueDates(uniqueDates))
-        setMarkDate(uniqueDates);
-        setAllData(result.data);
+        dispatch(insertMarkDate(uniqueDates))
+        dispatch(insertData(result.data))
       })
   }
+  
   
   useEffect(()=>{
     axiosAllData();
   },[])
 
+  console.log()
+
   return (
     <MainContainer>
-      <Sidebar markDate={markDate} allData={allData}/>
+      <Sidebar/>
       <ContentWrapper>
         <TodoInputModal getAllData={axiosAllData}/>
-        <TodoContent allData={allData} getAllData={axiosAllData}/>
+        <TodoContent  getAllData={axiosAllData}/>
       </ContentWrapper>
     </MainContainer>    
     )

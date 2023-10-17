@@ -5,7 +5,8 @@ import storage from "redux-persist/lib/storage";
 import userSlice from './userSlice';
 import todoSlice from './todoSlice';
 import dateSlice from './dateSlice';
-// import editContent from "./editContentSlice";
+import importanceSlice from "./importance";
+import dataSlice from "./dataSlice";
 
 const persistConfig = {
   key: "user", 
@@ -20,8 +21,8 @@ const store = configureStore({
     user: userReducer,
     todo: todoSlice.reducer,
     date: dateSlice.reducer,
-    // edit: editContent.reducer
-
+    importance: importanceSlice.reducer,
+    data: dataSlice.reducer
   },
 
   middleware: (getDefaultMiddleware) =>

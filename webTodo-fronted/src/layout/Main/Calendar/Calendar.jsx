@@ -8,17 +8,18 @@ import { styled } from "styled-components";
 import { changeCalendarDate, selectMonth } from "@/store/dateSlice";
 import './Calendar.css'
 
-const ReactCalendar = (props) => {
+const ReactCalendar = () => {
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [getMonthInYear, setGetMonthInYear] = useState(moment().format('YYYY-MM'));
   const [matchDateInWeek, setMatchDateInWeek] = useState([]);
   // const [matchEveryDate, setMatchEveryDate] = useState([]);
   const [month, setMonth] = useState();
-  const pickedDayNumber = useSelector(state=>state.date.selectDay);
   let formatdate = moment(selectedDate).format('YYYY-MM-DD');
+  const pickedDayNumber = useSelector(state=>state.date.selectDay);
   const selectCalendarOption = useSelector(state=>state.date);
-
+  const mark = useSelector(state=>state.data.markDate)
+  const allData = useSelector(state=>state.data.data)
   /**
    * 매일,주 요일 date 전역 값넣기
    */
@@ -100,12 +101,12 @@ const ReactCalendar = (props) => {
   console.log("요일반복데이터",matchDateInWeek);
   //입력한 날짜도 같이가져와서 같은날짜와 데이터면 보여줌
   const tileContent = ({ date }) => {
-    if (!props.mark) {
+    if (!mark) {
       return null; 
     }
 
     
-    if (props.mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
+    if (mark.find((x) => x === moment(date).format("YYYY-MM-DD"))) {
       return <Dot />;
     }
 

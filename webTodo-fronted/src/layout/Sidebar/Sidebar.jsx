@@ -17,33 +17,32 @@ const Icon = ({ icon, onClick }) => (
   />
 );
 
-const Sidebar = ({markDate, allData}) => {
+const Sidebar = () => {
   let [visible, setVisible] = useState({
     type:'',
     valid:false
   });
 
-  const handleIconClick = (type) => {
-    if(type == 'calendar' || type=='importance'){
-      setVisible(prev=>({
-        type:type,
-        valid: !prev.valid
-      }))
-    }
+const handleIconClick = (type) => {
+  if(type == 'calendar' || type=='importance'){
+    setVisible(prev=>({
+      type:type,
+      valid: !prev.valid
+    }))
   }
+}
+
   return (
     <>
       <SidebarWidth visible={visible.valid ? "true" : undefined}>
         <Wrapper>
         </Wrapper>
         {
-          visible.type=='calendar' && visible.valid ? (
+          visible.type=='calendar' ? (
           <SideCalendar
             visible={visible.valid}
-            markDate={markDate}
-            allData={allData}
           />)
-          : visible.type=='importance' && visible.valid ? (
+          : visible.type=='importance'? (
             <SideImportance
               visible={visible.valid}
             />

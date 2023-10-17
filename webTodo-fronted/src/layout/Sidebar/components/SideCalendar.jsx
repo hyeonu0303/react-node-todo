@@ -2,15 +2,15 @@ import Calendar from "@layout/Main/Calendar";
 import MonthContent from "@layout/Main/MonthContent/MonthContent";
 import styled from "styled-components";
 
-const SideCalendar = ({visible,markDate,allData}) => {
+const SideCalendar = ({visible}) => {
   return(
     <>
       <CalendarArea visible={visible ? "true" : undefined}>
-        <Calendar mark={markDate}/>
+        <Calendar/>
       </CalendarArea>
 
       <MonthContentArea visible={visible ? "true" : undefined}>
-        <MonthContent allData={allData}/>
+        <MonthContent/>
       </MonthContentArea>
     </>
 
