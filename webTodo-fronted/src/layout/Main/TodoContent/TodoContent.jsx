@@ -15,6 +15,7 @@ import oppenheimer from "./Oppenheimer.png";
 import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
+import Loading from "@components/Loading/Loading";
 
 const TodoContent = (props) => {
   const dateArr = useSelector((state) => state.todo.date);
@@ -31,6 +32,7 @@ const TodoContent = (props) => {
     type: null,
     data: null,
   });
+  
   
   // selectTag로 그룹화
   useEffect(() => {
@@ -57,14 +59,14 @@ const TodoContent = (props) => {
     console.log(groupedByTag);
   }, []);
 
-  // 투두 설정 버튼 visible
-const handleMouseOver = (uniqueKey) => {
-  setVisibleButton((prev) => ({ ...prev, [uniqueKey]: true }));
-};
+    // 투두 설정 버튼 visible
+  const handleMouseOver = (uniqueKey) => {
+    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: true }));
+  };
 
-const handleMouseOut = (uniqueKey) => {
-  setVisibleButton((prev) => ({ ...prev, [uniqueKey]: false }));
-};
+  const handleMouseOut = (uniqueKey) => {
+    setVisibleButton((prev) => ({ ...prev, [uniqueKey]: false }));
+  };
   // 투두 수정삭제 모달 open / close
   const handleOpenModal = (type, item) => {
     setModalInfo({ type, data: item, id: item._id });
@@ -74,9 +76,14 @@ const handleMouseOut = (uniqueKey) => {
     setModalInfo((prev) => ({ ...prev, type: null })); 
   };
 
+  if(allData.length == 0){
+    return(
+      <Loading></Loading>
+    )
+  }
   return (
     <TodoContainer>
-      {allData != []
+      {allData.length != 0
         ? Object.keys(groupedByTag).map((tag) => (
             <TodoWrapper key={tag}>
               <TodoTagArea>
@@ -257,12 +264,12 @@ const TodoButtonGroup = styled.div`
   align-items: center;
 `;
 
-const TodoButton = styled.button`
+/* const TodoButton = styled.button`
   padding: 10px;
   background: ${({ buttoncolor }) => (buttoncolor ? buttoncolor : "")};
   border-radius: 4px;
   margin-left: 3px;
-`;
+`; */
 
 const VisibleButton = styled.div`
   opacity: ${(props) => (props.visible ? 0 : 1)};
@@ -273,3 +280,5 @@ const HideButton = styled.div`
   visibility: ${(props) => (props.visible ? "visible" : "hidden")};
   transition: all 0.5s;
 `;
+
+

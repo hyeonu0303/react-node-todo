@@ -40,8 +40,6 @@ const MainPage = () => {
     axiosAllData();
   },[])
 
-  console.log()
-
   return (
     <MainContainer>
       <Sidebar/>
