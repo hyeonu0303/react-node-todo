@@ -31,7 +31,7 @@ const TodoContent = (props) => {
     type: null,
     data: null,
   });
-
+  
   // selectTag로 그룹화
   useEffect(() => {
     if (allData) {

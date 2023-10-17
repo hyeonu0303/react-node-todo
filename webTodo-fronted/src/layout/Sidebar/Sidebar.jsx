@@ -37,6 +37,7 @@ const handleIconClick = (type) => {
       <SidebarWidth visible={visible.valid ? "true" : undefined}>
         <Wrapper>
         </Wrapper>
+        
         {
           visible.type=='calendar' ? (
           <SideCalendar

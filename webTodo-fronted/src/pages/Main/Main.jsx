@@ -36,8 +36,6 @@ const MainPage = () => {
         dispatch(insertData(result.data))
       })
   }
-  
-  
   useEffect(()=>{
     axiosAllData();
   },[])

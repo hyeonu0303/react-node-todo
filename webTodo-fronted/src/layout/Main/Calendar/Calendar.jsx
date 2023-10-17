@@ -20,9 +20,13 @@ const ReactCalendar = () => {
   const selectCalendarOption = useSelector(state=>state.date);
   const mark = useSelector(state=>state.data.markDate)
   const allData = useSelector(state=>state.data.data)
+
+  console.log('calendar',allData)
   /**
    * 매일,주 요일 date 전역 값넣기
    */
+  
+
   useEffect(()=>{
     if(selectCalendarOption.checkedType){
       dispatch(changeDate(matchDateInWeek));
