@@ -13,7 +13,7 @@ let todo = createSlice({
     tags: [],
     selectTag: '', // 선택한 태그
     selectTime: '', // 설정한 시간
-    important:null,
+    
   },
 
   reducers: {

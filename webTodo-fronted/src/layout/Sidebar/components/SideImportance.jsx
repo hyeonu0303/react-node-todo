@@ -1,9 +1,21 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 const SideImportance = ({visible}) => {
+  const importanceContent = useSelector(state=>state.importance.importanceContent)
+
   return(
     <>
       <ImportanceArea visible={visible ? true : undefined}>
-        <p>안녕하세요</p>
+        {
+          importanceContent.map((data,idx)=>{
+            return(
+              <div key={idx}>
+                {data.content}
+                {data.time}
+              </div>
+            )
+          })
+        }
       </ImportanceArea>
     </>
   )

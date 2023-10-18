@@ -9,13 +9,15 @@ import {
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-
 import oppenheimer from "./Oppenheimer.png";
 import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 import Loading from "@components/Loading/Loading";
+import  { addImportanceContent, removeImportanceContent } from "@/store/importance";
+import axios from "axios";
 
 const TodoContent = (props) => {
   const dateArr = useSelector((state) => state.todo.date);
@@ -32,8 +34,9 @@ const TodoContent = (props) => {
     type: null,
     data: null,
   });
-  
-  
+  const importanceContent = useSelector(state=>state.importance.importanceContent)
+  console.log(importanceContent);
+  const dispatch = useDispatch();
   // selectTag로 그룹화
   useEffect(() => {
     if (allData) {
@@ -81,6 +84,7 @@ const TodoContent = (props) => {
       <Loading></Loading>
     )
   }
+  
   return (
     <TodoContainer>
       {allData.length != 0
@@ -123,15 +127,43 @@ const TodoContent = (props) => {
                             name={<FontAwesomeIcon icon={faXmark} size="sm" />}
                             onClick={() => handleOpenModal("delete", item)}
                           />
-
+                          
                           <Button
-                            name={<FontAwesomeIcon icon={faStar} size="sm" />}
+                            name={ <FontAwesomeIcon icon={faStar} size="sm" />}
+                            onClick={()=>{
+                              const existContent = importanceContent.find(content=>content._id === item._id)
+                              if(existContent){
+                                const importanceData={
+                                  _id:item._id,
+                                  content:item.content,
+                                  time:item.time,
+                                  visible:false,
+                                };
+                                dispatch(removeImportanceContent(item._id))
+                                axios.post('/api/delete/importance/content',{importanceData})
+                                  .then(result=>console.log('삭제완료'))
+                              }
+
+                              else{
+                                const importanceData={
+                                  _id:item._id,
+                                  content:item.content,
+                                  time:item.time,
+                                  visible:true,
+                                };
+                                dispatch(addImportanceContent(importanceData))
+                                axios.post('/api/importance/content',{importanceData})
+                                  .then(result=>console.log(result.data))
+                              }
+                              }
+                            }
                           />
                         </HideButton>
 
                         <VisibleButton visible={visibleButton[uniqueKey]}>
                           <FontAwesomeIcon icon={faEllipsisVertical} />
                         </VisibleButton>
+
                         <ModifyModal
                           isOpen={
                             modalInfo.type === "modify" &&
