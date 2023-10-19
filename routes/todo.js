@@ -7,7 +7,7 @@ let ImptContent = require('../schema/ImportanceContent')
 /**할일입력 데이터저장 */
 router.post('/api/todo',(req,res)=>{
   let todoData = req.body.todoData;
-  console.log(todoData);
+  console.log(todoData); 
   const todo = new Todo({
     user: req.user._id,
     content: todoData.content,
@@ -20,6 +20,16 @@ router.post('/api/todo',(req,res)=>{
       console.log(`저장완료: ${result}`);
       res.json(result);
     })
+})
+
+/**컨텐츠 수정요청 */
+router.post('/api/update/content',(req,res)=>{
+  const id = req.body._id
+  const content = req.body.content
+
+  Task.updateOne({_id:id},{content:content})
+    .then(result=>res.json(result.data),console.log('수정완료'))
+    .catch(error=>res.status(500).json(error))
 })
 
 /**컨텐츠 삭제요청 */

@@ -1,3 +1,4 @@
+import { fetchData } from "@/store/dataSlice";
 import {
   Modal,
   ModalOverlay,
@@ -9,16 +10,15 @@ import {
 } from "@chakra-ui/react";
 import Button from "@components/Button/Button";
 import axios from "axios";
-
+import { useDispatch } from "react-redux";
 const DeleteModal = ({
   isOpen,
   onClose,
   contentData,
-  getAllData,
   handleMouseOut,
   uniqueKey
 }) => {
-
+  const dispatch = useDispatch()
   const closeModal = () => {
   handleMouseOut(uniqueKey);
     onClose();
@@ -30,7 +30,7 @@ const DeleteModal = ({
         _id: contentData._id,
       })
       .then(() => {
-        getAllData();
+        dispatch(fetchData())
       })
       .catch((error) => console.log(error));
   };

@@ -12,12 +12,13 @@ import Button from "@components/Button/Button";
 import { useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchData } from "@/store/dataSlice";
 
 const ModifyModal = ({
   isOpen,
   onClose,
   contentData,
-  getAllData,
   handleMouseOut,
   uniqueKey
 
@@ -27,7 +28,7 @@ const ModifyModal = ({
   const [cautionMassage, setCautionMassage] =
     useState("수정할 내용을 입력하세요");
   const [messageColor, setMessageColor] = useState("black");
-
+  const dispatch = useDispatch();
   const closeModal = () => {
     handleMouseOut(uniqueKey);
       onClose();
@@ -44,8 +45,9 @@ const ModifyModal = ({
           _id: contentData._id,
           content: updateInputValue,
         })
-        .then(() => {
-          getAllData();
+        .then((result) => {
+          console.log(result.data)
+          dispatch(fetchData());
         })
         .catch((error) => console.log(error));
     }
