@@ -8,7 +8,8 @@ import {
   faPen,
   faEllipsisVertical,
 } from "@fortawesome/free-solid-svg-icons";
-import { faStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar as emptyStar } from "@fortawesome/free-regular-svg-icons";
+import { faStar as fullStar } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import oppenheimer from "./Oppenheimer.png";
@@ -16,7 +17,7 @@ import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 import Loading from "@components/Loading/Loading";
-import  { addImportanceContent, fetchImportanceContent, removeImportanceContent } from "@/store/importance";
+import  importance, { addImportanceContent, fetchImportanceContent, removeImportanceContent } from "@/store/importance";
 import axios from "axios";
 
 const TodoContent = (props) => {
@@ -77,7 +78,8 @@ const TodoContent = (props) => {
   const handleCloseModal = () => {
     setModalInfo((prev) => ({ ...prev, type: null })); 
   };
-
+  console.log(importanceContent);
+  
   if(allData.length == 0){
     return(
       <Loading></Loading>
@@ -100,6 +102,8 @@ const TodoContent = (props) => {
               <TodoContentArea>
                 {groupedByTag[tag].map((item, index) => {
                   const uniqueKey = item._id;
+                  const importantItem = importanceContent.find(content => content.contentId === item._id);
+                  const isItemVisible = importantItem && importantItem.visible;
                   return (
                     <TodoContentBox key={uniqueKey}>
                       <TodoContentGroup>
@@ -128,8 +132,12 @@ const TodoContent = (props) => {
                           />
                           
                           <Button
-                            name={<FontAwesomeIcon icon={faStar} size="sm" />}
-                            onClick={async() => {
+                            name={
+                              isItemVisible ?
+                              <FontAwesomeIcon icon={fullStar} size='sm'/>:
+                              <FontAwesomeIcon icon={emptyStar} size="sm" />
+                            }
+                            onClick={async () => {
                               const existContent = importanceContent.find(content => content.contentId == item._id);
                               const importanceData = {
                                 contentId: item._id,
@@ -139,13 +147,13 @@ const TodoContent = (props) => {
                               };
                               if (existContent){
                                 dispatch(removeImportanceContent(item._id));
-                                await axios.post('api/delete/importance/content', { importanceData })
+                                axios.post('api/delete/importance/content', { importanceData })
                                   .then(result=>{console.log(result.data)})
                                   .catch(error=>console.log(error))
                               }
                               else {
                                 dispatch(addImportanceContent(importanceData));
-                                await axios.post('/api/importance/content', { importanceData })
+                                axios.post('/api/importance/content', { importanceData })
                                   .then(result=>{console.log(result.data)})
                                   .catch(error=>console.log(error))
                               }
