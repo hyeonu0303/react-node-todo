@@ -60,6 +60,7 @@ const TodoContent = (props) => {
 
   useEffect(()=>{
     dispatch(fetchImportanceContent())
+    
   },[dispatch])
 
     // 투두 설정 버튼 visible

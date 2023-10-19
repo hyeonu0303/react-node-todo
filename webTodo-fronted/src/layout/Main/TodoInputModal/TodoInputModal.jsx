@@ -3,14 +3,15 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import BeforeModal from "./components/BeforeModal";
 import AfterModal from "./components/AfterModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { insertData } from "@/store/dataSlice";
 
 const TodoInputModal = ({ getAllData })=> {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const modalRef = useRef(null);
   const todoData = useSelector((state) => state.todo);
-
+  const dispatch = useDispatch();
   const toggleModal = () => {
     setIsModalVisible(true);
   };
@@ -22,20 +23,20 @@ const TodoInputModal = ({ getAllData })=> {
   const handleAddButton = () => {
     if (isSubmitting) return;  
     setIsSubmitting(true);
-
+    
     closeModal();
+    dispatch(insertData(todoData))
     axios.post("/api/todo", {
       todoData,
     })
     .then((response) => {
       console.log("할일 저장완료:", response.data);
-      getAllData();
     })
     .finally(() => {
       setIsSubmitting(false);  
     });
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {

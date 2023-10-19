@@ -8,9 +8,8 @@ import axios from "axios";
 import Sidebar from "@layout/Sidebar";
 import styled from "styled-components";
 import { setAllUniqueDates } from "@/store/dateSlice";
-import { insertData, insertMarkDate } from "@/store/dataSlice";
-import { fetchImportanceContent } from "@/store/importance";
-
+import { insertMarkDate } from "@/store/dataSlice";
+import { fetchData } from "@/store/dataSlice";
 const MainPage = () => {
   const dispatch = useDispatch();
   const allData = useSelector(state=>state.data.data)
@@ -27,19 +26,20 @@ const MainPage = () => {
   const axiosAllData = () => {
     axios.get('/api/data')
       .then((result)=>{
-
         const allDates = result.data.map(item => item.date).flat();
-
         const uniqueDates = [...new Set(allDates.sort())];
-
         dispatch(setAllUniqueDates(uniqueDates))
         dispatch(insertMarkDate(uniqueDates))
-        dispatch(insertData(result.data))
+        /* dispatch(insertData(result.data)) */
       })
   }
   useEffect(()=>{
     axiosAllData();
   },[])
+
+  useEffect(()=>{
+    dispatch(fetchData())
+  },[dispatch])
 
 
 
