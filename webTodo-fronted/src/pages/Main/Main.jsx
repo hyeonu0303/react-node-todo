@@ -9,6 +9,7 @@ import Sidebar from "@layout/Sidebar";
 import styled from "styled-components";
 import { setAllUniqueDates } from "@/store/dateSlice";
 import { insertData, insertMarkDate } from "@/store/dataSlice";
+import { fetchImportanceContent } from "@/store/importance";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const MainPage = () => {
   useEffect(()=>{
     axiosAllData();
   },[])
+
+
 
   return (
     <MainContainer>

@@ -25,64 +25,59 @@ router.post('/api/todo',(req,res)=>{
 /**컨텐츠 삭제요청 */
 router.post('/api/delete/content',(req,res)=>{
   let id = req.body._id
-
   if(!id) return res.status(400).json({status:400, error:'id 값 필요'})
   Task.deleteOne({_id : id})
     .then(response=> res.json({status:200,response:response.data}))
     .catch(error=>res.status(500).json({status: 500, error: error}))
 })
 
-/**컨텐츠 수정요청 */
-router.post('/api/update/content',(req,res)=>{
-  const id = req.body._id
-  const content = req.body.content
-
-  Task.updateOne({_id:id},{content:content})
-    .then(result=>res.json(result.data),console.log('수정완료'))
-    .catch(error=>res.status(500).json(error))
-})
-/**중요컨텐츠 저장 */
-router.post('/api/importance/content',(req,res)=>{
-  const data = req.body.importanceData
-
-  ImptContent.findOne({contentId:data._id})
-    .then(result=>{
-      if(result){
-        console.log('이미 저장한 중요데이터')
-        res.json({message:'이미 저장한 중요컨텐츠입니다.'})
-      }
-      else{
-        const importanceContent = new ImptContent({
-          contentId:data._id,
-          content:data.content,
-          time:data.time,
-          visible:data.visible
-        });
-        importanceContent.save()
+/**컨텐츠 저장요청 */
+router.post('/api/importance/content', (req, res) => {
+    const data = req.body.importanceData;
+    ImptContent.findOne({ contentId: data.contentId })
+      .then(existItem=>{
+        if (existItem) {
+          res.json({message:'이미저장한 컨텐츠입니다'})
+        }
+        else{
+          const importanceContent = new ImptContent({
+            user: req.user._id,
+            contentId: data.contentId,
+            content: data.content,
+            time: data.time,
+            visible: data.visible
+          });  
+          importanceContent.save()
           .then(result=>{
-            console.log(`저장완료 : ${result}`)
-            return res.json(result)
+            console.log('중요데이터저장완료')
+            return res.json(result.data)
           })
           .catch(error=>console.log(error))
-      }
-    })
-  
-
-  
-})
+        }
+      })
+});
 
 /**중요컨텐츠 삭제 */
-router.post('/api/delete/importance/content',(req,res)=>{
-  const data = req.body.importanceData;
-  
-})
+router.post('/api/delete/importance/content',(req, res) => {
+  try {
+    const data = req.body.importanceData;
+    ImptContent.deleteOne({ contentId: data.contentId })
+      .then(result=>{res.json('중요데이터 삭제완료'),console.log('중요데이터 삭제완료')})
+  } catch (error) {
+    console.error('삭제실패', error);
+    res.status(500).send('삭제실패');
+  }
+});
 
+
+/**모든 중요컨텐츠 GET요청 */
 router.get('/api/importance/content',(req,res)=>{
-  ImptContent.find({
-    user: req.user._id 
+  ImptContent.find({user:req.user._id})
+    .select('-user')
+    .then(response=>res.json(response))
+    .catch(error=>res.status(500).json({message:'❌중요컨텐츠 GET요청에러'}))
   })
-  .then(res.json(result))
-})
+
 
 /**태그저장 */
 router.post('/api/tags', async (req, res) => {
@@ -142,6 +137,7 @@ router.post('/api/tags/delete', (req,res)=>{
 /**태그데이터전송 */
 router.get('/api/tags',(req,res)=>{
   Tags.findOne({user:req.user._id})
+    .select('-user')
     .then(tags => {
       if(tags){
         res.json({tags: tags.tags});
@@ -157,6 +153,7 @@ router.get("/api/data", (req, res) => {
   Todo.find({ 
     user: req.user._id 
   })
+    .select('-user')
     .then((result) => {
       res.json(result);
     })

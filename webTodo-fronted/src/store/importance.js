@@ -1,57 +1,48 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import axios from 'axios'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // 비동기 요청 함수
-/* export const postImportanceContent = createAsyncThunk(
-  'importance/postImportanceContent',
-  async (importanceData) => {
-    console.log('요청중');
-    
-    const response = await fetch('/api/importance/content', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(importanceData)
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    return await response.json();
+export const fetchImportanceContent = createAsyncThunk(
+  'importance/fetchImportanceContent',
+  async () => {
+    const response = await axios.get('/api/importance/content');
+    return response.data;
   }
-); */
+);
+
 
 
 let importance = createSlice({
   name: "importance",
   initialState: {
-    importanceContent:[]
+    importanceContent:[],
+    status: 'idle',
+    error: null
   },
   reducers: {
     removeImportanceContent(state,action){
       const idToRemove = action.payload;
-      state.importanceContent = state.importanceContent.filter(content => content._id !== idToRemove)
+      state.importanceContent = state.importanceContent.filter(content => content.contentId !== idToRemove)
     },
     addImportanceContent(state,action){
-        state.importanceContent.push(action.payload)
+      state.importanceContent.push(action.payload)
     },
   },
 
-  /* extraReducers: (builder) => {
+  extraReducers: (builder) => {
     builder
-      .addCase(postImportanceContent.pending,state=>state.status = 'loading')
-      .addCase(postImportanceContent.fulfilled, (state, action) => {
-        state.status = 'success';
-        state.importanceContent.push(action.payload);
+      .addCase(fetchImportanceContent.pending, state => {
+        state.status = 'loading';
       })
-      .addCase(postImportanceContent.rejected, (state, action) => {
+      .addCase(fetchImportanceContent.fulfilled, (state, action) => {
+        state.status = 'success';
+        state.importanceContent = action.payload; // 서버에서 가져온 데이터로 초기값 설정
+      })
+      .addCase(fetchImportanceContent.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-      })
-  
-  } */
+      });
+  }
   
 });
 

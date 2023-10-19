@@ -16,7 +16,7 @@ import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 import Loading from "@components/Loading/Loading";
-import  { addImportanceContent, removeImportanceContent } from "@/store/importance";
+import  { addImportanceContent, fetchImportanceContent, removeImportanceContent } from "@/store/importance";
 import axios from "axios";
 
 const TodoContent = (props) => {
@@ -35,7 +35,6 @@ const TodoContent = (props) => {
     data: null,
   });
   const importanceContent = useSelector(state=>state.importance.importanceContent)
-  console.log(importanceContent);
   const dispatch = useDispatch();
   // selectTag로 그룹화
   useEffect(() => {
@@ -58,9 +57,9 @@ const TodoContent = (props) => {
     }
   }, [allData, selectCalendarDate]);
 
-  useEffect(() => {
-    console.log(groupedByTag);
-  }, []);
+  useEffect(()=>{
+    dispatch(fetchImportanceContent())
+  },[dispatch])
 
     // 투두 설정 버튼 visible
   const handleMouseOver = (uniqueKey) => {
@@ -129,34 +128,28 @@ const TodoContent = (props) => {
                           />
                           
                           <Button
-                            name={ <FontAwesomeIcon icon={faStar} size="sm" />}
-                            onClick={()=>{
-                              const existContent = importanceContent.find(content=>content._id === item._id)
-                              if(existContent){
-                                const importanceData={
-                                  _id:item._id,
-                                  content:item.content,
-                                  time:item.time,
-                                  visible:false,
-                                };
-                                dispatch(removeImportanceContent(item._id))
-                                axios.post('/api/delete/importance/content',{importanceData})
-                                  .then(result=>console.log('삭제완료'))
+                            name={<FontAwesomeIcon icon={faStar} size="sm" />}
+                            onClick={async() => {
+                              const existContent = importanceContent.find(content => content.contentId == item._id);
+                              const importanceData = {
+                                contentId: item._id,
+                                content: item.content,
+                                time: item.time,
+                                visible:true
+                              };
+                              if (existContent){
+                                dispatch(removeImportanceContent(item._id));
+                                await axios.post('api/delete/importance/content', { importanceData })
+                                  .then(result=>{console.log(result.data)})
+                                  .catch(error=>console.log(error))
                               }
-
-                              else{
-                                const importanceData={
-                                  _id:item._id,
-                                  content:item.content,
-                                  time:item.time,
-                                  visible:true,
-                                };
-                                dispatch(addImportanceContent(importanceData))
-                                axios.post('/api/importance/content',{importanceData})
-                                  .then(result=>console.log(result.data))
+                              else {
+                                dispatch(addImportanceContent(importanceData));
+                                await axios.post('/api/importance/content', { importanceData })
+                                  .then(result=>{console.log(result.data)})
+                                  .catch(error=>console.log(error))
                               }
-                              }
-                            }
+                            }}
                           />
                         </HideButton>
 
