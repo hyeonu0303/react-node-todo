@@ -4,7 +4,7 @@ import axios from "axios";
 import BeforeModal from "./components/BeforeModal";
 import AfterModal from "./components/AfterModal";
 import { useDispatch, useSelector } from "react-redux";
-import { insertData } from "@/store/dataSlice";
+import { fetchData, insertData } from "@/store/dataSlice";
 
 const TodoInputModal = ({ getAllData })=> {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,7 +30,8 @@ const TodoInputModal = ({ getAllData })=> {
       todoData,
     })
     .then((response) => {
-      console.log("할일 저장완료:", response.data);
+      console.log("할일 저장완료:", response);
+      dispatch(fetchData())
     })
     .finally(() => {
       setIsSubmitting(false);  

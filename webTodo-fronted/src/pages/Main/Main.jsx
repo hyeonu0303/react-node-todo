@@ -37,10 +37,10 @@ const MainPage = () => {
     axiosAllData();
   },[])
 
+  
   useEffect(()=>{
     dispatch(fetchData())
   },[dispatch])
-
 
 
   return (

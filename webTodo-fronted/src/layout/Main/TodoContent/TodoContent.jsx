@@ -17,7 +17,8 @@ import Button from "@components/Button/Button";
 import ModifyModal from "@layout/Main/Modal/ModifyModal";
 import DeleteModal from "@layout/Main/Modal/DeleteModal";
 import Loading from "@components/Loading/Loading";
-import  importance, { addImportanceContent, fetchImportanceContent, removeImportanceContent } from "@/store/importance";
+import { addImportanceContent, fetchImportanceContent, removeImportanceContent } from "@/store/importance";
+import { fetchData } from "@/store/dataSlice";
 import axios from "axios";
 
 const TodoContent = (props) => {
@@ -62,6 +63,10 @@ const TodoContent = (props) => {
     dispatch(fetchImportanceContent())
     
   },[dispatch])
+  useEffect(()=>{
+    dispatch(fetchData())
+  },[dispatch])
+
 
     // 투두 설정 버튼 visible
   const handleMouseOver = (uniqueKey) => {
@@ -139,14 +144,14 @@ const TodoContent = (props) => {
                               <FontAwesomeIcon icon={emptyStar} size="sm" />
                             }
                             onClick={async () => {
-                              const existContent = importanceContent.find(content => content.contentId == item._id);
+                              
                               const importanceData = {
                                 contentId: item._id,
                                 content: item.content,
                                 time: item.time,
                                 visible:true
                               };
-                              if (existContent){
+                              if (importantItem){
                                 dispatch(removeImportanceContent(item._id));
                                 axios.post('api/delete/importance/content', { importanceData })
                                   .then(result=>{console.log(result.data)})

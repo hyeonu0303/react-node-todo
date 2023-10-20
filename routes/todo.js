@@ -18,7 +18,7 @@ router.post('/api/todo',(req,res)=>{
   todo.save()
     .then((result)=>{
       console.log(`저장완료: ${result}`);
-      res.json(result);
+      res.json(result.data);
     })
 })
 
